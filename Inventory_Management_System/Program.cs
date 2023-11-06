@@ -8,10 +8,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// UseSqlServer instead of UseSqlConnection
-builder.Services.AddDbContext<AppDBContext>(options =>
+// UseSqlServer
+builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+    options.UseSqlServer("Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password=TEAM4W@rd;Encrypt=False;");
 });
 
 var app = builder.Build();
@@ -29,7 +29,7 @@ app.UseAuthorization();
 // Apply migrations
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
     dbContext.Database.Migrate();
 }
 
