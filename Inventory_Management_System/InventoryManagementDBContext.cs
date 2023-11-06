@@ -1,4 +1,4 @@
-﻿using Inventory_Management_System.Model;
+﻿using Inventory_Management_System.Model.Employee;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Management_System

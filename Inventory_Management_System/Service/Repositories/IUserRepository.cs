@@ -1,4 +1,4 @@
-﻿using Inventory_Management_System.Model;
+﻿using Inventory_Management_System.Model.Employee;
 using Inventory_Management_System.Model.Folder;
 
 namespace Inventory_Management_System.Service.Repositories

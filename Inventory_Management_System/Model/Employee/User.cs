@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Inventory_Management_System.Model.Folder;
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory_Management_System.Model
+namespace Inventory_Management_System.Model.Employee
 {
     public abstract class User
     {
