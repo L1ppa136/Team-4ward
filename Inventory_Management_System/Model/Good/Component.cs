@@ -4,7 +4,7 @@ namespace Inventory_Management_System.Model.Good
 {
     public class Component : Good
     {
-        public Component(ComponentType componentType, string partNumber) : base(componentType, partNumber)
+        public Component(ProductDesignation productDesignation, string partNumber) : base(productDesignation, partNumber)
         {
         }
     }

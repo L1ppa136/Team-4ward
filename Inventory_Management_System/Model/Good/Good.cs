@@ -4,13 +4,13 @@ namespace Inventory_Management_System.Model.Good
 {
     public abstract class Good
     {
-        public ComponentType ComponentType { get; set; }
+        public ProductDesignation ProductDesignation { get; set; }
         public string PartNumber { get; set; }
         public DateTime? CreatedAt { get; set; }
 
-        public Good(ComponentType componentType, string partNumber)
+        public Good(ProductDesignation productDesignation, string partNumber)
         {
-            ComponentType = componentType;
+            ProductDesignation = productDesignation;
             PartNumber = partNumber;
             CreatedAt = DateTime.Now;
         }
