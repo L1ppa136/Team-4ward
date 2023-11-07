@@ -3,38 +3,59 @@ using Inventory_Management_System.Model.Good;
 
 namespace Inventory_Management_System.Model.Location
 {
-    public class RawMaterialLocation : StorageLocation
+    public class RawMaterialLocation : StorageLocation<Component>
     {
-        public List<Component> Components;
-        public string PartNumber;
-        public DateTime? InboundDate;
-        public RawMaterialLocation(LocationType locationType) : base(locationType)
+        public RawMaterialLocation()
         {
-            Components = new List<Component>();
-            PartNumber = "";
+            LocationType = LocationType.RawMaterial;
+            GoodList = new List<Component>(); // ToTuple
         }
-
-        public void FillComponents(Component component, int quantity)
+        
+        public override void FillGoods(Component component, int quantity)
         {
-            PartNumber = component.PartNumber;
-            InboundDate = component.CreatedAt;
-            for(int i = 0; i < quantity; i++)
+            //0 exception handling
+            SetPartNumber(component);
+            SetDate(component.CreatedAt);
+            
+            for (int i = 0; i < quantity; i++)
             {
-                Components.Add(component);
+                GoodList.Add(component);
             }
         }
 
-        public void RetrieveComponents(Component component, int quantity)
+        public override void RetrieveComponents(Component component, int quantity)
         {
             for (int i = 0; i < quantity; i++)
             {
-                Components.Remove(component);
+                GoodList.Remove(component);
             }
-            if(Components.Count == 0) 
+
+            if (GoodList.Count <= 0)
             {
-                PartNumber = "";
-                InboundDate = null;
+                ClearDate();
+                ClearPartNumber();
             }
         }
+
+        protected override void SetPartNumber(Component good)
+        {
+            PartNumber = good.PartNumber;
+        }
+
+        protected override void SetDate(DateTime date)
+        {
+            StockCreated = date;
+        }
+        
+        protected override void ClearDate()
+        {
+            StockCreated = DateTime.MinValue;
+        }
+        
+        protected override void ClearPartNumber()
+        {
+            PartNumber = 0;
+        }
+        
     }
 }
