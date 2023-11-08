@@ -2,14 +2,13 @@
 
 namespace Inventory_Management_System.Service.Repositories
 {
-    public interface IWarehouse
+    public interface IWarehouse<T>
     {
         Task<List<OutboundLocation>> GetFinishedGoodStock(int partNumber);
         Task<List<RawMaterialLocation>> GetRawMaterialStock(int partNumber);
-        Task<RawMaterialLocation> GetEmptyLocation();
-        Task<RawMaterialLocation> CreateRawMaterialLocation(RawMaterialLocation rawMaterialLocation);
-        Task<RawMaterialLocation> DeleteRawMaterialLocation(int id);
-        Task<RawMaterialLocation> UpdateRawMaterialLocation(int id);
-        
+        Task<List<StorageLocation<T>>> GetEmptyLocations();
+        Task<List<StorageLocation<T>>> GetAvailableLocations();
+        Task<StorageLocation<T>> RetrieveStorageLocation(int id);
+        Task<StorageLocation<T>> FillStorageLocation(int id);
     }
 }

@@ -5,34 +5,33 @@ namespace Inventory_Management_System.Model.Location
 {
     public class RawMaterialLocation : StorageLocation<Component>
     {
+        public List<Tuple<Component, int>> BoxesForProduction { get; set; }
         public RawMaterialLocation()
         {
             LocationType = LocationType.RawMaterial;
-            GoodList = new List<Component>(); // ToTuple
+            Boxes = new Queue<Tuple<Component, int>>();
         }
         
         public override void FillGoods(Component component, int quantity)
         {
             //0 exception handling
             SetPartNumber(component);
-            SetDate(component.CreatedAt);
-            
-            for (int i = 0; i < quantity; i++)
+            for (int i = 0; i < quantity/component.BoxCapacity; i++)
             {
-                GoodList.Add(component);
+                Boxes.Enqueue(new Tuple<Component, int>(component, component.BoxCapacity));
             }
         }
 
-        public override void RetrieveComponents(Component component, int quantity)
+        public override void RemoveBoxes(Component component, int quantity)
         {
-            for (int i = 0; i < quantity; i++)
+            for (int i = 0; i < quantity/component.BoxCapacity; i++)
             {
-                GoodList.Remove(component);
+                Boxes.Enqueue(Boxes.First()); // -> where should we add the moved boxes?
+                Boxes.Dequeue();
             }
 
-            if (GoodList.Count <= 0)
+            if (Boxes.Count <= 0)
             {
-                ClearDate();
                 ClearPartNumber();
             }
         }
@@ -40,16 +39,6 @@ namespace Inventory_Management_System.Model.Location
         protected override void SetPartNumber(Component good)
         {
             PartNumber = good.PartNumber;
-        }
-
-        protected override void SetDate(DateTime date)
-        {
-            StockCreated = date;
-        }
-        
-        protected override void ClearDate()
-        {
-            StockCreated = DateTime.MinValue;
         }
         
         protected override void ClearPartNumber()

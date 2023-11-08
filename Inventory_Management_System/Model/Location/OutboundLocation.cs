@@ -1,3 +1,4 @@
+using System.Collections;
 using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
 
@@ -10,30 +11,31 @@ public class OutboundLocation : StorageLocation<FinishedGood>
     public OutboundLocation() : base()
     {
         LocationType = LocationType.FinishedGood;
-        GoodList = new List<FinishedGood>();
+        Boxes = new Queue<Tuple<FinishedGood, int>>();
     }
 
     public override void FillGoods(FinishedGood finishedGood, int quantity)
     {
+        //0 exception handling
         SetPartNumber(finishedGood);
-        SetDate(finishedGood.CreatedAt);
-            
-        for (int i = 0; i < quantity; i++)
+        for (int i = 0; i < quantity/finishedGood.BoxCapacity; i++)
         {
-            GoodList.Add(finishedGood);
+            Boxes.Add(new Tuple<FinishedGood, int>(finishedGood, finishedGood.BoxCapacity));
         }
     }
 
-    public override void RetrieveComponents(FinishedGood finishedGood, int quantity)
+    public override void RemoveBoxes(FinishedGood finishedGood, int quantity)
     {
-        for (int i = 0; i < quantity; i++)
+        int quantityCounter;
+        List<Tuple<FinishedGood, int>> BoxesOrderedByDate = Boxes.OrderBy(b=>b.Item1.CreatedAt).ToList();
+
+        for (int i = 0; i < finishedGood.BoxCapacity; i++)
         {
-            GoodList.Remove(finishedGood);
+            BoxesOrderedByDate.Remove(BoxesOrderedByDate.First());
         }
 
-        if (GoodList.Count <= 0)
+        if (Boxes.Count <= 0)
         {
-            ClearDate();
             ClearPartNumber();
         }
     }
@@ -42,16 +44,7 @@ public class OutboundLocation : StorageLocation<FinishedGood>
     {
         PartNumber = finishedGood.PartNumber;
     }
-
-    protected override void SetDate(DateTime date)
-    {
-        StockCreated = date;
-    }
-        
-    protected override void ClearDate()
-    {
-        StockCreated = DateTime.MinValue;
-    }
+    
         
     protected override void ClearPartNumber()
     {
