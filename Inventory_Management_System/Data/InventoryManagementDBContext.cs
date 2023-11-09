@@ -3,6 +3,7 @@ using Inventory_Management_System.Model.Location;
 using Inventory_Management_System.Model.Good;
 using Microsoft.EntityFrameworkCore;
 using Inventory_Management_System.Model.HandlingUnit;
+using Newtonsoft.Json;
 
 namespace Inventory_Management_System.Data
 {
@@ -21,15 +22,15 @@ namespace Inventory_Management_System.Data
         // must extend in accordance of new entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasKey(u => u.UserId); // Define the primary key
-            modelBuilder.Entity<User>()
-                .Property(u => u.UserName)
-                .HasMaxLength(50); // Set a maximum length for a property
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.UserName) // Create an index on a column
-                .IsUnique();
-            // Define relationships here using modelBuilder.Entity().Has... methods.
-        }
+            modelBuilder.Entity<FinishedGood>()
+            .Property(f => f.BuildOfMaterial)
+            .IsRequired()
+            .HasConversion(
+                bom => JsonConvert.SerializeObject(bom),
+                jsonBom => jsonBom == null
+                    ? new Dictionary<Component, int>() // fallback
+                    : JsonConvert.DeserializeObject<Dictionary<Component, int>>(jsonBom)
+            );
+        }   
     }
 }

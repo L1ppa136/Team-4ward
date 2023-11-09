@@ -24,6 +24,10 @@ namespace Inventory_Management_System.Model.Location
         public Queue<Box<T>> Boxes { get; set; }
         public int PartNumber { get; set; }
 
+        protected StorageLocation()
+        {
+
+        }
         public StorageLocation(int storageLine, int storagePosition, int storageStare)
         {
             StorageLine = storageLine;
