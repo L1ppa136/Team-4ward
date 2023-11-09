@@ -33,6 +33,7 @@ namespace Inventory_Management_System.Data
                     : JsonConvert.DeserializeObject<Dictionary<Component, int>>(jsonBom)
             );
             //MUST ADD TO ALL IMPLEMENTATIONS OF "GOOD" ABSTRACT CLASS
+            
             modelBuilder
             .Entity<Component>()
             .Property(g => g.ProductDesignation)
