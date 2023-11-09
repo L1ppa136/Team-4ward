@@ -20,12 +20,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-        working-directory: /Inventory_Management_System
-
         
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore /Inventory_Management_System/Inventory_Management_System.csproj
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore /Inventory_Management_System/Inventory_Management_System.csproj
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal /Inventory_Management_System/Inventory_Management_System.csproj
