@@ -81,11 +81,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Apply migrations
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
-    dbContext.Database.Migrate();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
+//    dbContext.Database.Migrate();
+//}
 
 app.MapControllers();
 app.Run();

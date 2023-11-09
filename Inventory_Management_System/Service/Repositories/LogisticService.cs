@@ -1,6 +1,7 @@
 using Inventory_Management_System.Data;
 using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
+using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Location;
 
 namespace Inventory_Management_System.Service.Repositories;
@@ -16,12 +17,23 @@ public class LogisticService : IStock, IProduction, ISupplier
 
     public void CreateRawMaterial(int quantity, ProductDesignation productDesignation)
     {
-        throw new NotImplementedException();
+        Component component = new Component(productDesignation);
+        //RawMaterialLocation rawMaterialLocation = new RawMaterialLocation(1, 1, 1);
+        //_dbContext.RawMaterialLocations.Add(rawMaterialLocation);
+        //rawMaterialLocation.FillGoods(component,quantity);
+        //foreach(var box in rawMaterialLocation.Boxes)
+        //{
+        //    _dbContext.ComponentStock.Add(box);
+        //}
+        Box<Component> box = new Box<Component>(component, quantity);
+        _dbContext.ComponentStock.Add(box);
+        _dbContext.SaveChanges();
     }
 
-    public Task<List<OutboundLocation>> GetEmptyFinishedGoodLocations()
+    public async Task<List<OutboundLocation>> GetEmptyFinishedGoodLocations()
     {
-        throw new NotImplementedException();
+        List<OutboundLocation> emptyLocations = _dbContext.OutboundLocations.ToList();
+        return emptyLocations;
     }
 
     public Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocations()
