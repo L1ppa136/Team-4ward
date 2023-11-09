@@ -80,6 +80,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+//SEEMS LIKE DUPLICATE MIGRATIONS AND APP DO NOT RUN
 // Apply migrations
 //using (var scope = app.Services.CreateScope())
 //{
