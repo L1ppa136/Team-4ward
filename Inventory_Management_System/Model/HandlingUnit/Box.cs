@@ -25,6 +25,18 @@ namespace Inventory_Management_System.Model.HandlingUnit
             Good = good;
             Quantity = quantity;
             MaxCapacity = good.BoxCapacity;
+            SetPartNumber(good.PartNumber);
+            SetCreatedAt(good.CreatedAt);
+        }
+
+        private void SetPartNumber(int partNumber) 
+        {
+            PartNumber = partNumber;
+        }
+
+        private void SetCreatedAt(DateTime createdAt)
+        {
+            CreatedAt = createdAt;
         }
     }
 }

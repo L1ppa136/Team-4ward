@@ -4,6 +4,7 @@ using Inventory_Management_System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory_Management_System.Migrations.InventoryManagementDB
 {
     [DbContext(typeof(InventoryManagementDBContext))]
-    partial class InventoryManagementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231109183123_boxColumnAddition")]
+    partial class boxColumnAddition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,6 +95,10 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                     b.Property<int?>("GoodId")
                         .HasColumnType("int");
 
+                    b.Property<string>("LocatedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
@@ -129,6 +136,10 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
 
                     b.Property<int?>("GoodId")
                         .HasColumnType("int");
+
+                    b.Property<string>("LocatedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");

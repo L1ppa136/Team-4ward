@@ -43,7 +43,9 @@ namespace Inventory_Management_System.Model.Location
 
             for (int i = 0; i < numberOfBoxes; i++)
             {
-                Boxes.Enqueue(new Box<T>(good, quantity));
+                Box<T> newBox = new Box<T>(good, good.BoxCapacity);
+                //newBox.SetProperties(good, this.LocationId);
+                Boxes.Enqueue(newBox);
             }
         }
         public virtual Queue<Box<T>> RemoveBoxes(T good, int quantity)
