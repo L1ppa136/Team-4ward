@@ -26,6 +26,7 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddSingleton<IProduction, LogisticService>();
 builder.Services.AddSingleton<IStock, LogisticService>();
 builder.Services.AddSingleton<ISupplier, LogisticService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 //This will add a JWT token authentication scheme to your API. This piece of code is required to validate a JWT.
 builder.Services
