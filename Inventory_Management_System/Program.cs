@@ -18,14 +18,14 @@ builder.Services.AddSwaggerGen();
 // UseSqlServer
 builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
 {
-    options.UseSqlServer("Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password=TEAM4W@rd;Encrypt=False;");
+    options.UseSqlServer("Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password=L1ppa1Chicago36;Encrypt=False;");
 });
 builder.Services.AddDbContext<UsersContext>();
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddSingleton<IProduction, LogisticService>();
-builder.Services.AddSingleton<IStock, LogisticService>();
-builder.Services.AddSingleton<ISupplier, LogisticService>();
+builder.Services.AddScoped<IProduction, LogisticService>();
+builder.Services.AddScoped<IStock, LogisticService>();
+builder.Services.AddScoped<ISupplier, LogisticService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 //This will add a JWT token authentication scheme to your API. This piece of code is required to validate a JWT.

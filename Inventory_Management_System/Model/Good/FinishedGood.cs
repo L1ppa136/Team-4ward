@@ -5,6 +5,11 @@ namespace Inventory_Management_System.Model.Good
     public class FinishedGood : Good
     {
         public Dictionary<Component, int> BuildOfMaterial { get; set; }
+
+        protected FinishedGood() 
+        {
+
+        }
         public FinishedGood(Dictionary<Component, int> buildOfMaterial) : base(ProductDesignation.Airbag)
         {
             BuildOfMaterial = new Dictionary<Component, int>();

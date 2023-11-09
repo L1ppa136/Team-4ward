@@ -12,12 +12,18 @@ namespace Inventory_Management_System.Model.HandlingUnit
 
         [ForeignKey(nameof(RawMaterialLocation))]
         public Guid LocationId { get; set; }
-        public Tuple<T, int> Content { get; set; }
+        public T Good { get; set; }
+        public int Quantity { get; set; }
         public int MaxCapacity {get; set; }
 
+        protected Box()
+        {
+
+        }
         public Box(T good, int quantity)
         {
-            Content = new Tuple<T, int>(good, quantity);
+            Good = good;
+            Quantity = quantity;
             MaxCapacity = good.BoxCapacity;
         }
     }

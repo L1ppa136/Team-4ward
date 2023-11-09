@@ -4,6 +4,10 @@ namespace Inventory_Management_System.Model.Good
 {
     public class Component : Good
     {
+        private Component()
+        {
+
+        }
         public Component(ProductDesignation productDesignation) : base(productDesignation)
         {
             switch(productDesignation)
