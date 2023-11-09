@@ -1,5 +1,9 @@
 using Inventory_Management_System;
+using Inventory_Management_System.Service.UserService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,29 @@ builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
 {
     options.UseSqlServer("Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password=TEAM4W@rd;Encrypt=False;");
 });
+builder.Services.AddDbContext<UsersContext>();
+
+//This will add a JWT token authentication scheme to your API. This piece of code is required to validate a JWT.
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ClockSkew = TimeSpan.Zero,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "apiWithAuthBackend",
+            ValidAudience = "apiWithAuthBackend",
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("!SomethingSecret!")
+            ),
+        };
+    });
+
+
 
 var app = builder.Build();
 

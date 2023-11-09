@@ -4,11 +4,11 @@ using Inventory_Management_System.Model.Location;
 
 namespace Inventory_Management_System.Service.Repositories;
 
-public class Warehouse : IWarehouse, IProduction
+public class LogisticService : IStock, IProduction, ISupplier
 {
     private readonly InventoryManagementDBContext _dbContext;
 
-    public Warehouse(InventoryManagementDBContext dbContext)
+    public LogisticService(InventoryManagementDBContext dbContext)
     {
         _dbContext = dbContext;
     }
