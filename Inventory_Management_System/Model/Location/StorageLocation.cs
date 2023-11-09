@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Inventory_Management_System.Model.Good;
+using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Enums;
 
 namespace Inventory_Management_System.Model.Location
@@ -14,20 +15,21 @@ namespace Inventory_Management_System.Model.Location
                 return $"{StorageLine}-{StoragePosition}-{StorageStare}";
             }
         }
+        private int StorageLine {get; set;}
+        private int StoragePosition { get; set; }
+        private int StorageStare { get; set; }
 
-        public int StorageLine { get; set; }
-        public int StoragePosition { get; set; }
-        public int  StorageStare { get; set; }
-
-        
         public LocationType LocationType { get; set; }
         
-        public Queue<Tuple<T, int>> Boxes { get; set; }
+        public Queue<Box<T>> Boxes { get; set; }
         public int PartNumber { get; set; }
 
-        public StorageLocation()
+        public StorageLocation(int storageLine, int storagePosition, int storageStare)
         {
-           Boxes = new Queue<Tuple<T, int>>();
+            StorageLine = storageLine;
+            StoragePosition = storagePosition;
+            StorageStare = storageStare;
+            Boxes = new Queue<Box<T>>();
         }
 
         public virtual void FillGoods(T good, int quantity) 
@@ -37,16 +39,16 @@ namespace Inventory_Management_System.Model.Location
 
             for (int i = 0; i < numberOfBoxes; i++)
             {
-                Boxes.Enqueue(new Tuple<T, int>(good, good.BoxCapacity));
+                Boxes.Enqueue(new Box<T>(good, quantity));
             }
         }
-        public virtual Queue<Tuple<T, int>> RemoveBoxes(T good, int quantity)
+        public virtual Queue<Box<T>> RemoveBoxes(T good, int quantity)
         {
             int numberOfBoxes = quantity / good.BoxCapacity;
-            Queue<Tuple<T,int>> removedBoxes = new Queue<Tuple<T,int>>();
+            Queue<Box<T>> removedBoxes = new Queue<Box<T>>();
             for (int i = 0; i < numberOfBoxes; i++)
             {
-                Tuple<T, int> boxOut = Boxes.Dequeue();
+                Box<T> boxOut = Boxes.Dequeue();
                 removedBoxes.Enqueue(boxOut);
             }
             if(Boxes.Count <= 0)
