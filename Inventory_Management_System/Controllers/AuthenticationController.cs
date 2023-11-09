@@ -41,5 +41,24 @@ namespace Inventory_Management_System.Controllers
                 ModelState.AddModelError(error.Key, error.Value);
             }
         }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<AuthenticationResponse>> Authenticate([FromBody] AuthenticationRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _authenticationService.LoginAsync(request.Email, request.Password);
+
+            if (!result.Success)
+            {
+                AddErrors(result);
+                return BadRequest(ModelState);
+            }
+
+            return Ok(new AuthenticationResponse(result.Email, result.UserName, result.Token));
+        }
     }
 }
