@@ -1,6 +1,9 @@
-using Inventory_Management_System;
+using Inventory_Management_System.Data;
+using Inventory_Management_System.Service.Authentication;
+using Inventory_Management_System.Service.Repositories;
 using Inventory_Management_System.Service.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -18,6 +21,11 @@ builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
     options.UseSqlServer("Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password=TEAM4W@rd;Encrypt=False;");
 });
 builder.Services.AddDbContext<UsersContext>();
+
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddSingleton<IProduction, LogisticService>();
+builder.Services.AddSingleton<IStock, LogisticService>();
+builder.Services.AddSingleton<ISupplier, LogisticService>();
 
 //This will add a JWT token authentication scheme to your API. This piece of code is required to validate a JWT.
 builder.Services
@@ -39,9 +47,24 @@ builder.Services
         };
     });
 
+//User requirements
+builder.Services
+    .AddIdentityCore<IdentityUser>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        options.User.RequireUniqueEmail = true;
+        options.Password.RequireDigit = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
+    })
+    .AddEntityFrameworkStores<UsersContext>();
+
 
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -51,6 +74,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+//Authentication and Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Apply migrations

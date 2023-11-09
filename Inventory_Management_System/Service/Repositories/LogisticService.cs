@@ -1,3 +1,4 @@
+using Inventory_Management_System.Data;
 using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
 using Inventory_Management_System.Model.Location;
