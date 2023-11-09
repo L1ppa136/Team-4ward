@@ -22,8 +22,8 @@ jobs:
         dotnet-version: 7.0.x
         
     - name: Restore dependencies
-      run: dotnet restore /Inventory_Management_System/Inventory_Management_System.csproj
+      run: dotnet restore /Inventory_Management_System
     - name: Build
-      run: dotnet build --no-restore /Inventory_Management_System/Inventory_Management_System.csproj
+      run: dotnet build --no-restore /Inventory_Management_System
     - name: Test
-      run: dotnet test --no-build --verbosity normal /Inventory_Management_System/Inventory_Management_System.csproj
+      run: dotnet test --no-build --verbosity normal /Inventory_Management_System
