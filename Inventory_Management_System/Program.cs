@@ -3,6 +3,7 @@ using Inventory_Management_System.Service.Authentication;
 using Inventory_Management_System.Service.Repositories;
 using Inventory_Management_System.Service.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +11,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var _configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+string? connectionString = _configuration.GetConnectionString("Default");
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -18,7 +21,7 @@ builder.Services.AddSwaggerGen();
 // UseSqlServer
 builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
 {
-    options.UseSqlServer("Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password=L1ppa1Chicago36;Encrypt=False;");
+    options.UseSqlServer(connectionString);
 });
 builder.Services.AddDbContext<UsersContext>();
 

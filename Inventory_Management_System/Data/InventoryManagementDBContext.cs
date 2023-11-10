@@ -38,15 +38,15 @@ namespace Inventory_Management_System.Data
             .Entity<Component>()
             .Property(g => g.ProductDesignation)
             .HasConversion(
-            v => v.ToString(),
-            v => (ProductDesignation)Enum.Parse(typeof(ProductDesignation), v));
+            enumType => enumType.ToString(),
+            str => Enum.Parse<ProductDesignation>(str)); // new, generic syntax
 
             modelBuilder
             .Entity<FinishedGood>()
             .Property(g => g.ProductDesignation)
             .HasConversion(
-            v => v.ToString(),
-            v => (ProductDesignation)Enum.Parse(typeof(ProductDesignation), v));
+            enumType => enumType.ToString(),
+            str => (ProductDesignation)Enum.Parse(typeof(ProductDesignation), str)); //"old" syntax
         }
     }
 }
