@@ -32,7 +32,7 @@ namespace Inventory_Management_System.Controllers
         [HttpPost("Order")]
         public IActionResult OrderComponent([Required]int quantity, [Required] string productDesignation)
         {
-
+            // might need a look into the generic type
             if(Enum.TryParse(typeof(ProductDesignation), productDesignation, out object parsedValue))
             {
                 ProductDesignation parsedString = (ProductDesignation)parsedValue;

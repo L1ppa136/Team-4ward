@@ -3,6 +3,7 @@ using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
 using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Location;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Management_System.Service.Repositories;
 
@@ -15,7 +16,8 @@ public class LogisticService : IStock, IProduction, ISupplier
         _dbContext = dbContext;
     }
 
-    public void CreateRawMaterial(int quantity, ProductDesignation productDesignation)
+    // would be nice to return ID to use as response in controller
+    public async void CreateRawMaterialAsync(int quantity, ProductDesignation productDesignation)
     {
         Component component = new Component(productDesignation);
         //RawMaterialLocation rawMaterialLocation = new RawMaterialLocation(1, 1, 1);
@@ -27,41 +29,41 @@ public class LogisticService : IStock, IProduction, ISupplier
         //}
         Box<Component> box = new Box<Component>(component, quantity);
         _dbContext.ComponentStock.Add(box);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<List<OutboundLocation>> GetEmptyFinishedGoodLocations()
+    public async Task<List<OutboundLocation>> GetEmptyFinishedGoodLocationsAsync()
     {
-        List<OutboundLocation> emptyLocations = _dbContext.OutboundLocations.ToList();
+        List<OutboundLocation> emptyLocations = await _dbContext.OutboundLocations.ToListAsync();
         return emptyLocations;
     }
 
-    public Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocations()
+    public async Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocationsAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<OutboundLocation>> GetFinishedGoodStock(ProductDesignation productDesignation)
+    public async Task<List<OutboundLocation>> GetFinishedGoodStockAsync(ProductDesignation productDesignation)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<RawMaterialLocation>> GetRawMaterialStock(ProductDesignation productDesignation)
+    public async Task<List<RawMaterialLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation)
     {
         throw new NotImplementedException();
     }
 
-    public void MoveFinishedGoodToOutbound(Queue<Tuple<FinishedGood, int>> finishedGoodQueue)
+    public async void MoveFinishedGoodToOutboundAsync(Queue<Tuple<FinishedGood, int>> finishedGoodQueue)
     {
         throw new NotImplementedException();
     }
 
-    public void MoveRawMaterialToProduction(int quantity, ProductDesignation productDesignation)
+    public async void MoveRawMaterialToProductionAsync(int quantity, ProductDesignation productDesignation)
     {
         throw new NotImplementedException();
     }
 
-    public Queue<Tuple<FinishedGood, int>> Produce(Queue<Tuple<Component, int>> queue)
+    public Task<Queue<Tuple<FinishedGood, int>>> ProduceAsync(Queue<Tuple<Component, int>> queue)
     {
         throw new NotImplementedException();
     }
