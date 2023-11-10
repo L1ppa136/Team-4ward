@@ -25,7 +25,7 @@ namespace Inventory_Management_System.Controllers
         [HttpGet("Outbound")]
         public async Task<IActionResult> GetAllOutbound() 
         {
-            List<OutboundLocation> outboundLocations = await _stockService.GetEmptyFinishedGoodLocations();
+            List<OutboundLocation> outboundLocations = await _stockService.GetEmptyFinishedGoodLocationsAsync();
             return Ok(outboundLocations);
         }
 
@@ -36,7 +36,7 @@ namespace Inventory_Management_System.Controllers
             if(Enum.TryParse(typeof(ProductDesignation), productDesignation, out object parsedValue))
             {
                 ProductDesignation parsedString = (ProductDesignation)parsedValue;
-                _supplierService.CreateRawMaterial(quantity, parsedString);
+                _supplierService.CreateRawMaterialAsync(quantity, parsedString);
                 return Ok(productDesignation);
             }
             else
