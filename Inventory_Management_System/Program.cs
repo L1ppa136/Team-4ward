@@ -11,8 +11,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var _configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+var _configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.Development.json").Build();
 string? connectionString = _configuration.GetConnectionString("Default");
+Console.WriteLine(connectionString);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
 {
     options.UseSqlServer(connectionString);
 });
+
 builder.Services.AddDbContext<UsersContext>();
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -77,7 +79,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 //Authentication and Authorization
 app.UseAuthentication();
