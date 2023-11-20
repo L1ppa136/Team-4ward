@@ -1,5 +1,6 @@
 ﻿using Inventory_Management_System.Contracts;
 using Inventory_Management_System.Service.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory_Management_System.Controllers
@@ -8,6 +9,7 @@ namespace Inventory_Management_System.Controllers
     [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
+        private readonly string _defaultRole = "User";
         private readonly IAuthenticationService _authenticationService;
 
         public AuthenticationController(IAuthenticationService authenticationService)
@@ -23,7 +25,7 @@ namespace Inventory_Management_System.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _authenticationService.RegisterAsync(request.Email, request.Username, request.Password);
+            var result = await _authenticationService.RegisterAsync(request.Email, request.UserName, request.Password, _defaultRole);
 
             if (!result.Success)
             {
@@ -50,7 +52,7 @@ namespace Inventory_Management_System.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _authenticationService.LoginAsync(request.Email, request.Password);
+            var result = await _authenticationService.LoginAsync(request.UserName, request.Password);
 
             if (!result.Success)
             {
@@ -59,6 +61,25 @@ namespace Inventory_Management_System.Controllers
             }
 
             return Ok(new AuthenticationResponse(result.Email, result.UserName, result.Token));
+        }
+
+        [HttpPatch("SetRole"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<AuthenticationResponse>> ChangeRole([FromBody] SetRoleRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _authenticationService.SetRole(request.UserName, request.Role);
+
+            if (!result.Success)
+            {
+                AddErrors(result);
+                return BadRequest(ModelState);
+            }
+
+            return Ok(new AuthenticationResponse(result.Email, result.UserName, ""));
         }
     }
 }
