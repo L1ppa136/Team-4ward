@@ -4,6 +4,6 @@ namespace Inventory_Management_System.Service.Repositories
 {
     public interface ISupplier
     {
-        void CreateRawMaterialAsync(int quantity, ProductDesignation productDesignation);
+        Task CreateRawMaterialAsync(int quantity, ProductDesignation productDesignation);
     }
 }

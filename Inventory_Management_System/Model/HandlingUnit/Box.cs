@@ -11,7 +11,7 @@ namespace Inventory_Management_System.Model.HandlingUnit
         public DateTime CreatedAt { get; set; }
 
         [ForeignKey(nameof(RawMaterialLocation))]
-        public Guid LocationId { get; set; }
+        public string LocationId { get; set; }
         public T Good { get; set; }
         public int Quantity { get; set; }
         public int MaxCapacity {get; set; }
@@ -27,6 +27,11 @@ namespace Inventory_Management_System.Model.HandlingUnit
             MaxCapacity = good.BoxCapacity;
             SetPartNumber(good.PartNumber);
             SetCreatedAt(good.CreatedAt);
+        }
+
+        public void SetLocationID(string locationID)
+        {
+            LocationId = locationID;
         }
 
         private void SetPartNumber(int partNumber) 

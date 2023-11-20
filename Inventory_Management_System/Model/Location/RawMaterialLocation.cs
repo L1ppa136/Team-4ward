@@ -7,7 +7,7 @@ namespace Inventory_Management_System.Model.Location
     public class RawMaterialLocation : StorageLocation<Component>
     {
         private RawMaterialLocation() { }
-        public RawMaterialLocation(int storageLine, int storagePosition, int storageStare) : base(storageLine, storagePosition, storageStare)
+        public RawMaterialLocation(string locationID) : base(locationID, 20)
         {
             LocationType = LocationType.RawMaterial;
         }

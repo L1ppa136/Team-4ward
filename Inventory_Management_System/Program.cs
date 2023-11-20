@@ -194,3 +194,5 @@ async Task CreateWarehouseLeaderRole(RoleManager<IdentityRole> roleManager)
 {
     await roleManager.CreateAsync(new IdentityRole("Warehouse Leader"));
 }
+
+

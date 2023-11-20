@@ -8,45 +8,51 @@ namespace Inventory_Management_System.Model.Location
     public abstract class StorageLocation<T> where T : Good.Good
     {
         public Guid Id { get; set; }
-        public string LocationId
-        {
-            get
-            {
-                return $"{StorageLine}-{StoragePosition}-{StorageStare}";
-            }
-        }
-        private int StorageLine {get; set;}
-        private int StoragePosition { get; set; }
-        private int StorageStare { get; set; }
+        public string LocationId { get; set; }
+        //private int StorageLine {get; set;}
+        //private int StoragePosition { get; set; }
+        //private int StorageStare { get; set; }
 
         public LocationType LocationType { get; set; }
         
         public Queue<Box<T>> Boxes { get; set; }
         public int PartNumber { get; set; }
 
+        public int MaxBoxCapacity { get; set; }
+
+        public bool Full { get; set; }
+
         protected StorageLocation()
         {
 
         }
-        public StorageLocation(int storageLine, int storagePosition, int storageStare)
+        public StorageLocation(string locationID, int maxBoxCapacity)
         {
-            StorageLine = storageLine;
-            StoragePosition = storagePosition;
-            StorageStare = storageStare;
+            Full = false;
+            LocationId = locationID;
+            MaxBoxCapacity = maxBoxCapacity;
             Boxes = new Queue<Box<T>>();
         }
 
-        public virtual void FillGoods(T good, int quantity) 
+        public virtual void FillGoods(T good, int quantity)
         {
-            int numberOfBoxes = quantity / good.BoxCapacity;
             SetPartNumber(good);
 
-            for (int i = 0; i < numberOfBoxes; i++)
+            while (quantity > 0 && Full == false)
             {
-                Box<T> newBox = new Box<T>(good, good.BoxCapacity);
+                int boxCapacity = Math.Min(quantity, good.BoxCapacity);
+                Box<T> newBox = new Box<T>(good, boxCapacity);
+                newBox.SetLocationID(LocationId);
                 Boxes.Enqueue(newBox);
+
+                quantity -= boxCapacity;
+                if(Boxes.Count >= MaxBoxCapacity)
+                {
+                    Full = true;
+                }
             }
         }
+
         public virtual Queue<Box<T>> RemoveBoxes(T good, int quantity)
         {
             int numberOfBoxes = quantity / good.BoxCapacity;
