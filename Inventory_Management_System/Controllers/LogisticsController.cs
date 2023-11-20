@@ -29,14 +29,14 @@ namespace Inventory_Management_System.Controllers
             return Ok(outboundLocations);
         }
 
-        [HttpPost("Order")]
-        public IActionResult OrderComponent([Required]int quantity, [Required] string productDesignation)
+        [HttpPost("OrderComponent")]
+        public async Task<IActionResult> OrderComponent([Required]int quantity, [Required] string productDesignation)
         {
             // might need a look into the generic type
             if(Enum.TryParse(typeof(ProductDesignation), productDesignation, out object parsedValue))
             {
                 ProductDesignation parsedString = (ProductDesignation)parsedValue;
-                _supplierService.CreateRawMaterialAsync(quantity, parsedString);
+                await _supplierService.CreateRawMaterialAsync(quantity, parsedString);
                 return Ok(productDesignation);
             }
             else
@@ -44,5 +44,12 @@ namespace Inventory_Management_System.Controllers
                 return BadRequest("Incorrect productDesignation added!");
             }
         }
+
+        //[HttpGet("CreateLocations")]
+        //public IActionResult Create()
+        //{
+        //    _stockService.CreateStorageLocations();
+        //    return Ok();
+        //}
     }
 }

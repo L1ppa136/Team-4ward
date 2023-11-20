@@ -6,6 +6,7 @@ namespace Inventory_Management_System.Service.Repositories
 {
     public interface IStock
     {
+        //void CreateStorageLocations();
         Task<List<OutboundLocation>> GetFinishedGoodStockAsync(ProductDesignation productDesignation); //ProductDesignation includes PartNumber as well, easier to query
         Task<List<RawMaterialLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation);
         Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocationsAsync();

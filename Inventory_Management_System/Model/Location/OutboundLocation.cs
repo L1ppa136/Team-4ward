@@ -8,7 +8,7 @@ namespace Inventory_Management_System.Model.Location;
 public class OutboundLocation : StorageLocation<FinishedGood>
 {
     private OutboundLocation() { }
-    public OutboundLocation(int storageLine, int storagePosition, int storageStare) : base(storageLine, storagePosition, storageStare)
+    public OutboundLocation(string locationID) : base(locationID, 10)
     {
         LocationType = LocationType.FinishedGood;
     }
