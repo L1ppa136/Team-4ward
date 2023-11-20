@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Inventory_Management_System.Contracts;
+using Inventory_Management_System.Model.Employee;
+using Microsoft.AspNetCore.Identity;
+using System.Runtime.CompilerServices;
 
 namespace Inventory_Management_System.Service.Authentication
 {
@@ -13,15 +16,16 @@ namespace Inventory_Management_System.Service.Authentication
             _tokenService = tokenService;
         }
 
-        public async Task<AuthenticationResult> RegisterAsync(string email, string username, string password)
+        public async Task<AuthenticationResult> RegisterAsync(string email, string username, string password, string role)
         {
-            var result = await _userManager.CreateAsync(
-                new IdentityUser { UserName = username, Email = email }, password);
+            var user = new IdentityUser { UserName = username, Email = email };
+            var result = await _userManager.CreateAsync(user, password);
 
             if (!result.Succeeded)
             {
                 return FailedRegistration(result, email, username);
             }
+            await SetRole(user.UserName, role);
 
             return new AuthenticationResult(true, email, username, "");
         }
@@ -38,19 +42,19 @@ namespace Inventory_Management_System.Service.Authentication
             return authResult;
         }
 
-        public async Task<AuthenticationResult> LoginAsync(string email, string password)
+        public async Task<AuthenticationResult> LoginAsync(string username, string password)
         {
-            var managedUser = await _userManager.FindByEmailAsync(email);
+            var managedUser = await _userManager.FindByNameAsync(username);
 
             if (managedUser == null)
             {
-                return InvalidEmail(email);
+                return InvalidUsername(username);
             }
 
             var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, password);
             if (!isPasswordValid)
             {
-                return InvalidPassword(email, managedUser.UserName);
+                return InvalidPassword(managedUser.Email, managedUser.UserName);
             }
 
             var accessToken = _tokenService.CreateToken(managedUser);
@@ -58,10 +62,10 @@ namespace Inventory_Management_System.Service.Authentication
             return new AuthenticationResult(true, managedUser.Email, managedUser.UserName, accessToken);
         }
 
-        private static AuthenticationResult InvalidEmail(string email)
+        private static AuthenticationResult InvalidUsername(string username)
         {
-            var result = new AuthenticationResult(false, email, "", "");
-            result.ErrorMessages.Add("Bad credentials", "Invalid email");
+            var result = new AuthenticationResult(false, "", username, "");
+            result.ErrorMessages.Add("Bad credentials", "Invalid username");
             return result;
         }
 
@@ -70,6 +74,14 @@ namespace Inventory_Management_System.Service.Authentication
             var result = new AuthenticationResult(false, email, userName, "");
             result.ErrorMessages.Add("Bad credentials", "Invalid password");
             return result;
+        }
+
+        public async Task<AuthenticationResult> SetRole(string username, string role)
+        {
+            var managedUser = await _userManager.FindByNameAsync(username);
+            await _userManager.AddToRoleAsync(managedUser, role);
+
+            return new AuthenticationResult(true, managedUser.Email, managedUser.UserName, "");
         }
     }
 }
