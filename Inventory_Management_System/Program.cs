@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Inventory_Management_System.Model.Location;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +25,9 @@ var app = builder.Build();
 
 //Adding all roles to AspNetRoles
 AddRoles();
+
+//Add admin if not exists
+AddAdmin();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -204,4 +206,27 @@ async Task CreateWarehouseLeaderRole(RoleManager<IdentityRole> roleManager)
     await roleManager.CreateAsync(new IdentityRole("Warehouse Leader"));
 }
 
+void AddAdmin()
+{
+    var tAdmin = CreateAdminIfNotExists();
+    tAdmin.Wait();
+}
 
+async Task CreateAdminIfNotExists()
+{
+    using var scope = app.Services.CreateScope();
+    var userManager =
+        scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
+    if (adminInDb == null)
+    {
+        var admin = new IdentityUser { UserName = "admin", Email = "admin@admin.com" };
+        var adminCreated = await userManager.CreateAsync(admin, "Admin123");
+
+        if (adminCreated.Succeeded)
+        {
+            await userManager.AddToRoleAsync(admin, "Admin");
+        }
+    }
+}
