@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Inventory_Management_System.Model.Location;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// Add CORS middleware here
+app.UseCors(builder =>
+{
+    builder.WithOrigins("http://localhost:3000")
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+});
 
 // app.UseHttpsRedirection();
 
