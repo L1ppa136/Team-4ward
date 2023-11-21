@@ -5,6 +5,6 @@ namespace Inventory_Management_System.Service.Repositories
 {
     public interface IProduction
     {
-        Task<List<Box<FinishedGood>>> ProduceAsync();
+        Task<Queue<Box<FinishedGood>>> ProduceAsync();
     }
 }

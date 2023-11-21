@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Inventory_Management_System.Migrations.InventoryManagementDB
+namespace Inventory_Management_System.Migrations
 {
     [DbContext(typeof(InventoryManagementDBContext))]
-    [Migration("20231109183800_newMigration")]
-    partial class newMigration
+    [Migration("20231121121453_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,10 +62,6 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                     b.Property<int>("BoxCapacity")
                         .HasColumnType("int");
 
-                    b.Property<string>("BuildOfMaterial")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -95,8 +91,9 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                     b.Property<int?>("GoodId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("LocationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("LocationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaxCapacity")
                         .HasColumnType("int");
@@ -133,8 +130,9 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                     b.Property<int?>("GoodId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("LocationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("LocationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaxCapacity")
                         .HasColumnType("int");
@@ -163,7 +161,17 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Full")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LocationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("LocationType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxBoxCapacity")
                         .HasColumnType("int");
 
                     b.Property<int>("PartNumber")
@@ -180,7 +188,17 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Full")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LocationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("LocationType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxBoxCapacity")
                         .HasColumnType("int");
 
                     b.Property<int>("PartNumber")
