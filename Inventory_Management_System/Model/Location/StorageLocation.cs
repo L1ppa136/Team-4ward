@@ -2,36 +2,32 @@
 using Inventory_Management_System.Model.Good;
 using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Inventory_Management_System.Model.Location
 {
     public abstract class StorageLocation<T> where T : Good.Good
     {
         public Guid Id { get; set; }
-        public string LocationId { get; set; }
-        //private int StorageLine {get; set;}
-        //private int StoragePosition { get; set; }
-        //private int StorageStare { get; set; }
-
+        public string LocationName { get; set; }
         public LocationType LocationType { get; set; }
-        
-        public Queue<Box<T>> Boxes { get; set; }
+        public List<Box<T>> Boxes { get; set; }
         public int PartNumber { get; set; }
-
         public int MaxBoxCapacity { get; set; }
-
         public bool Full { get; set; }
 
         protected StorageLocation()
         {
+            Full = false;
+            Boxes = new List<Box<T>>();
 
         }
-        public StorageLocation(string locationID, int maxBoxCapacity)
+        public StorageLocation(string locationName, int maxBoxCapacity)
         {
             Full = false;
-            LocationId = locationID;
+            LocationName = locationName;
             MaxBoxCapacity = maxBoxCapacity;
-            Boxes = new Queue<Box<T>>();
+            Boxes = new List<Box<T>>();
         }
 
         public virtual void FillGoods(T good, int quantity)
@@ -41,9 +37,8 @@ namespace Inventory_Management_System.Model.Location
             while (quantity > 0 && Full == false)
             {
                 int boxCapacity = Math.Min(quantity, good.BoxCapacity);
-                Box<T> newBox = new Box<T>(good, boxCapacity);
-                newBox.SetLocationID(LocationId);
-                Boxes.Enqueue(newBox);
+                Box<T> newBox = new Box<T>(good, boxCapacity, this.LocationName);
+                Boxes.Add(newBox);
 
                 quantity -= boxCapacity;
                 if(Boxes.Count >= MaxBoxCapacity)
@@ -53,18 +48,20 @@ namespace Inventory_Management_System.Model.Location
             }
         }
 
-        public virtual Queue<Box<T>> RemoveBoxes(T good, int quantity)
+        public virtual List<Box<T>> RemoveBoxes(T good, int quantity)
         {
             int numberOfBoxes = quantity / good.BoxCapacity;
-            Queue<Box<T>> removedBoxes = new Queue<Box<T>>();
+            List<Box<T>> removedBoxes = new List<Box<T>>();
             for (int i = 0; i < numberOfBoxes; i++)
-            {
-                Box<T> boxOut = Boxes.Dequeue();
-                removedBoxes.Enqueue(boxOut);
+            {                
+                Box<T> boxOut = Boxes[i];
+                Boxes.Remove(boxOut);
+                removedBoxes.Add(boxOut);
             }
             if(Boxes.Count <= 0)
             {
                 ClearPartNumber();
+                Full = false;
             }
             return removedBoxes;
         }

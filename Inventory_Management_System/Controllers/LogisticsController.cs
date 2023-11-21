@@ -45,11 +45,11 @@ namespace Inventory_Management_System.Controllers
             }
         }
 
-        //[HttpGet("CreateLocations")]
-        //public IActionResult Create()
-        //{
-        //    _stockService.CreateStorageLocations();
-        //    return Ok();
-        //}
+        [HttpGet("CreateLocations")]
+        public IActionResult Create()
+        {
+            _stockService.CreateStorageLocations();
+            return Ok();
+        }
     }
 }

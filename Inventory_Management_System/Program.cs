@@ -2,6 +2,7 @@ using Inventory_Management_System.Data;
 using Inventory_Management_System.Service.Authentication;
 using Inventory_Management_System.Service.Repositories;
 using Inventory_Management_System.Service.UserService;
+using Inventory_Management_System.Model.Location;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -94,7 +95,7 @@ void AddDbContext()
     });
 
     builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-    builder.Services.AddScoped<IProduction, LogisticService>();
+    builder.Services.AddScoped<IProduction, ProductionLocation>();
     builder.Services.AddScoped<IStock, LogisticService>();
     builder.Services.AddScoped<ISupplier, LogisticService>();
     builder.Services.AddScoped<ITokenService, TokenService>();

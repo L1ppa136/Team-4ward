@@ -6,12 +6,12 @@ namespace Inventory_Management_System.Service.Repositories
 {
     public interface IStock
     {
-        //void CreateStorageLocations();
+        void CreateStorageLocations();
         Task<List<OutboundLocation>> GetFinishedGoodStockAsync(ProductDesignation productDesignation); //ProductDesignation includes PartNumber as well, easier to query
         Task<List<RawMaterialLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation);
         Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocationsAsync();
         Task<List<OutboundLocation>> GetEmptyFinishedGoodLocationsAsync();
-        void MoveRawMaterialToProductionAsync(int quantity, ProductDesignation productDesignation);
-        void MoveFinishedGoodToOutboundAsync(Queue<Tuple<FinishedGood, int>> finishedGoodQueue);
+        void MoveRawMaterialToProductionAsync(int quantity);
+        void MoveFinishedGoodToOutboundAsync();
     }
 }

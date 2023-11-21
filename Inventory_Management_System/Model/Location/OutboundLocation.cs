@@ -18,7 +18,7 @@ public class OutboundLocation : StorageLocation<FinishedGood>
         base.FillGoods(good, quantity);
     }
 
-    public override Queue<Box<FinishedGood>> RemoveBoxes(FinishedGood good, int quantity)
+    public override List<Box<FinishedGood>> RemoveBoxes(FinishedGood good, int quantity)
     {
         return base.RemoveBoxes(good, quantity);
     }

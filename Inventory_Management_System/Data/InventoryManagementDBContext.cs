@@ -23,15 +23,15 @@ namespace Inventory_Management_System.Data
         // must extend in accordance of new entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<FinishedGood>()
-            .Property(f => f.BuildOfMaterial)
-            .IsRequired()
-            .HasConversion(
-                bom => JsonConvert.SerializeObject(bom),
-                jsonBom => jsonBom == null
-                    ? new Dictionary<Component, int>()
-                    : JsonConvert.DeserializeObject<Dictionary<Component, int>>(jsonBom)
-            );
+            //modelBuilder.Entity<FinishedGood>()
+            //.Property(f => f.BuildOfMaterial)
+            //.IsRequired()
+            //.HasConversion(
+            //    bom => JsonConvert.SerializeObject(bom),
+            //    jsonBom => jsonBom == null
+            //        ? new Dictionary<Component, int>()
+            //        : JsonConvert.DeserializeObject<Dictionary<Component, int>>(jsonBom)
+            //);
             //MUST ADD TO ALL IMPLEMENTATIONS OF "GOOD" ABSTRACT CLASS
             
             modelBuilder

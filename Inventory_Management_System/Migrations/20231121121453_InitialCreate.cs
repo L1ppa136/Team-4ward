@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Inventory_Management_System.Migrations.InventoryManagementDB
+namespace Inventory_Management_System.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductDesignation = table.Column<int>(type: "int", nullable: false),
+                    ProductDesignation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PartNumber = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BoxCapacity = table.Column<int>(type: "int", nullable: false)
@@ -33,8 +33,7 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BuildOfMaterial = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductDesignation = table.Column<int>(type: "int", nullable: false),
+                    ProductDesignation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PartNumber = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BoxCapacity = table.Column<int>(type: "int", nullable: false)
@@ -49,8 +48,11 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LocationType = table.Column<int>(type: "int", nullable: false),
-                    PartNumber = table.Column<int>(type: "int", nullable: false)
+                    PartNumber = table.Column<int>(type: "int", nullable: false),
+                    MaxBoxCapacity = table.Column<int>(type: "int", nullable: false),
+                    Full = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,8 +64,11 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LocationType = table.Column<int>(type: "int", nullable: false),
-                    PartNumber = table.Column<int>(type: "int", nullable: false)
+                    PartNumber = table.Column<int>(type: "int", nullable: false),
+                    MaxBoxCapacity = table.Column<int>(type: "int", nullable: false),
+                    Full = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,7 +83,7 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PartNumber = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GoodId = table.Column<int>(type: "int", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     MaxCapacity = table.Column<int>(type: "int", nullable: false),
@@ -107,7 +112,7 @@ namespace Inventory_Management_System.Migrations.InventoryManagementDB
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PartNumber = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GoodId = table.Column<int>(type: "int", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     MaxCapacity = table.Column<int>(type: "int", nullable: false),
