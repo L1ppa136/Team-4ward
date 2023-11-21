@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import Registration from './Pages/Registration.jsx';
 import Layout from './Pages/Layout/Layout.jsx';
 import Login from './Pages/Login.jsx';
+import InboundList from "./Pages/LogisticsTables/InboundList.jsx";
+import OutboundList from "./Pages/LogisticsTables/OutBoundList.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,8 +23,23 @@ const router = createBrowserRouter([
           {
             path: '/Login',
             element: <Login />,
-        }
-        
+          },
+          {
+            path: '/Inbound',
+            element: <InboundList />,
+          },
+          {
+            path: '/Outbound',
+            element: <OutboundList />,
+          },
+          {
+            path: '/Prodsupply',
+            element: <ProdSupplyList />,
+          },
+          {
+            path: '/Production',
+            element: <ProductionList />,
+          }, 
       ]
   }
 ]);
