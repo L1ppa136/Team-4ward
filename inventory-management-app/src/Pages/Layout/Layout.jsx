@@ -11,6 +11,11 @@ const Layout = () => {
                             <button>Register</button>
                         </Link>
                     </li>
+                    <li>
+                        <Link to='/Login'>
+                            <button>Login</button>
+                        </Link>
+                    </li>
                 </ul>
             </nav>
             <Outlet />
