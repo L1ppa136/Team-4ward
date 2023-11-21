@@ -1,7 +1,19 @@
 import { Outlet, Link } from 'react-router-dom';
 import "./Layout.css";
+import { useState } from 'react';
+import Login from "../Login.jsx";
 
 const Layout = () => {
+    const [isLoggedIn, setLoggedIn] = useState(false);
+
+    const handleLogin = () => {
+        setLoggedIn(true);
+    };
+
+    const handleLogout = () => {
+        setLoggedIn(false);
+    };
+
     return (
         <div className='Layout'>
             <nav>
@@ -12,8 +24,15 @@ const Layout = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/Login'>
-                            <button>Login</button>
+                        {isLoggedIn ? (
+                            <button onClick={handleLogout}>Logout</button>
+                        ) : (
+                            <Login onLogin={handleLogin} isLoggedIn={isLoggedIn} />
+                        )}
+                    </li>
+                    <li>
+                        <Link to='/SetRole'>
+                            <button>Set Role</button>
                         </Link>
                     </li>
                 </ul>

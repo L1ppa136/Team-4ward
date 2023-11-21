@@ -66,10 +66,10 @@ namespace Inventory_Management_System.Controllers
         [HttpPatch("SetRole"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<AuthenticationResponse>> ChangeRole([FromBody] SetRoleRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+           // if (!ModelState.IsValid)
+           // {
+           //     return BadRequest(ModelState);
+           // }
 
             var result = await _authenticationService.SetRole(request.UserName, request.Role);
 
