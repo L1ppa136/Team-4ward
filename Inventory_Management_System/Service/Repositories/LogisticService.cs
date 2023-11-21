@@ -55,7 +55,7 @@ public class LogisticService : IStock, ISupplier
     {
         Component component = new(productDesignation);
         var numberOfBoxes = quantity / component.BoxCapacity;
-        int neededLocations = quantity 
+        int neededLocations = quantity;
         var emptyLocations = GetEmptyRawMaterialLocationsAsync();
         
         
