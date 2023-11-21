@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Login = ({ onLogin, isLoggedIn }) => {
+const SetRole = () => {
     const [formdata, setFormData] = useState({
         "userName": '',
-        "password": ''
+        "role": ''
     });
 
     const [responseState, setResponseState] = useState('');
@@ -16,23 +16,27 @@ const Login = ({ onLogin, isLoggedIn }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        console.log(formdata);
+
         try {
-            const response = await axios.post('http://localhost:5179/Authentication/Login', formdata);
+            const response = await axios.patch('http://localhost:5179/Authentication/SetRole', formdata);
+
+            //Try to save token into a variable in login, and add to the header here
 
             if (response && response.data && response.data.token) {
                 // Add the token to the axios defaults for subsequent requests
-                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
 
                 console.log(response.data);
                 setResponseState(response.data);
-                onLogin(); // Call the onLogin callback from the parent component
             } else {
                 console.error('Invalid response:', response);
                 setResponseState(response.data);
             }
         } catch (error) {
+            // Check if 'error.response' is defined and has a 'data' property
             if (error.response && error.response.data) {
-                console.error('Login failed:', error.response.data);
+                console.error('Setting role failed:', error.response.data);
                 setResponseState(error.response.data);
             } else {
                 console.error('Unexpected error:', error);
@@ -41,29 +45,33 @@ const Login = ({ onLogin, isLoggedIn }) => {
         }
     };
 
+
+
     return (
         <div>
             {responseState === '' ? (
                 <div>
-                    <h2>Login</h2>
+                    <h2>Registration</h2>
                     <form onSubmit={handleSubmit}>
                         <label>Username:</label>
-                        <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
-                        <label>Password:</label>
-                        <input type='password' name='password' value={formdata.password} onChange={handleInputChange} required />
+                        <input type='text' name='userName' value={formdata.username} onChange={handleInputChange} required />
+                        <label>Role:</label>
+                        <input type='role' name='role' value={formdata.password} onChange={handleInputChange} required />
                         <button type='submit'>Submit</button>
                     </form>
                 </div>
             ) : (
-                responseState.hasOwnProperty("Bad credentials") ? (
+                responseState.message === 'Request failed with status code 405' ? (
                     <div>
-                        {responseState["Bad credentials"][0]}
+                        You have no right to change roles.
                     </div>
-                ) : <div>{responseState.userName} has been successfully logged in.</div>
+                ) : responseState.hasOwnProperty("DuplicateEmail") ? (
+                    <div> {responseState.DuplicateEmail[0]} </div>
+                ) : <div> {formdata.userName} has a new role as {formdata.role}. </div>
             )}
         </div>
     );
 
 };
 
-export default Login;
+export default SetRole;

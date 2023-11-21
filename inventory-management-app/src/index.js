@@ -7,30 +7,36 @@ import reportWebVitals from './reportWebVitals';
 import Registration from './Pages/Registration.jsx';
 import Layout from './Pages/Layout/Layout.jsx';
 import Login from './Pages/Login.jsx';
+import SetRole from './Pages/SetRole.jsx';
 
 const router = createBrowserRouter([
   {
-      path: '/',
-      element: <Layout />,
-     // errorElement: <ErrorPage />,
-      children: [
-          {
-              path: '/Register',
-              element: <Registration />,
-          },
-          {
-            path: '/Login',
-            element: <Login />,
-        }
-        
-      ]
+    path: '/',
+    element: <Layout />,
+    // errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '/Register',
+        element: <Registration />,
+      },
+      {
+        path: '/Login',
+        element: <Login />,
+      },
+      {
+        path: '/SetRole',
+        element: <SetRole />,
+
+      }
+
+    ]
   }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-<React.StrictMode>
+  <React.StrictMode>
     <RouterProvider router={router}>{router.route}</RouterProvider>
-</React.StrictMode>
+  </React.StrictMode>
 );
 
 
