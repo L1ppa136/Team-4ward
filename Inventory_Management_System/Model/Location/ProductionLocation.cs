@@ -19,12 +19,12 @@ namespace Inventory_Management_System.Model.Location
             { ProductDesignation.WireHarness, 1 }
         };
 
-        public List<Component> Components { get; set; }
+        public List<Box<Component>> Components { get; set; }
         public List<Box<FinishedGood>> FinishedGoods { get; set; }
 
         public ProductionLocation()
         {
-            Components = new List<Component>();
+            Components = new List<Box<Component>>();
             FinishedGoods = new List<Box<FinishedGood>>();
         }
 
@@ -33,9 +33,9 @@ namespace Inventory_Management_System.Model.Location
             throw new NotImplementedException();
         }
 
-        public void StoreComponents(Box<Component> componentBox)
+        public void StoreComponents(List<Box<Component>> components)
         {
-
+            Components.AddRange(components);
         }
 
         public List<Box<FinishedGood>> MoveFinishedGoodFromLine()

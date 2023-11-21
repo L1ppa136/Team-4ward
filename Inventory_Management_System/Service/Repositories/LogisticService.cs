@@ -11,6 +11,17 @@ public class LogisticService : IStock, ISupplier
 {
     private readonly InventoryManagementDBContext _dbContext;
     private readonly IProduction _production;
+    private readonly Dictionary<ProductDesignation, int> _buildOfMaterial = new Dictionary<ProductDesignation, int>() {
+            { ProductDesignation.Screw, 4},
+            { ProductDesignation.Nut, 4 },
+            { ProductDesignation.Cushion, 1},
+            { ProductDesignation.Diffusor, 1 },
+            { ProductDesignation.Retainer, 1},
+            { ProductDesignation.Cover, 1 },
+            { ProductDesignation.Emblem, 1 },
+            { ProductDesignation.Inflator , 1 },
+            { ProductDesignation.WireHarness, 1 }
+        };
 
     public LogisticService(InventoryManagementDBContext dbContext, IProduction production)
     {
@@ -80,35 +91,63 @@ public class LogisticService : IStock, ISupplier
         await _dbContext.SaveChangesAsync();
     }
 
-public async Task<List<OutboundLocation>> GetEmptyFinishedGoodLocationsAsync()
+    public async Task<List<OutboundLocation>> GetEmptyFinishedGoodLocationsAsync()
     {
-        List<OutboundLocation> emptyLocations = await _dbContext.OutboundLocations.Where(l => !l.Boxes.Any()).ToListAsync();
+        List<OutboundLocation> emptyLocations = await _dbContext.OutboundLocations.Where(l => !l.Full).ToListAsync();
         return emptyLocations;
     }
 
     public async Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocationsAsync()
     {
-        List<RawMaterialLocation> emptyLocations = await _dbContext.RawMaterialLocations.Where(l => !l.Boxes.Any()).ToListAsync();
+        List<RawMaterialLocation> emptyLocations = await _dbContext.RawMaterialLocations.Where(l => !l.Full).ToListAsync();
         return emptyLocations;
     }
 
-    public async Task<List<OutboundLocation>> GetFinishedGoodStockAsync(ProductDesignation productDesignation)
+    public async Task<List<OutboundLocation>> GetFinishedGoodStockAsync()
     {
-        throw new NotImplementedException();
+        List<OutboundLocation> outboundLocations = await _dbContext.OutboundLocations.Where(l => l.Full).ToListAsync();
+        return outboundLocations;
     }
 
     public async Task<List<RawMaterialLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation)
     {
-        throw new NotImplementedException();
+        List<RawMaterialLocation> rawMaterialLocations = await _dbContext.RawMaterialLocations.Include(l => l.Boxes).Where(l => l.Full && l.PartNumber == (int)productDesignation).ToListAsync();
+        return rawMaterialLocations;
     }
 
-    public async void MoveFinishedGoodToOutboundAsync()
+    public async Task MoveFinishedGoodToOutboundAsync()
     {
         throw new NotImplementedException();
     }
 
-    public async void MoveRawMaterialToProductionAsync(int quantity)
+    public async Task MoveRawMaterialToProductionAsync(ProductDesignation productDesignation, int quantity)
     {
-        throw new NotImplementedException();
+        var rawMaterialStock = await GetRawMaterialStockAsync(productDesignation);
+        List<Box<Component>> neededComponents = new List<Box<Component>>();
+        var locationsToEmpty = new List<RawMaterialLocation>();
+        var component = new Component(productDesignation);
+
+        foreach (var location in rawMaterialStock)
+        {
+            var removeQuantity = Math.Min(quantity, component.BoxCapacity * location.MaxBoxCapacity);
+            neededComponents.AddRange(location.RemoveBoxes(component, removeQuantity));
+            quantity -= removeQuantity;
+
+            if (!location.Full)
+            {
+                locationsToEmpty.Add(location);
+            }
+
+            if (quantity <= 0)
+            {
+                break;
+            }
+        }
+        //foreach (var location in locationsToEmpty)
+        //{
+        //    rawMaterialStock.Remove(location);
+        //}
+        _production.StoreComponents(neededComponents);
+        await _dbContext.SaveChangesAsync();
     }
 }

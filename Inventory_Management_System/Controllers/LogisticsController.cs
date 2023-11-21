@@ -32,16 +32,38 @@ namespace Inventory_Management_System.Controllers
         [HttpPost("OrderComponent")]
         public async Task<IActionResult> OrderComponent([Required]int quantity, [Required] string productDesignation)
         {
-            // might need a look into the generic type
-            if(Enum.TryParse(typeof(ProductDesignation), productDesignation, out object parsedValue))
+            if (quantity <= 0)
             {
-                ProductDesignation parsedString = (ProductDesignation)parsedValue;
-                await _supplierService.CreateRawMaterialAsync(quantity, parsedString);
-                return Ok(productDesignation);
+                return BadRequest("Requested quantity can not be zero or negative!");
+            }
+            // might need a look into the generic type
+            if (Enum.TryParse(typeof(ProductDesignation), productDesignation, out object parsedValue))
+            {
+                await _supplierService.CreateRawMaterialAsync(quantity, (ProductDesignation)parsedValue);
+                return Ok($"{quantity} pcs of {productDesignation} successfully ordered from supplier. Raw material locations will be filled accordingly.");
             }
             else
             {
-                return BadRequest("Incorrect productDesignation added!");
+                return BadRequest("Incorrect productDesignation!");
+            }
+        }
+
+        [HttpPost("MoveToProduction")]
+        public async Task<IActionResult> ComponentToProduction([Required] int quantity, [Required] string productDesignation)
+        {
+            if(quantity <= 0)
+            {
+                return BadRequest("Requested quantity can not be zero or negative!");
+            }
+            // might need a look into the generic type
+            if (Enum.TryParse(typeof(ProductDesignation), productDesignation, out object parsedValue))
+            {
+                await _stockService.MoveRawMaterialToProductionAsync((ProductDesignation)parsedValue, quantity);
+                return Ok($"{quantity} pcs of {productDesignation} successfully moved to production line.");
+            }
+            else
+            {
+                return BadRequest("Incorrect productDesignation!");
             }
         }
 

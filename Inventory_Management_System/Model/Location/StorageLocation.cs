@@ -52,9 +52,10 @@ namespace Inventory_Management_System.Model.Location
         {
             int numberOfBoxes = quantity / good.BoxCapacity;
             List<Box<T>> removedBoxes = new List<Box<T>>();
+            List<Box<T>> boxesCopy = Boxes.OrderBy(b => b.CreatedAt).ToList();
             for (int i = 0; i < numberOfBoxes; i++)
-            {                
-                Box<T> boxOut = Boxes[i];
+            {
+                Box<T> boxOut = boxesCopy[i];
                 Boxes.Remove(boxOut);
                 removedBoxes.Add(boxOut);
             }
