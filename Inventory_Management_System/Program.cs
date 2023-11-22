@@ -40,7 +40,8 @@ app.UseCors(builder =>
 {
     builder.WithOrigins("http://localhost:3000")
         .AllowAnyMethod()
-        .AllowAnyHeader();
+        .AllowAnyHeader()
+        ;
 });
 
 // app.UseHttpsRedirection();
@@ -129,7 +130,10 @@ void AddAuthentication()
                 ValidAudience = "apiWithAuthBackend",
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes("!SomethingSecret!")
-                ),
+                
+                    
+                    ),
+                
             };
         });
 }

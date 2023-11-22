@@ -15,18 +15,13 @@ const SetRole = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        console.log(formdata);
-
+        console.log("role: ", formdata.role);
+        console.log("name: ", formdata.userName);
         try {
             const response = await axios.patch('http://localhost:5179/Authentication/SetRole', formdata);
 
-            //Try to save token into a variable in login, and add to the header here
-
             if (response && response.data && response.data.token) {
                 // Add the token to the axios defaults for subsequent requests
-
-
                 console.log(response.data);
                 setResponseState(response.data);
             } else {
@@ -45,18 +40,23 @@ const SetRole = () => {
         }
     };
 
-
-
     return (
         <div>
             {responseState === '' ? (
                 <div>
-                    <h2>Registration</h2>
+                    <h2>Set Role</h2>
                     <form onSubmit={handleSubmit}>
                         <label>Username:</label>
-                        <input type='text' name='userName' value={formdata.username} onChange={handleInputChange} required />
+                        <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
                         <label>Role:</label>
-                        <input type='role' name='role' value={formdata.password} onChange={handleInputChange} required />
+                        <select name='role' defaultValue={formdata.role} onChange={handleInputChange} required>
+
+                            <option value={"Forklift Driver"}>Forklift Driver</option>
+                            <option value={"Admin"}>Admin</option>
+                            <option value={"Customer Planner"}>Customer Planner</option>
+                            <option value={"Production Leader"}>Production Leader</option>
+                            <option value={"Shift Leader"}>Shift Leader</option>
+                        </select>
                         <button type='submit'>Submit</button>
                     </form>
                 </div>
@@ -71,7 +71,6 @@ const SetRole = () => {
             )}
         </div>
     );
-
 };
 
 export default SetRole;
