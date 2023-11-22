@@ -2,6 +2,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom';
 import "./Layout.css";
 import { useState } from 'react';
 import Login from "../Login.jsx";
+import mainLogo from './Warehouse01.png';
 
 const Layout = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -24,13 +25,18 @@ const Layout = () => {
         <div className='Layout'>
             <nav>
                 <ul>
-                    <li>
-                        {isLoggedIn ? (
-                            <button onClick={handleLogout}>Logout</button>
-                        ) : (
-                            <Login onLogin={handleLogin} isLoggedIn={isLoggedIn} />
-                        )}
+                    <li className='imageLi'>
+                        <Link to='/'>
+                            <img src={mainLogo} alt="logo" className='mainLogo' />
+                        </Link>
                     </li>
+
+                    {/* Login button (conditionally rendered) */}
+                    {!isLoggedIn && (
+                        <li className='loginLi'>
+                            <Login onLogin={handleLogin} isLoggedIn={isLoggedIn} />
+                        </li>
+                    )}
                     <li>
                         {!isLoggedIn ? (
                             <Link to='/Register'>
@@ -49,6 +55,13 @@ const Layout = () => {
                             <button>Set Role</button>
                         </Link>
                     </li>
+                    {/* Logout button (conditionally rendered) */}
+                    {isLoggedIn && (
+                        <li className='logoutLi'>
+                            <button className='logoutBtn' onClick={handleLogout}>Logout</button>
+                        </li>
+                    )}
+
 
                 </ul>
             </nav>

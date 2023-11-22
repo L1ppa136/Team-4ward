@@ -1,6 +1,16 @@
 .login{
     color: white;
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-transform: uppercase;
+    font-size: 1rem;
+
+    
+}
+
+.login input {
+    background-color: black;
+    color:white;
+    border-style:groove;
+    border-width: 1px;
+    border-radius: 3px;
+    height: 1.2rem;
+    margin-right: 0.5rem;
 }
