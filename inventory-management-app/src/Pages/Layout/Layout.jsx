@@ -12,6 +12,9 @@ const Layout = () => {
 
     const handleLogout = () => {
         setLoggedIn(false);
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('email');
     };
 
     return (
@@ -31,10 +34,16 @@ const Layout = () => {
                         )}
                     </li>
                     <li>
+                        <Link to='/User'>
+                            <button>Profile</button>
+                        </Link>
+                    </li>
+                    <li>
                         <Link to='/SetRole'>
                             <button>Set Role</button>
                         </Link>
                     </li>
+                    
                 </ul>
             </nav>
             <Outlet />

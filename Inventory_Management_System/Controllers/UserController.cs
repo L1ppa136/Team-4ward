@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +17,8 @@ public class UserController : ControllerBase
         _userManager = userManager;
     }
 
-    [HttpPost("Roles")]
-    public async Task<IActionResult> GetUserRoles([FromBody] string userName)
+    [HttpPost("Role")]
+    public async Task<IActionResult> GetUserRoles([Required] string userName)
     {
         if (string.IsNullOrEmpty(userName))
         {
@@ -32,8 +33,9 @@ public class UserController : ControllerBase
         }
 
         var roles = await _userManager.GetRolesAsync(user);
+        var role = roles[0];
 
-        return Ok(new { UserName = user.UserName, Roles = roles });
+        return Ok(role);
     }
 
 }
