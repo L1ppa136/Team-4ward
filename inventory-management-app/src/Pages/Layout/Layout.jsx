@@ -25,17 +25,20 @@ const Layout = () => {
             <nav>
                 <ul>
                     <li>
-                        <Link to='/Register'>
-                            <button>Register</button>
-                        </Link>
-                    </li>
-                    <li>
                         {isLoggedIn ? (
                             <button onClick={handleLogout}>Logout</button>
                         ) : (
                             <Login onLogin={handleLogin} isLoggedIn={isLoggedIn} />
                         )}
                     </li>
+                    <li>
+                        {!isLoggedIn ? (
+                            <Link to='/Register'>
+                                <button>Register</button>
+                            </Link>
+                        ) : (null)}
+                    </li>
+
                     <li>
                         <Link to='/User'>
                             <button>Profile</button>
@@ -46,7 +49,7 @@ const Layout = () => {
                             <button>Set Role</button>
                         </Link>
                     </li>
-                    
+
                 </ul>
             </nav>
             <Outlet />
