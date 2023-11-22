@@ -8,6 +8,7 @@ import Registration from './Pages/Registration.jsx';
 import Layout from './Pages/Layout/Layout.jsx';
 import Login from './Pages/Login.jsx';
 import SetRole from './Pages/SetRole.jsx';
+import User from './Pages/User.jsx';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: '/Login',
         element: <Login />,
+      },
+      {
+        path: '/User',
+        element: <User />,
       },
       {
         path: '/SetRole',

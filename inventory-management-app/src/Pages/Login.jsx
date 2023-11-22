@@ -13,33 +13,40 @@ const Login = ({ onLogin, isLoggedIn }) => {
         setFormData({ ...formdata, [e.target.name]: e.target.value });
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const loginUser = async (formData) => {
         try {
-            const response = await axios.post('http://localhost:5179/Authentication/Login', formdata);
-
-            if (response && response.data && response.data.token) {
-                // Add the token to the axios defaults for subsequent requests
-                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-
-                console.log(response.data);
-                setResponseState(response.data);
-                onLogin(); // Call the onLogin callback from the parent component
-            } else {
-                console.error('Invalid response:', response);
-                setResponseState(response.data);
-            }
+            const response = await axios.post('http://localhost:5179/Authentication/Login', formData);
+            return response.data;
         } catch (error) {
-            if (error.response && error.response.data) {
-                console.error('Login failed:', error.response.data);
-                setResponseState(error.response.data);
-            } else {
-                console.error('Unexpected error:', error);
-                setResponseState(error.response.data);
-            }
+            throw error.response ? error.response.data : error;
         }
     };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const responseData = await loginUser(formdata);
+    
+            if (responseData && responseData.token) {
+                // Add the token to the axios defaults for subsequent requests
+                axios.defaults.headers.common['Authorization'] = `Bearer ${responseData.token}`;
+                localStorage.setItem('accessToken', responseData.token);
+                localStorage.setItem('userName', responseData.userName);
+                localStorage.setItem('email', responseData.email);
+
+                console.log(responseData);
+                setResponseState(responseData);
+                onLogin(); // Call the onLogin callback from the parent component
+            } else {
+                console.error('Invalid response:', responseData);
+                setResponseState(responseData);
+            }
+        } catch (error) {
+            console.error('Login failed:', error);
+            setResponseState(error);
+        }
+    };
+    
 
     return (
         <div>
