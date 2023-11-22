@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Login.css';
 
 const Login = ({ onLogin, isLoggedIn }) => {
     const [formdata, setFormData] = useState({
@@ -49,10 +50,9 @@ const Login = ({ onLogin, isLoggedIn }) => {
     
 
     return (
-        <div>
+        <div className='login'>
             {responseState === '' ? (
                 <div>
-                    <h2>Login</h2>
                     <form onSubmit={handleSubmit}>
                         <label>Username:</label>
                         <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
