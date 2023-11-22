@@ -1,7 +1,9 @@
-﻿using Inventory_Management_System.Contracts;
+﻿using System.ComponentModel.DataAnnotations;
+using Inventory_Management_System.Contracts;
 using Inventory_Management_System.Service.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Inventory_Management_System.Controllers
 {
@@ -25,7 +27,9 @@ namespace Inventory_Management_System.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _authenticationService.RegisterAsync(request.Email, request.UserName, request.Password, _defaultRole);
+            var result =
+                await _authenticationService.RegisterAsync(request.Email, request.UserName, request.Password,
+                    _defaultRole);
 
             if (!result.Success)
             {
@@ -66,10 +70,10 @@ namespace Inventory_Management_System.Controllers
         [HttpPatch("SetRole"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<AuthenticationResponse>> ChangeRole([FromBody] SetRoleRequest request)
         {
-           // if (!ModelState.IsValid)
-           // {
-           //     return BadRequest(ModelState);
-           // }
+            // if (!ModelState.IsValid)
+            // {
+            //     return BadRequest(ModelState);
+            // }
 
             var result = await _authenticationService.SetRole(request.UserName, request.Role);
 
@@ -80,6 +84,24 @@ namespace Inventory_Management_System.Controllers
             }
 
             return Ok(new AuthenticationResponse(result.Email, result.UserName, ""));
+        }
+
+        [HttpPost("Roles")]
+        public async Task<IActionResult> GetUserRoles([FromBody] RoleRequest request)
+        {
+            if (string.IsNullOrEmpty(request.userName))
+            {
+                return BadRequest("Invalid request. Provide a valid userName in the request body.");
+            }
+
+            var roles = await _authenticationService.GetRoles(request.userName);
+
+            if (roles.IsNullOrEmpty())
+            {
+                return NotFound("Roles are not found.");
+            }
+
+            return Ok(roles);
         }
     }
 }

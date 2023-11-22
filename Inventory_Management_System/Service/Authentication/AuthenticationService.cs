@@ -83,5 +83,13 @@ namespace Inventory_Management_System.Service.Authentication
 
             return new AuthenticationResult(true, managedUser.Email, managedUser.UserName, "");
         }
+
+        public async Task<IList<string>> GetRoles(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            var roles = await _userManager.GetRolesAsync(user);
+            // var role = roles[0];
+            return roles;
+        }
     }
 }
