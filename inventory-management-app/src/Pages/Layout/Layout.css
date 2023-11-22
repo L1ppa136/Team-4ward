@@ -29,7 +29,8 @@
   }
 
   .Layout nav button:hover {
-    box-shadow: 0px 0px 5px rgb(255, 255, 255);
+    box-shadow: 0px 0px 5px #f6e839;
+    color: #f6e839;
   }
   .mainLogo{
     width: 50px;
