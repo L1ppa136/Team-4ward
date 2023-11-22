@@ -20,7 +20,7 @@ const SetRole = () => {
         try {
             const response = await axios.patch('http://localhost:5179/Authentication/SetRole', formdata);
 
-            if (response && response.data && response.data.token) {
+            if (response && response.data) {
                 // Add the token to the axios defaults for subsequent requests
                 console.log(response.data);
                 setResponseState(response.data);
@@ -55,7 +55,7 @@ const SetRole = () => {
                             <option value={"Admin"}>Admin</option>
                             <option value={"Customer Planner"}>Customer Planner</option>
                             <option value={"Production Leader"}>Production Leader</option>
-                            <option value={"Shift Leader"}>Shift Leader</option>
+                            <option value={"Warehouse Leader"}>Warehouse Leader</option>
                         </select>
                         <button type='submit'>Submit</button>
                     </form>
