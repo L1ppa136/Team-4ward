@@ -1,13 +1,15 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import "./Layout.css";
 import { useState } from 'react';
 import Login from "../Login.jsx";
 
 const Layout = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = () => {
         setLoggedIn(true);
+        navigate('/User');
     };
 
     const handleLogout = () => {
