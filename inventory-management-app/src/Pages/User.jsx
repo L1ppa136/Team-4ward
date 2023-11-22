@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const User = () => {
 
-    const [role, setRole] = useState(null);
+    const [roles, setRoles] = useState(null);
     const [hasData, setHasData] = useState(false);
 
     const userName = localStorage.getItem('userName')
@@ -17,14 +17,15 @@ const User = () => {
     }, [])
 
 
-    const getUserRole = async (userName) => {
+    const getUserRoles = async (userName) => {
         if (hasData) {
             try {
-                const response = await axios.post('http://localhost:5179/User/Role', { userName: userName });
+                const response = await axios.post('http://localhost:5179/Authentication/Roles', { userName });
 
                 if (response && response.data) {
-                    setRole(response.data);
-                    localStorage.setItem('role', response.data);
+                    setRoles(response.data);
+                    localStorage.setItem('roles', response.data);
+                    console.log("response: ", response.data);
 
                 } else {
                     console.error('Invalid response:', response);
@@ -39,24 +40,31 @@ const User = () => {
     };
 
     useEffect(() => {
-        console.log(userName)
-        getUserRole(userName);
-        console.log(role);
-    }, [])
+        const fetchData = async () => {
+            await getUserRoles(userName);
+        };
+    
+        fetchData();
+    }, [hasData]);
+    
 
 
     return (
-        <div>
-            Username: {userName},
-            Email: {email},
-            Token: {token}
-            
-            {role && (
-                <div>
-                    Role: {role},
-                </div>
-            )}
-        </div>
+        <div className='userData'>
+        {roles && (
+            <ul>
+                <li>Username: {userName}</li>
+                <li>Email: {email}</li>
+                <li>Roles:
+                    <ul>
+                        {roles.map((role, index) => (
+                            <li key={index}>{role}</li>
+                        ))}
+                    </ul>
+                </li>
+            </ul>
+        )}
+    </div>
     )
 }
 
