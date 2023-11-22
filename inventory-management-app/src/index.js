@@ -9,6 +9,7 @@ import Layout from './Pages/Layout/Layout.jsx';
 import Login from './Pages/Login.jsx';
 import SetRole from './Pages/SetRole.jsx';
 import User from './Pages/User.jsx';
+import Home from './Pages/Home.jsx';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
     element: <Layout />,
     // errorElement: <ErrorPage />,
     children: [
+      {
+        path: '/',
+        element: <Home />,
+      },  
       {
         path: '/Register',
         element: <Registration />,
