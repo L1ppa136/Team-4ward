@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ProdSupplyTable() {
+function ProdSupplyTable({prodSupplyComponents, handleDelivery}) {
   return (
 
     //Copied, TBD
@@ -11,20 +11,17 @@ function ProdSupplyTable() {
           <th>Product Designation</th>
           <th>Time of Arrival</th>
           <th>Part Number</th>
-          <th>Inspection Procedure</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {inboundComponents.map((component)=>(
+        {prodSupplyComponents.map((component)=>(
           <tr key={component.id}>
             <td>{component.ProductDesignation}</td>
             <td>{component.CreatedAt}</td>
             <td>{component.PartNumber}</td>
             <td>
-              {component.inspection ? 
-              <button type="button" onClick={()=> handleDelivery(component.id)}>Deliver</button> 
-              :
-              <button type="button" onClick={() => inspectComponent(component.id)}>Inspect</button>}
+              <button type="button" onClick={()=> handleDelivery(component.id)}>Collect & Deliver</button> 
             </td>
           </tr>
         ))}

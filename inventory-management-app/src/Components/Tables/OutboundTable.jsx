@@ -1,6 +1,6 @@
 import React from 'react'
 
-function OutboundTable() {
+function OutboundTable({outboundComponents, handleShipping}) {
   return (
 
     //Copied, TBD
@@ -11,20 +11,17 @@ function OutboundTable() {
           <th>Product Designation</th>
           <th>Time of Arrival</th>
           <th>Part Number</th>
-          <th>Inspection Procedure</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {inboundComponents.map((component)=>(
+        {outboundComponents.map((component)=>(
           <tr key={component.id}>
             <td>{component.ProductDesignation}</td>
             <td>{component.CreatedAt}</td>
             <td>{component.PartNumber}</td>
             <td>
-              {component.inspection ? 
-              <button type="button" onClick={()=> handleDelivery(component.id)}>Deliver</button> 
-              :
-              <button type="button" onClick={() => inspectComponent(component.id)}>Inspect</button>}
+              <button type="button" onClick={() => handleShipping(component.id)}>Ship to Customer</button>
             </td>
           </tr>
         ))}

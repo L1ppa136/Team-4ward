@@ -1,10 +1,12 @@
 import React, { useState, useEffect, Component } from 'react'
 import InboundTable from "../../Components/Tables/InboundTable"
 import Loading from "../../Components/Loading" 
+import "./Table.css";
+
 //CreateFetch Request w/ Axios for the DB, Check role, if role is wrong, navigate to the "NoAuthorization" page.
 
 const fetchInboundComponents = async () =>{
-    //empty
+        return console.log("juj")
 }
 
 //Kellenek "ál" értékek a componentshez, amiket itt érdemes megkreálni, egy "Inspection status-t" hozzá adunk a componenthez, azt az inspectel megváltoztatjuk
@@ -15,7 +17,10 @@ const InboundList = () => {
     const [inboundComponents, setInboundComponents] = useState([])
 
     const handleInboundFetch = async() =>{
-        const components = await fetchInboundComponents();
+        let components = []
+        //components = await fetchInboundComponents();
+        var component = {id: 1, ProductDesignation: 1, CreatedAt: 11, PartNumber: 11}
+        components.push(component)
         setInboundComponents(components);
         setLoading(false);
         console.log(inboundComponents);
@@ -25,7 +30,6 @@ const InboundList = () => {
     const handleCollect = async(id) =>{
         
     }
-
 
     useEffect(()=>{
         handleInboundFetch()

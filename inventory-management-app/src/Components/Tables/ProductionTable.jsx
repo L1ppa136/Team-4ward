@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ProductionTable({orderableGoods, handleOrder}) {
+function ProductionTable({productionPlans, handleProductionOrder}) {
   return (
     <div className="ProductionTable">
     <table>
@@ -12,12 +12,12 @@ function ProductionTable({orderableGoods, handleOrder}) {
         </tr>
       </thead>
       <tbody>
-        {orderableGoods.map((good)=>(
-          <tr key={good.id}>
-            <td>{good.ProductDesignation}</td>
+        {productionPlans.map((plan)=>(
+          <tr key={plan.Name}>
+            <td>{plan.ProductDesignation}</td>
             <td>dropdownmenuhere</td>
             <td>
-              <button type="button" onClick={()=> handleOrder(good.id)}>Order</button> 
+              <button type="button" onClick={()=> handleProductionOrder(plan.id)}>Order</button> 
             </td>
           </tr>
         ))}

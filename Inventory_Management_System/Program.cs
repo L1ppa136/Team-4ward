@@ -43,7 +43,7 @@ app.UseCors(builder =>
         .AllowAnyHeader();
 });
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 //Authentication and Authorization
 app.UseAuthentication();
