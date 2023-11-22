@@ -17,6 +17,7 @@ const Layout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userName');
         localStorage.removeItem('email');
+        navigate('/');
     };
 
     return (
