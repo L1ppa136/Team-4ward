@@ -1,55 +1,70 @@
 ﻿using System.Collections;
 using Inventory_Management_System.Model.Good;
+using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Management_System.Model.Location
 {
     public abstract class StorageLocation<T> where T : Good.Good
     {
         public Guid Id { get; set; }
-        public string LocationId
-        {
-            get
-            {
-                return $"{StorageLine}-{StoragePosition}-{StorageStare}";
-            }
-        }
-
-        public int StorageLine { get; set; }
-        public int StoragePosition { get; set; }
-        public int  StorageStare { get; set; }
-
-        
+        public string LocationName{get; set; }
         public LocationType LocationType { get; set; }
-        
-        public Queue<Tuple<T, int>> Boxes { get; set; }
+        public List<Box<T>> Boxes { get; set; }
         public int PartNumber { get; set; }
+        public int MaxBoxCapacity { get; set; }
+        public bool Full { get; set; }
 
-        public StorageLocation()
+        protected StorageLocation()
         {
-           Boxes = new Queue<Tuple<T, int>>();
+            Full = false;
+            Boxes = new List<Box<T>>();
+
+        }
+        public StorageLocation(string locationName, int maxBoxCapacity)
+        {
+            Full = false;
+            LocationName = locationName;
+            MaxBoxCapacity = maxBoxCapacity;
+            Boxes = new List<Box<T>>();
         }
 
-        public virtual void FillGoods(T good, int quantity) 
+        public virtual void FillGoods(T good, int quantity)
         {
-            int numberOfBoxes = quantity / good.BoxCapacity;
             SetPartNumber(good);
 
-            for (int i = 0; i < numberOfBoxes; i++)
+            while (quantity > 0 && Full == false)
             {
-                Boxes.Enqueue(new Tuple<T, int>(good, good.BoxCapacity));
+                int boxCapacity = Math.Min(quantity, good.BoxCapacity);
+                Box<T> newBox = new Box<T>(good, boxCapacity, this.LocationName);
+                Boxes.Add(newBox);
+
+                quantity -= boxCapacity;
+                if(Boxes.Count >= MaxBoxCapacity)
+                {
+                    Full = true;
+                }
             }
         }
-        public virtual Queue<Tuple<T, int>> RemoveBoxes(T good, int quantity)
+
+        public virtual List<Box<T>> RemoveBoxes(T good, int quantity)
         {
             int numberOfBoxes = quantity / good.BoxCapacity;
-            Queue<Tuple<T,int>> removedBoxes = new Queue<Tuple<T,int>>();
+            List<Box<T>> removedBoxes = new List<Box<T>>();
+            List<Box<T>> boxesCopy = Boxes.OrderBy(b => b.CreatedAt).ToList();
             for (int i = 0; i < numberOfBoxes; i++)
             {
-                Tuple<T, int> boxOut = Boxes.Dequeue();
-                removedBoxes.Enqueue(boxOut);
+                Box<T> boxOut = boxesCopy[i];
+                Boxes.Remove(boxOut);
+                removedBoxes.Add(boxOut);
             }
-            if(Boxes.Count <= 0)
+            if(Boxes.Count <= MaxBoxCapacity)
+            {
+                Full = false;
+            }
+            else if(Boxes.Count <= 0)
             {
                 ClearPartNumber();
             }

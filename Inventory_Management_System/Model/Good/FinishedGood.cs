@@ -4,10 +4,13 @@ namespace Inventory_Management_System.Model.Good
 {
     public class FinishedGood : Good
     {
-        public Dictionary<Component, int> BuildOfMaterial { get; set; }
-        public FinishedGood(Dictionary<Component, int> buildOfMaterial) : base(ProductDesignation.Airbag)
+        protected FinishedGood() 
         {
-            BuildOfMaterial = new Dictionary<Component, int>();
+
+        }
+        public FinishedGood(Dictionary<ProductDesignation, int> buildOfMaterial) : base(ProductDesignation.Airbag)
+        {
+            BoxCapacity = 100;
         }
     }
 }

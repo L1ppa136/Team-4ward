@@ -1,9 +1,12 @@
 ﻿using Inventory_Management_System.Model.Good;
+using Inventory_Management_System.Model.HandlingUnit;
 
 namespace Inventory_Management_System.Service.Repositories
 {
     public interface IProduction
     {
-        Queue<Tuple<FinishedGood,int>> Produce(Queue<Tuple<Component,int>> queue);
+        Task<Queue<Box<FinishedGood>>> ProduceAsync();
+        void StoreComponents(List<Box<Component>> components);
+        List<Box<FinishedGood>> MoveFinishedGoodFromLine();
     }
 }

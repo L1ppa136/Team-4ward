@@ -1,13 +1,14 @@
 using System.Collections;
 using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
+using Inventory_Management_System.Model.HandlingUnit;
 
 namespace Inventory_Management_System.Model.Location;
 
-public class OutboundLocation : StorageLocation<FinishedGood>
+public class FinishedGoodLocation : StorageLocation<FinishedGood>
 {
-
-    public OutboundLocation()
+    private FinishedGoodLocation() { }
+    public FinishedGoodLocation(string locationID) : base(locationID, 10)
     {
         LocationType = LocationType.FinishedGood;
     }
@@ -17,7 +18,7 @@ public class OutboundLocation : StorageLocation<FinishedGood>
         base.FillGoods(good, quantity);
     }
 
-    public override Queue<Tuple<FinishedGood, int>> RemoveBoxes(FinishedGood good, int quantity)
+    public override List<Box<FinishedGood>> RemoveBoxes(FinishedGood good, int quantity)
     {
         return base.RemoveBoxes(good, quantity);
     }
