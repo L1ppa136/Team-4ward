@@ -72,7 +72,11 @@ namespace Inventory_Management_System.Controllers
         public IActionResult Create()
         {
             _stockService.CreateStorageLocations();
+
+            Console.WriteLine();
+            
             return Ok();
         }
     }
 }
+        
