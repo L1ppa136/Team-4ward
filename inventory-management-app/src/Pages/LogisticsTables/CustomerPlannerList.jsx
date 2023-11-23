@@ -1,67 +1,45 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomerPlannerTable from '../../Components/Tables/CustomerPlannerTable';
-import Loading from '../../Components/Loading';
-import axios from 'axios';
+
 import "./Table.css";
 
-const fetchCustomerDemands = async() =>{
-    let response = await axios.get("ENDPOINT")
-  }
-  
-  const createCustomerDemands= async(order) =>{
-    let response = await axios.post("//ENDPOINT", "order")
-  }
-  
 
 function CustomerPlannerList() {
-    const [loading, setLoading] = useState(true)
-    const [customerDemands, setCustomerDemands] = useState([])
-    const [formdata, setFormData] = useState({
-        "Quantity": '',
-        "Product Designation": ''
-    });
-    const [responseState, setResponseState] = useState('');
+  const [formdata, setFormData] = useState({
+    "quantity": '',
+    "productDesignation": 'Airbag'
+  });
 
-    const handleInputChange = (e) => {
-        setFormData({...formdata, [e.target.name]: e.target.value });
-    }
+  const handleInputChange = (e) => {
+    setFormData({ ...formdata, [e.target.name]: e.target.value });
+  }
 
-    const handlePlanFetch = async() =>{
-        let plans = []
-        //plans = await fetchProductionPlans();
-        let component = {id: 1, ProductDesignation: 1, CreatedAt: 11, PartNumber: 11}
-        let component2 = {id: 2, ProductDesignation: 2, CreatedAt: 21, PartNumber: 21}
-        plans.push(component)
-        plans.push(component2)
-        setCustomerDemands(plans);
-        setLoading(false);
-        console.log(customerDemands);
-    }
-  
-    //Ez a method kiveszi a beérkező componentseket és eltárolja őket az adott raktárba (RawMat).
-    const handleCustomerDemands = async(id) =>{
-        console.log("juj")
-    }
-  
-    useEffect(() => {
-      console.log(customerDemands); // This will log the updated value
-  }, [customerDemands]);
 
-    useEffect(()=>{
-        handlePlanFetch()
-    },[])
-  
-    if (loading) {
-        return <Loading />;
-      };
-  
-    return (
+
+  const createComponents = () => {
+    // Convert the formdata object to a JSON string before storing
+    const formDataString = JSON.stringify(formdata);
+
+    // Store the JSON string in localStorage
+    localStorage.setItem("OrderList", formDataString);
+
+    // Retrieve the JSON string from localStorage
+    const locStoreDataString = localStorage.getItem("OrderList");
+
+    // Parse the JSON string back to an object
+    const locStoreDataObject = JSON.parse(locStoreDataString);
+
+    // Log the keys of the object and the original formdata
+    console.log(Object.values(locStoreDataObject), Object.keys(locStoreDataObject));
+    console.log(formdata);
+  }
+
+  return (
     <CustomerPlannerTable
-    customerDemands = {customerDemands}
-    handleCustomerDemand = {handleCustomerDemands}
-    handleInputChange = {handleInputChange}
+      createComponents={createComponents}
+      handleInputChange={handleInputChange}
     />
-    )
+  )
 }
 
 export default CustomerPlannerList

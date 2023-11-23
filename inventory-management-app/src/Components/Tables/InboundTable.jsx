@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
 
 
-function InboundTable({inboundComponents, handleCollect}) {
+function InboundTable({ inboundComponents, handleStore, nextOrderList }) {
 
   return (
     <div className="InboundTable">
@@ -10,19 +10,20 @@ function InboundTable({inboundComponents, handleCollect}) {
         <thead>
           <tr>
             <th>Product Designation</th>
-            <th>Time of Arrival</th>
-            <th>Part Number</th>
+            <th>Quantity</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {inboundComponents && inboundComponents.map((component)=>(
-            <tr key={component.id}>
-              <td>{component.ProductDesignation}</td>
-              <td>{component.CreatedAt}</td>
-              <td>{component.PartNumber}</td>
+          {inboundComponents && inboundComponents.map(({ prodDes, quantity }) => (
+            <tr>
+              <td>{prodDes}</td>
+              <td>{quantity}</td>
               <td>
-                <button type="button" onClick={()=> handleCollect(component.id)}>Send to Storage</button>
+                <button type="button" onClick={() => handleStore(quantity, prodDes)}>Send to Storage</button>
+              </td>
+              <td>
+                <button type="button" onClick={() => nextOrderList()}>Next Order List</button>
               </td>
             </tr>
           ))}
