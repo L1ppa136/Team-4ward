@@ -1,16 +1,24 @@
+.Layout nav {
+  background-color: black;
+}
 .Layout nav ul {
-    margin: 0;
-    padding: 0;
+    margin-right: 10%;
+    margin-left:10%;
     list-style-type: none;
     display: flex;
     align-items: center;
     padding: 0.5rem;
-    background-color: black;
+
     color: white;
     font-size: 1.5rem;
     font-weight: bold;
+ 
   }
-  
+
+  .Layout nav ul{
+    margin-left: auto;
+  }
+
   .Layout nav button {
     padding: 0.7rem 1.7rem;
     font-weight: bold;
@@ -19,7 +27,22 @@
     border: none;
     text-transform: uppercase;
   }
-  
+
   .Layout nav button:hover {
-    box-shadow: 0px 0px 5px rgb(255, 255, 255);
+    box-shadow: 0px 0px 5px #f6e839;
+    color: #f6e839;
   }
+  .mainLogo{
+    width: 50px;
+    padding-right: 30px;
+  }
+
+  .imageLi{
+    margin-left: 10%;
+    margin-right: auto;
+  }
+
+  .loginLi {
+    margin:auto;
+  }
+

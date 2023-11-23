@@ -56,6 +56,7 @@ namespace Inventory_Management_System.Service.Authentication
             {
                 return InvalidPassword(managedUser.Email, managedUser.UserName);
             }
+            
             var roles = await _userManager.GetRolesAsync(managedUser);
             var accessToken = _tokenService.CreateToken(managedUser, roles.Last());
 
@@ -82,6 +83,14 @@ namespace Inventory_Management_System.Service.Authentication
             await _userManager.AddToRoleAsync(managedUser, role);
 
             return new AuthenticationResult(true, managedUser.Email, managedUser.UserName, "");
+        }
+
+        public async Task<IList<string>> GetRoles(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            var roles = await _userManager.GetRolesAsync(user);
+            // var role = roles[0];
+            return roles;
         }
     }
 }

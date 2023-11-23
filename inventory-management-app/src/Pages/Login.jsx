@@ -1,57 +1,63 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Login.css';
 
-const Login = () => {
-    const [formdata, setFormData] = useState({
+const Login = ({ onLogin, isLoggedIn }) => {
+    const initialFormData = {
         "userName": '',
         "password": ''
-    });
+    };
 
+    const [formdata, setFormData] = useState(initialFormData);
     const [responseState, setResponseState] = useState('');
 
     const handleInputChange = (e) => {
         setFormData({ ...formdata, [e.target.name]: e.target.value });
-    }
+    };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        console.log(formdata);
-
+    const loginUser = async (formData) => {
         try {
-            const response = await axios.post('http://localhost:5179/Authentication/Login', formdata);
-
-            // Check if 'response' is defined and has a 'data' property
-            if (response && response.data) {
-                console.log(response.data);
-                setResponseState(response.data);
-            } else {
-                console.error('Invalid response:', response);
-                setResponseState(response.data);
-            }
+            const response = await axios.post('http://localhost:5179/Authentication/Login', formData);
+            return response.data;
         } catch (error) {
-            // Check if 'error.response' is defined and has a 'data' property
-            if (error.response && error.response.data) {
-                console.error('Login failed:', error.response.data);
-                setResponseState(error.response.data);
-            } else {
-                console.error('Unexpected error:', error);
-                setResponseState(error.response.data);
-            }
+            throw error.response ? error.response.data : error;
         }
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const responseData = await loginUser(formdata);
+
+            if (responseData && responseData.token) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${responseData.token}`;
+                localStorage.setItem('accessToken', responseData.token);
+                localStorage.setItem('userName', responseData.userName);
+                localStorage.setItem('email', responseData.email);
+
+                setResponseState(responseData);
+                onLogin(); // Call the onLogin callback from the parent component
+            } else {
+                console.error('Invalid response:', responseData);
+                setResponseState(responseData);
+            }
+        } catch (error) {
+            console.error('Login failed:', error);
+            setResponseState(error);
+            // Reset the form state to allow the user to try again
+            setFormData(initialFormData);
+        }
+    };
 
     return (
-        <div>
+        <div className='login'>
             {responseState === '' ? (
                 <div>
-                    <h2>Login</h2>
                     <form onSubmit={handleSubmit}>
                         <label>Username:</label>
-                        <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
+                        <input type='text' name='userName' placeholder="enter username" value={formdata.userName} onChange={handleInputChange} required />
                         <label>Password:</label>
-                        <input type='password' name='password' value={formdata.password} onChange={handleInputChange} required />
+                        <input type='password' name='password' placeholder="enter password" value={formdata.password} onChange={handleInputChange} required />
                         <button type='submit'>Submit</button>
                     </form>
                 </div>
@@ -59,12 +65,21 @@ const Login = () => {
                 responseState.hasOwnProperty("Bad credentials") ? (
                     <div>
                         {responseState["Bad credentials"][0]}
+                        {/* Render the form again to allow the user to try again */}
+                        <form onSubmit={handleSubmit}>
+                            <label>Username:</label>
+                            <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
+                            <label>Password:</label>
+                            <input type='password' name='password' value={formdata.password} onChange={handleInputChange} required />
+                            <button type='submit'>Submit</button>
+                        </form>
                     </div>
-                ) : <div>{responseState.userName} has been successfully logged in.</div>
+                ) : (
+                    <div>{responseState.userName} has been successfully logged in.</div>
+                )
             )}
         </div>
     );
-    
 };
 
 export default Login;

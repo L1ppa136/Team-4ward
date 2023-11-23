@@ -9,5 +9,6 @@ namespace Inventory_Management_System.Service.Authentication
         Task<AuthenticationResult> LoginAsync(string username, string password);
 
         Task<AuthenticationResult> SetRole(string username, string role);
+        Task<IList<string>> GetRoles(string userName);
     }
 }
