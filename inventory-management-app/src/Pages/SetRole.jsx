@@ -43,7 +43,7 @@ const SetRole = () => {
     return (
         <div>
             {responseState === '' ? (
-                <div>
+                <div className='setRole'>
                     <h2>Set Role</h2>
                     <form onSubmit={handleSubmit}>
                         <label>Username:</label>
