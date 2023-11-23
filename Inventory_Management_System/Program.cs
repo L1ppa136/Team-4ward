@@ -12,12 +12,11 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var _configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.Development.json").Build();
-string? connectionString = _configuration.GetConnectionString("Default");
+var configuration = builder.Configuration;
 
 AddServices();
 ConfigureSwagger();
-AddDbContext();
+AddDbContext(configuration);
 AddAuthentication();
 AddIdentity();
 
@@ -28,6 +27,9 @@ AddRoles();
 
 //Add admin if not exists
 AddAdmin();
+
+//Migrate InventoryManagementDBContext
+DBMigration();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -44,7 +46,7 @@ app.UseCors(builder =>
         ;
 });
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 //Authentication and Authorization
 app.UseAuthentication();
@@ -52,6 +54,15 @@ app.UseAuthorization();
 app.MapControllers();
 app.Run();
 
+void DBMigration()
+{
+    // migrate any database changes on startup (includes initial db creation)
+    using (var scope = app.Services.CreateScope())
+    {
+        var dataContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
+        dataContext.Database.Migrate();
+    }
+}
 
 void AddServices()
 {
@@ -93,16 +104,16 @@ void ConfigureSwagger()
     });
 }
 
-void AddDbContext()
+void AddDbContext(IConfiguration configuration)
 {
     builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
     {
-        options.UseSqlServer(connectionString);
+        options.UseSqlServer($"Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password={configuration["ConnectionStringPassword"]};Encrypt=False;");
     });
 
     builder.Services.AddDbContext<UsersContext>(options =>
     {
-        options.UseSqlServer(connectionString);
+        options.UseSqlServer($"Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password={configuration["ConnectionStringPassword"]};Encrypt=False;");
     });
 
     builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();

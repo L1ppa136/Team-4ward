@@ -8,7 +8,7 @@ namespace Inventory_Management_System.Model.Good
         {
 
         }
-        public FinishedGood(Dictionary<Component, int> buildOfMaterial) : base(ProductDesignation.Airbag)
+        public FinishedGood(Dictionary<ProductDesignation, int> buildOfMaterial) : base(ProductDesignation.Airbag)
         {
             BoxCapacity = 100;
         }

@@ -23,7 +23,6 @@ namespace Inventory_Management_System.Model.HandlingUnit
             Good = good;
             Quantity = quantity;
             MaxCapacity = good.BoxCapacity;
-            //LocationId = locationId;
             LocationName = locationName;
             SetPartNumber(good.PartNumber);
             SetCreatedAt(good.CreatedAt);
