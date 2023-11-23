@@ -35,3 +35,7 @@ code {
   width: 100vw;
 }
 
+.submitBtn {
+  width: 10%;
+  border-radius: 3px;
+}
