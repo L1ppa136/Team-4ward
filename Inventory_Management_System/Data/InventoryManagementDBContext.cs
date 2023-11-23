@@ -13,6 +13,7 @@ namespace Inventory_Management_System.Data
         public DbSet<ComponentLocation> ComponentLocations { get; set; }
         public DbSet<FinishedGoodLocation> FinishedGoodLocations { get; set; }
         public DbSet<Box<Component>> ComponentStock { get; set; }
+        public DbSet<ProductionLocation> ProductionLocations { get; set; }
         public DbSet<Box<FinishedGood>> FinishedGoodStock { get; set; }
 
         public InventoryManagementDBContext(DbContextOptions<InventoryManagementDBContext> options) : base(options)

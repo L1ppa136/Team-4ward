@@ -117,11 +117,12 @@ void AddDbContext(IConfiguration configuration)
     });
 
     builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-    builder.Services.AddScoped<IProduction, ProductionLocation>();
+    //builder.Services.AddScoped<IProduction, ProductionLocation>();
     builder.Services.AddScoped<IStock, LogisticService>();
     builder.Services.AddScoped<ISupplier, LogisticService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
-}
+}    
+
 
 void AddAuthentication()
 {

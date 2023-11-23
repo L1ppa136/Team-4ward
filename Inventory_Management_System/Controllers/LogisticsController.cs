@@ -13,13 +13,13 @@ namespace Inventory_Management_System.Controllers
     public class LogisticsController : ControllerBase
     {
         private readonly IStock _stockService;
-        private readonly IProduction _productionService;
+        //private readonly IProduction _productionService;
         private readonly ISupplier _supplierService;
 
-        public LogisticsController(IStock stockService, IProduction productionService, ISupplier supplierService)
+        public LogisticsController(IStock stockService, ISupplier supplierService)
         {
             _stockService = stockService;
-            _productionService = productionService;
+            //_productionService = productionService;
             _supplierService = supplierService;
         }
 
@@ -72,9 +72,6 @@ namespace Inventory_Management_System.Controllers
         public IActionResult Create()
         {
             _stockService.CreateStorageLocations();
-
-            Console.WriteLine();
-            
             return Ok();
         }
     }
