@@ -46,9 +46,11 @@ const Layout = () => {
                     </li>
 
                     <li>
-                        <Link to='/User'>
-                            <button>Profile</button>
-                        </Link>
+                        {isLoggedIn ? (
+                            <Link to='/User'>
+                                <button>Profile</button>
+                            </Link>
+                        ) : (null)}
                     </li>
                     <li>
                         <Link to='/SetRole'>

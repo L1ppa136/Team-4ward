@@ -14,5 +14,18 @@ code {
 }
 
 .userData{
+  height: 50vh;
   font-weight: bold;
+  margin:3%;
+  margin-top:0%;
+  border: 2px solid #58595b;
+  border-radius: 5px;
+  color:black;
+
 }
+
+.name {
+  border-bottom: 1px solid #58595b;
+  width: 300px;
+}
+

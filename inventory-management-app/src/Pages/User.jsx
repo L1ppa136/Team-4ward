@@ -39,15 +39,15 @@ const User = () => {
         <div className='userData'>
             {userName && roles.length > 0 && (
                 <ul>
-                    <li>Username: {userName}</li>
-                    <li>Email: {email}</li>
-                    <li>Roles:
+                    <div className='name'>{userName}</div>
+                    <div>e-mail: {email}</div>
+                    <div>roles:
                         <ul>
                             {roles.map((role, index) => (
-                                <li key={index}>{role}</li>
+                                <div key={index}>{role}</div>
                             ))}
                         </ul>
-                    </li>
+                    </div>
                 </ul>
             )}
         </div>
