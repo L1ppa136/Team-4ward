@@ -10,8 +10,8 @@ namespace Inventory_Management_System.Data
 {
     public class InventoryManagementDBContext : DbContext
     {
-        public DbSet<RawMaterialLocation> RawMaterialLocations { get; set; }
-        public DbSet<OutboundLocation> OutboundLocations { get; set; }
+        public DbSet<ComponentLocation> ComponentLocations { get; set; }
+        public DbSet<FinishedGoodLocation> FinishedGoodLocations { get; set; }
         public DbSet<Box<Component>> ComponentStock { get; set; }
         public DbSet<Box<FinishedGood>> FinishedGoodStock { get; set; }
 
@@ -33,7 +33,7 @@ namespace Inventory_Management_System.Data
             //        : JsonConvert.DeserializeObject<Dictionary<Component, int>>(jsonBom)
             //);
             //MUST ADD TO ALL IMPLEMENTATIONS OF "GOOD" ABSTRACT CLASS
-            
+
             modelBuilder
             .Entity<Component>()
             .Property(g => g.ProductDesignation)

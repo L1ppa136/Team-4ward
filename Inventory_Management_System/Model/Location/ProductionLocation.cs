@@ -19,23 +19,39 @@ namespace Inventory_Management_System.Model.Location
             { ProductDesignation.WireHarness, 1 }
         };
 
-        public List<Component> Components { get; set; }
+        public int Id { get; set; }
+
+        public ProductDesignation ProductDesignation { get; set; }
+
+        public int PartNumber { get; set; }
+
+        public int Quantity { get; set; }
+
+        public List<Box<Component>> Components { get; set; }
         public List<Box<FinishedGood>> FinishedGoods { get; set; }
 
-        public ProductionLocation()
+        public ProductionLocation(List<Box<Component>> components)
         {
-            Components = new List<Component>();
+            Components = components;
             FinishedGoods = new List<Box<FinishedGood>>();
+            ProductDesignation = components.FirstOrDefault().Good.ProductDesignation;
+            PartNumber = components.FirstOrDefault().PartNumber; ;
+            Quantity = components.Count * components.FirstOrDefault().Quantity;
         }
 
         public Task<Queue<Box<FinishedGood>>> ProduceAsync()
         {
             throw new NotImplementedException();
+            //FinishedGood finishedGood = new FinishedGood(_buildOfMaterial);
+            //while (quantity > 0)
+            //{
+            //    FinishedGoods.Add(new Box<FinishedGood>(finishedGood, finishedGood.BoxCapacity, "Production"));
+            //}
         }
 
-        public void StoreComponents(Box<Component> componentBox)
+        public void StoreComponents(List<Box<Component>> components)
         {
-
+            Components.AddRange(components);
         }
 
         public List<Box<FinishedGood>> MoveFinishedGoodFromLine()

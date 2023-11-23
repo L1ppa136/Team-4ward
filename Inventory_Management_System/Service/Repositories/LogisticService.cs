@@ -11,6 +11,17 @@ public class LogisticService : IStock, ISupplier
 {
     private readonly InventoryManagementDBContext _dbContext;
     private readonly IProduction _production;
+    private readonly Dictionary<ProductDesignation, int> _buildOfMaterial = new Dictionary<ProductDesignation, int>() {
+            { ProductDesignation.Screw, 4},
+            { ProductDesignation.Nut, 4 },
+            { ProductDesignation.Cushion, 1},
+            { ProductDesignation.Diffusor, 1 },
+            { ProductDesignation.Retainer, 1},
+            { ProductDesignation.Cover, 1 },
+            { ProductDesignation.Emblem, 1 },
+            { ProductDesignation.Inflator , 1 },
+            { ProductDesignation.WireHarness, 1 }
+        };
 
     public LogisticService(InventoryManagementDBContext dbContext, IProduction production)
     {
@@ -20,6 +31,7 @@ public class LogisticService : IStock, ISupplier
 
     public void CreateStorageLocations()
     {
+        //throw new NotImplementedException();
         //Create Raw material locations
         for (int i = 1; i < 10; i++)
         {
@@ -27,8 +39,8 @@ public class LogisticService : IStock, ISupplier
             {
                 for (int k = 1; k < 6; k++)
                 {
-                    var rawMaterialLocation = new RawMaterialLocation($"{i}-{j}-{k}");
-                    _dbContext.RawMaterialLocations.Add(rawMaterialLocation);
+                    var componentLocation = new ComponentLocation($"{i}-{j}-{k}");
+                    _dbContext.ComponentLocations.Add(componentLocation);
                     _dbContext.SaveChanges();
                 }
             }
@@ -41,8 +53,8 @@ public class LogisticService : IStock, ISupplier
             {
                 for (int k = 1; k < 6; k++)
                 {
-                    var outboundLocation = new OutboundLocation($"{i}-{j}-{k}");
-                    _dbContext.OutboundLocations.Add(outboundLocation);
+                    var finishedGoodLocation = new FinishedGoodLocation($"{i}-{j}-{k}");
+                    _dbContext.FinishedGoodLocations.Add(finishedGoodLocation);
                     _dbContext.SaveChanges();
                 }
             }
@@ -55,7 +67,7 @@ public class LogisticService : IStock, ISupplier
     {
         var emptyLocations = await GetEmptyRawMaterialLocationsAsync();
         Component component = new(productDesignation);
-        var locationsToRemove = new List<RawMaterialLocation>();
+        var locationsToRemove = new List<ComponentLocation>();
         foreach (var location in emptyLocations)
         {
             var fillingQuantity = Math.Min(quantity, component.BoxCapacity * location.MaxBoxCapacity);
@@ -80,35 +92,63 @@ public class LogisticService : IStock, ISupplier
         await _dbContext.SaveChangesAsync();
     }
 
-public async Task<List<OutboundLocation>> GetEmptyFinishedGoodLocationsAsync()
+    public async Task<List<FinishedGoodLocation>> GetEmptyFinishedGoodLocationsAsync()
     {
-        List<OutboundLocation> emptyLocations = await _dbContext.OutboundLocations.Where(l => !l.Boxes.Any()).ToListAsync();
+        List<FinishedGoodLocation> emptyLocations = await _dbContext.FinishedGoodLocations.Where(l => !l.Full).ToListAsync();
         return emptyLocations;
     }
 
-    public async Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocationsAsync()
+    public async Task<List<ComponentLocation>> GetEmptyRawMaterialLocationsAsync()
     {
-        List<RawMaterialLocation> emptyLocations = await _dbContext.RawMaterialLocations.Where(l => !l.Boxes.Any()).ToListAsync();
+        List<ComponentLocation> emptyLocations = await _dbContext.ComponentLocations.Where(l => !l.Full).ToListAsync();
         return emptyLocations;
     }
 
-    public async Task<List<OutboundLocation>> GetFinishedGoodStockAsync(ProductDesignation productDesignation)
+    public async Task<List<FinishedGoodLocation>> GetFinishedGoodStockAsync()
+    {
+        List<FinishedGoodLocation> outboundLocations = await _dbContext.FinishedGoodLocations.Where(l => l.Full).ToListAsync();
+        return outboundLocations;
+    }
+
+    public async Task<List<ComponentLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation)
+    {
+        List<ComponentLocation> rawMaterialLocations = await _dbContext.ComponentLocations.Include(l => l.Boxes).Where(l => l.Full && l.PartNumber == (int)productDesignation).ToListAsync();
+        return rawMaterialLocations;
+    }
+
+    public async Task MoveFinishedGoodToOutboundAsync()
     {
         throw new NotImplementedException();
     }
 
-    public async Task<List<RawMaterialLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation)
+    public async Task MoveRawMaterialToProductionAsync(ProductDesignation productDesignation, int quantity)
     {
-        throw new NotImplementedException();
-    }
+        var rawMaterialStock = await GetRawMaterialStockAsync(productDesignation);
+        List<Box<Component>> neededComponents = new List<Box<Component>>();
+        var locationsToEmpty = new List<ComponentLocation>();
+        var component = new Component(productDesignation);
 
-    public async void MoveFinishedGoodToOutboundAsync()
-    {
-        throw new NotImplementedException();
-    }
+        foreach (var location in rawMaterialStock)
+        {
+            var removeQuantity = Math.Min(quantity, component.BoxCapacity * location.MaxBoxCapacity);
+            neededComponents.AddRange(location.RemoveBoxes(component, removeQuantity));
+            quantity -= removeQuantity;
 
-    public async void MoveRawMaterialToProductionAsync(int quantity)
-    {
-        throw new NotImplementedException();
+            if (!location.Full)
+            {
+                locationsToEmpty.Add(location);
+            }
+
+            if (quantity <= 0)
+            {
+                break;
+            }
+        }
+        //foreach (var location in locationsToEmpty)
+        //{
+        //    rawMaterialStock.Remove(location);
+        //}
+        _production.StoreComponents(neededComponents);
+        await _dbContext.SaveChangesAsync();
     }
 }

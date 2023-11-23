@@ -7,9 +7,15 @@ import reportWebVitals from './reportWebVitals';
 import Registration from './Pages/Registration.jsx';
 import Layout from './Pages/Layout/Layout.jsx';
 import Login from './Pages/Login.jsx';
+
 import SetRole from './Pages/SetRole.jsx';
 import User from './Pages/User.jsx';
 import Home from './Pages/Home.jsx';
+import InboundList from "./Pages/LogisticsTables/InboundList.jsx";
+import OutboundList from "./Pages/LogisticsTables/OutBoundList.jsx";
+import ProdSupplyList from "./Pages/LogisticsTables/ProdSupplyList.jsx";
+import ProductionList from "./Pages/LogisticsTables/ProductionList.jsx";
+import CustomerPlannerList from './Pages/LogisticsTables/CustomerPlannerList.jsx';
 
 const router = createBrowserRouter([
   {
@@ -36,9 +42,27 @@ const router = createBrowserRouter([
       {
         path: '/SetRole',
         element: <SetRole />,
-
-      }
-
+      },
+      {
+            path: '/Inbound',
+            element: <InboundList />,
+          },
+          {
+            path: '/Outbound',
+            element: <OutboundList />,
+          },
+          {
+            path: '/Prodsupply',
+            element: <ProdSupplyList />,
+          },
+          {
+            path: '/Production',
+            element: <ProductionList />,
+          }, 
+          {
+            path: '/CustomerPlanner',
+            element: <CustomerPlannerList />,
+          }, 
     ]
   }
 ]);

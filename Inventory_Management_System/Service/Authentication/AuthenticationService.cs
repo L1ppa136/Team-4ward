@@ -56,7 +56,7 @@ namespace Inventory_Management_System.Service.Authentication
             {
                 return InvalidPassword(managedUser.Email, managedUser.UserName);
             }
-
+            
             var roles = await _userManager.GetRolesAsync(managedUser);
             var accessToken = _tokenService.CreateToken(managedUser, roles.Last());
 
