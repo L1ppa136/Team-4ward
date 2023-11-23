@@ -4,6 +4,7 @@ using Inventory_Management_System.Model.Good;
 using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Location;
 using Microsoft.EntityFrameworkCore;
+using System.Resources;
 
 namespace Inventory_Management_System.Service.Repositories;
 
@@ -123,6 +124,48 @@ public class LogisticService : IStock, ISupplier
         return rawMaterialLocations;
     }
 
+    //public async Task<Component> GetComponentByDesignation(ProductDesignation productDesignation)
+    //{
+    //    return await ;
+    //}
+
+    //public async Task<List<Box<FinishedGood>>> ProduceAsnyc(int orderedQuantity)
+    //{
+    //    if(await ResourcesAvailable(orderedQuantity))
+    //    {
+    //        var productionLocations = await GetProductionLocations();
+    //        foreach (var material in _buildOfMaterial)
+    //        {
+    //            foreach (var location in productionLocations)
+    //            {
+    //                location.Quantity -= material.Value;
+    //                if(location.Quantity <= 0)
+    //                {
+    //                    var component = await GetComponentByDesignation(material.Key);
+    //                }
+    //            }
+    //        }
+    //    }
+    //    return new List<Box<FinishedGood>>();
+    //}
+
+    private async Task<bool> ResourcesAvailable(int orderedQuantity)
+    {
+        var productionLocations = await GetProductionLocations();
+        int resources = 0;
+        foreach(var material in _buildOfMaterial)
+        {
+            foreach(var location in productionLocations)
+            {
+                if(location.LocationName == material.Key.ToString())
+                {
+                    resources += location.Quantity / material.Value;
+                }
+            }
+        }
+        return resources >= orderedQuantity;
+    }
+
     public async Task MoveFinishedGoodToOutboundAsync()
     {
         throw new NotImplementedException();
@@ -130,8 +173,13 @@ public class LogisticService : IStock, ISupplier
 
     public async Task<ProductionLocation> GetProductionLocationByComponent(ProductDesignation componentDesignation)
     {
-        ProductionLocation productionLocation = _dbContext.ProductionLocations.FirstOrDefault(p => p.LocationName == componentDesignation.ToString());
+        ProductionLocation productionLocation = await _dbContext.ProductionLocations.FirstOrDefaultAsync(p => p.LocationName == componentDesignation.ToString());
         return productionLocation;
+    }
+
+    public async Task<List<ProductionLocation>> GetProductionLocations()
+    {
+        return await _dbContext.ProductionLocations.ToListAsync();
     }
 
     public async Task MoveRawMaterialToProductionAsync(ProductDesignation productDesignation, int quantity)

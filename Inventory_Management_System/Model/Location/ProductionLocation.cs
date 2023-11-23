@@ -5,7 +5,7 @@ using Inventory_Management_System.Service.Repositories;
 
 namespace Inventory_Management_System.Model.Location
 {
-    public class ProductionLocation //: IProduction
+    public class ProductionLocation
     {
         private readonly Dictionary<ProductDesignation, int> _buildOfMaterial = new Dictionary<ProductDesignation, int>() {
             { ProductDesignation.Screw, 4},
@@ -33,11 +33,6 @@ namespace Inventory_Management_System.Model.Location
             FinishedGoods = new List<Box<FinishedGood>>();
         }
 
-        public Task<Queue<Box<FinishedGood>>> ProduceAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public void StoreComponents(List<Box<Component>> components)
         {
             var partNumber = components.First().PartNumber;
@@ -58,15 +53,5 @@ namespace Inventory_Management_System.Model.Location
             return FinishedGoods;
         }
 
-        //private int CalculateFGFromResources()
-        //{
-            
-        //    foreach(var material in _buildOfMaterial)
-        //    {
-        //        int availableQuantity = 
-        //        int neededQuantityPerFG = material.Value;
-
-        //    }
-        //}
     }
 }
