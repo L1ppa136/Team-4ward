@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from 'react'
+import React, { useState, useEffect} from 'react'
 import InboundTable from "../../Components/Tables/InboundTable"
 import Loading from "../../Components/Loading" 
 import "./Table.css";
@@ -10,7 +10,7 @@ const fetchInboundComponents = async () =>{
 }
 
 //Kellenek "ál" értékek a componentshez, amiket itt érdemes megkreálni, egy "Inspection status-t" hozzá adunk a componenthez, azt az inspectel megváltoztatjuk
-// és ez engedélyezi a 
+// és ez engedélyezi a  
 
 const InboundList = () => {
     const [loading, setLoading] = useState(true)

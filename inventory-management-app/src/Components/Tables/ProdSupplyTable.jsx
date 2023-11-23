@@ -15,7 +15,7 @@ function ProdSupplyTable({prodSupplyComponents, handleDelivery}) {
         </tr>
       </thead>
       <tbody>
-        {prodSupplyComponents.map((component)=>(
+        {prodSupplyComponents && prodSupplyComponents.map((component)=>(
           <tr key={component.id}>
             <td>{component.ProductDesignation}</td>
             <td>{component.CreatedAt}</td>

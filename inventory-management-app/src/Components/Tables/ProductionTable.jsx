@@ -12,7 +12,7 @@ function ProductionTable({productionPlans, handleProductionOrder}) {
         </tr>
       </thead>
       <tbody>
-        {productionPlans.map((plan)=>(
+        {productionPlans && productionPlans.map((plan)=>(
           <tr key={plan.Name}>
             <td>{plan.ProductDesignation}</td>
             <td>dropdownmenuhere</td>

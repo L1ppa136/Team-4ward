@@ -1,10 +1,15 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 
-function CustomerPlannerList(productionPlans,handleOrder) {
+function CustomerPlannerList({customerDemands,handleOrder, handleInputChange}) {
+  
+  const [selectedOption, setSelectedOption] = useState('');
+
+  useEffect(()=>{
+    console.log(selectedOption)
+  },[selectedOption])
+
     return (
-
-        //Copied, TBD
-        <div className="OutboundTable">
+        <div className="CustomerPlannerTable">
         <table>
           <thead>
             <tr>
@@ -15,13 +20,19 @@ function CustomerPlannerList(productionPlans,handleOrder) {
             </tr>
           </thead>
           <tbody>
-            {productionPlans.map((component)=>(
+            {customerDemands && customerDemands.map((component)=>(
               <tr key={component.id}>
                 <td>{component.ProductDesignation}</td>
-                <td>{component.CreatedAt}</td>
+                <td>
+                  <select id="dropdown" name="Quantity" value={selectedOption} onChange={handleInputChange}>
+                    <option value="200">200</option>
+                    <option value="400">400</option>
+                    <option value="600">600</option>
+                  </select>
+                </td>
                 <td>{component.PartNumber}</td>
                 <td>
-                  <button type="button" onClick={() => handleOrder(component.id)}>Ship to Customer</button>
+                  <button type="button" onClick={() => handleOrder(component.ProductDesignation)}>Ship to Customer</button>
                 </td>
               </tr>
             ))}

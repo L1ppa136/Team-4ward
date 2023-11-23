@@ -15,7 +15,7 @@ function OutboundTable({outboundComponents, handleShipping}) {
         </tr>
       </thead>
       <tbody>
-        {outboundComponents.map((component)=>(
+        {outboundComponents && outboundComponents.map((component)=>(
           <tr key={component.id}>
             <td>{component.ProductDesignation}</td>
             <td>{component.CreatedAt}</td>

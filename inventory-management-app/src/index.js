@@ -11,6 +11,7 @@ import InboundList from "./Pages/LogisticsTables/InboundList.jsx";
 import OutboundList from "./Pages/LogisticsTables/OutBoundList.jsx";
 import ProdSupplyList from "./Pages/LogisticsTables/ProdSupplyList.jsx";
 import ProductionList from "./Pages/LogisticsTables/ProductionList.jsx";
+import CustomerPlannerList from './Pages/LogisticsTables/CustomerPlannerList.jsx';
 
 
 const router = createBrowserRouter([
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
           {
             path: '/Production',
             element: <ProductionList />,
+          }, 
+          {
+            path: '/CustomerPlanner',
+            element: <CustomerPlannerList />,
           }, 
       ]
   }
