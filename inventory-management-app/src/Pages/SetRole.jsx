@@ -57,7 +57,7 @@ const SetRole = () => {
                             <option value={"Production Leader"}>Production Leader</option>
                             <option value={"Warehouse Leader"}>Warehouse Leader</option>
                         </select>
-                        <button type='submit'>Submit</button>
+                        <button type='submit' className='submitBtn'>Submit</button>
                     </form>
                 </div>
             ) : (
