@@ -39,7 +39,7 @@ function CustomerPlannerTable({ customerDemands, handleOrder, handleInputChange,
             </td>
             <td>
               <select placeholder='Quantity' name="quantity" value={selectedQuantityOption} onChange={(e) => handleOptionAndChangeForQuantity(e)}>
-                <option value="" disabled selected>Select your option</option>
+                <option value="" disabled selected hidden>Select your option</option>
                 <option value="200">200</option>
                 <option value="400">400</option>
                 <option value="600">600</option>

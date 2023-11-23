@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CustomerPlannerTable from '../../Components/Tables/CustomerPlannerTable';
-
 import "./Table.css";
-
 
 function CustomerPlannerList() {
   const [formdata, setFormData] = useState({
@@ -13,8 +11,6 @@ function CustomerPlannerList() {
   const handleInputChange = (e) => {
     setFormData({ ...formdata, [e.target.name]: e.target.value });
   }
-
-
 
   const createComponents = () => {
     // Convert the formdata object to a JSON string before storing

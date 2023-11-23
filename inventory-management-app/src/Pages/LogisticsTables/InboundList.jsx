@@ -4,7 +4,6 @@ import Loading from "../../Components/Loading"
 import "./Table.css";
 import axios from 'axios';
 
-
 const fetchStoreComponents = async (orderItem) => {
     try {
         const response = await axios.post('http://localhost:5179/Logistics/OrderComponent', orderItem);
@@ -14,17 +13,8 @@ const fetchStoreComponents = async (orderItem) => {
     }
 }
 
-
-//Kellenek "ál" értékek a componentshez, amiket itt érdemes megkreálni, egy "Inspection status-t" hozzá adunk a componenthez, azt az inspectel megváltoztatjuk
-// és ez engedélyezi a  
-
 const InboundList = () => {
-    const [loading, setLoading] = useState(true)
-    const [inboundComponents, setInboundComponents] = useState({})
-
-
-
-
+    const [inboundComponents, setInboundComponents] = useState([])
 
     const GenerateOrderList = (Quantity) => {
         return {
@@ -40,18 +30,25 @@ const InboundList = () => {
         }
     }
 
-    // betenni egy buttonre (következő store ciklus, ha jött infó a customer plannertől)
-    const nextOrderList = () => {
+    const nextOrderList = async () => {
         let CustomerOrder = localStorage.getItem("OrderList");
-        let generatedList = GenerateOrderList(CustomerOrder.quantity);
-        setInboundComponents(generatedList);
-        console.log(CustomerOrder);
-        localStorage.removeItem("OrderList");
-        return inboundComponents;
+        let CustomerOrderObject = await JSON.parse(CustomerOrder)
+
+        if (CustomerOrderObject && CustomerOrderObject.quantity !== null) {
+            let generatedList = GenerateOrderList(CustomerOrderObject.quantity);
+            let keyValueArr = Object.entries(generatedList).map(([key, value])=>{
+                console.log(key, value)
+                return {key, value}
+            })
+            setInboundComponents(keyValueArr);
+            console.log("Components here!" + inboundComponents.map((comp)=>console.log(comp)));
+            localStorage.removeItem("OrderList");
+            return inboundComponents;
+        }
+        return console.log("No quantity in Order")
     }
 
-
-    //Ez a method kiveszi a beérkező componentseket és eltárolja őket az adott raktárba (RawMat).
+    //NEM MÜKÖDIK
     const handleStore = (quantity, productDesignation) => {
         var componentToFetch = { "quantity": quantity, "productDesignation": productDesignation };
         fetchStoreComponents(componentToFetch);
@@ -66,17 +63,17 @@ const InboundList = () => {
     };
 
     useEffect(() => {
+        console.log("HERE", inboundComponents);
+      }, [inboundComponents]);
 
-    }, [inboundComponents]);
+    useEffect(() => {
+    }, []);
 
-    if (loading) {
-        return <Loading />;
-    };
 
     return (
         <InboundTable
             inboundComponents={inboundComponents}
-            handleCollect={handleStore}
+            handleStore={handleStore}
             nextOrderList={nextOrderList}
         />
     )
