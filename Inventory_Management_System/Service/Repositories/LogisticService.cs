@@ -31,6 +31,7 @@ public class LogisticService : IStock, ISupplier
 
     public void CreateStorageLocations()
     {
+        //throw new NotImplementedException();
         //Create Raw material locations
         for (int i = 1; i < 10; i++)
         {
@@ -38,8 +39,8 @@ public class LogisticService : IStock, ISupplier
             {
                 for (int k = 1; k < 6; k++)
                 {
-                    var rawMaterialLocation = new RawMaterialLocation($"{i}-{j}-{k}");
-                    _dbContext.RawMaterialLocations.Add(rawMaterialLocation);
+                    var componentLocation = new ComponentLocation($"{i}-{j}-{k}");
+                    _dbContext.ComponentLocations.Add(componentLocation);
                     _dbContext.SaveChanges();
                 }
             }
@@ -52,8 +53,8 @@ public class LogisticService : IStock, ISupplier
             {
                 for (int k = 1; k < 6; k++)
                 {
-                    var outboundLocation = new OutboundLocation($"{i}-{j}-{k}");
-                    _dbContext.OutboundLocations.Add(outboundLocation);
+                    var finishedGoodLocation = new FinishedGoodLocation($"{i}-{j}-{k}");
+                    _dbContext.FinishedGoodLocations.Add(finishedGoodLocation);
                     _dbContext.SaveChanges();
                 }
             }
@@ -66,7 +67,7 @@ public class LogisticService : IStock, ISupplier
     {
         var emptyLocations = await GetEmptyRawMaterialLocationsAsync();
         Component component = new(productDesignation);
-        var locationsToRemove = new List<RawMaterialLocation>();
+        var locationsToRemove = new List<ComponentLocation>();
         foreach (var location in emptyLocations)
         {
             var fillingQuantity = Math.Min(quantity, component.BoxCapacity * location.MaxBoxCapacity);
@@ -91,27 +92,27 @@ public class LogisticService : IStock, ISupplier
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<List<OutboundLocation>> GetEmptyFinishedGoodLocationsAsync()
+    public async Task<List<FinishedGoodLocation>> GetEmptyFinishedGoodLocationsAsync()
     {
-        List<OutboundLocation> emptyLocations = await _dbContext.OutboundLocations.Where(l => !l.Full).ToListAsync();
+        List<FinishedGoodLocation> emptyLocations = await _dbContext.FinishedGoodLocations.Where(l => !l.Full).ToListAsync();
         return emptyLocations;
     }
 
-    public async Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocationsAsync()
+    public async Task<List<ComponentLocation>> GetEmptyRawMaterialLocationsAsync()
     {
-        List<RawMaterialLocation> emptyLocations = await _dbContext.RawMaterialLocations.Where(l => !l.Full).ToListAsync();
+        List<ComponentLocation> emptyLocations = await _dbContext.ComponentLocations.Where(l => !l.Full).ToListAsync();
         return emptyLocations;
     }
 
-    public async Task<List<OutboundLocation>> GetFinishedGoodStockAsync()
+    public async Task<List<FinishedGoodLocation>> GetFinishedGoodStockAsync()
     {
-        List<OutboundLocation> outboundLocations = await _dbContext.OutboundLocations.Where(l => l.Full).ToListAsync();
+        List<FinishedGoodLocation> outboundLocations = await _dbContext.FinishedGoodLocations.Where(l => l.Full).ToListAsync();
         return outboundLocations;
     }
 
-    public async Task<List<RawMaterialLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation)
+    public async Task<List<ComponentLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation)
     {
-        List<RawMaterialLocation> rawMaterialLocations = await _dbContext.RawMaterialLocations.Include(l => l.Boxes).Where(l => l.Full && l.PartNumber == (int)productDesignation).ToListAsync();
+        List<ComponentLocation> rawMaterialLocations = await _dbContext.ComponentLocations.Include(l => l.Boxes).Where(l => l.Full && l.PartNumber == (int)productDesignation).ToListAsync();
         return rawMaterialLocations;
     }
 
@@ -124,7 +125,7 @@ public class LogisticService : IStock, ISupplier
     {
         var rawMaterialStock = await GetRawMaterialStockAsync(productDesignation);
         List<Box<Component>> neededComponents = new List<Box<Component>>();
-        var locationsToEmpty = new List<RawMaterialLocation>();
+        var locationsToEmpty = new List<ComponentLocation>();
         var component = new Component(productDesignation);
 
         foreach (var location in rawMaterialStock)

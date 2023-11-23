@@ -5,10 +5,10 @@ using Inventory_Management_System.Model.HandlingUnit;
 
 namespace Inventory_Management_System.Model.Location;
 
-public class OutboundLocation : StorageLocation<FinishedGood>
+public class FinishedGoodLocation : StorageLocation<FinishedGood>
 {
-    private OutboundLocation() { }
-    public OutboundLocation(string locationID) : base(locationID, 10)
+    private FinishedGoodLocation() { }
+    public FinishedGoodLocation(string locationID) : base(locationID, 10)
     {
         LocationType = LocationType.FinishedGood;
     }

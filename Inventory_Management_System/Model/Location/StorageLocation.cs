@@ -3,13 +3,14 @@ using Inventory_Management_System.Model.Good;
 using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Management_System.Model.Location
 {
     public abstract class StorageLocation<T> where T : Good.Good
     {
         public Guid Id { get; set; }
-        public string LocationName { get; set; }
+        public string LocationName{get; set; }
         public LocationType LocationType { get; set; }
         public List<Box<T>> Boxes { get; set; }
         public int PartNumber { get; set; }
@@ -59,10 +60,13 @@ namespace Inventory_Management_System.Model.Location
                 Boxes.Remove(boxOut);
                 removedBoxes.Add(boxOut);
             }
-            if(Boxes.Count <= 0)
+            if(Boxes.Count <= MaxBoxCapacity)
+            {
+                Full = false;
+            }
+            else if(Boxes.Count <= 0)
             {
                 ClearPartNumber();
-                Full = false;
             }
             return removedBoxes;
         }

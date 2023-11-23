@@ -1,4 +1,5 @@
-﻿using Inventory_Management_System.Model.Enums;
+﻿using Inventory_Management_System.Contracts;
+using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Location;
 using Inventory_Management_System.Service.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -25,22 +26,22 @@ namespace Inventory_Management_System.Controllers
         [HttpGet("Outbound")]
         public async Task<IActionResult> GetAllOutbound() 
         {
-            List<OutboundLocation> outboundLocations = await _stockService.GetEmptyFinishedGoodLocationsAsync();
+            List<FinishedGoodLocation> outboundLocations = await _stockService.GetEmptyFinishedGoodLocationsAsync();
             return Ok(outboundLocations);
         }
 
         [HttpPost("OrderComponent")]
-        public async Task<IActionResult> OrderComponent([Required]int quantity, [Required] string productDesignation)
+        public async Task<IActionResult> OrderComponent([FromBody] ComponentOrderRequest request)
         {
-            if (quantity <= 0)
+            if (request.Quantity <= 0)
             {
                 return BadRequest("Requested quantity can not be zero or negative!");
             }
             // might need a look into the generic type
-            if (Enum.TryParse(typeof(ProductDesignation), productDesignation, out object parsedValue))
+            if (Enum.TryParse(typeof(ProductDesignation), request.ProductDesignation, out object parsedValue))
             {
-                await _supplierService.CreateRawMaterialAsync(quantity, (ProductDesignation)parsedValue);
-                return Ok($"{quantity} pcs of {productDesignation} successfully ordered from supplier. Raw material locations will be filled accordingly.");
+                await _supplierService.CreateRawMaterialAsync(request.Quantity, (ProductDesignation)parsedValue);
+                return Ok($"{request.Quantity} pcs of {request.ProductDesignation} successfully ordered from supplier. Raw material locations will be filled accordingly.");
             }
             else
             {
@@ -49,17 +50,17 @@ namespace Inventory_Management_System.Controllers
         }
 
         [HttpPost("MoveToProduction")]
-        public async Task<IActionResult> ComponentToProduction([Required] int quantity, [Required] string productDesignation)
+        public async Task<IActionResult> ComponentToProduction([FromBody] ComponentOrderRequest request)
         {
-            if(quantity <= 0)
+            if(request.Quantity <= 0)
             {
                 return BadRequest("Requested quantity can not be zero or negative!");
             }
             // might need a look into the generic type
-            if (Enum.TryParse(typeof(ProductDesignation), productDesignation, out object parsedValue))
+            if (Enum.TryParse(typeof(ProductDesignation), request.ProductDesignation, out object parsedValue))
             {
-                await _stockService.MoveRawMaterialToProductionAsync((ProductDesignation)parsedValue, quantity);
-                return Ok($"{quantity} pcs of {productDesignation} successfully moved to production line.");
+                await _stockService.MoveRawMaterialToProductionAsync((ProductDesignation)parsedValue, request.Quantity);
+                return Ok($"{request.Quantity} pcs of {request.ProductDesignation} successfully moved to production line.");
             }
             else
             {

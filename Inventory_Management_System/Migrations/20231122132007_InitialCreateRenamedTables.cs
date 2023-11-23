@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Inventory_Management_System.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreateRenamedTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,22 @@ namespace Inventory_Management_System.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ComponentLocations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LocationType = table.Column<int>(type: "int", nullable: false),
+                    PartNumber = table.Column<int>(type: "int", nullable: false),
+                    MaxBoxCapacity = table.Column<int>(type: "int", nullable: false),
+                    Full = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComponentLocations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FinishedGood",
                 columns: table => new
                 {
@@ -44,7 +60,7 @@ namespace Inventory_Management_System.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OutboundLocations",
+                name: "FinishedGoodLocations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -56,52 +72,7 @@ namespace Inventory_Management_System.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OutboundLocations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RawMaterialLocations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LocationType = table.Column<int>(type: "int", nullable: false),
-                    PartNumber = table.Column<int>(type: "int", nullable: false),
-                    MaxBoxCapacity = table.Column<int>(type: "int", nullable: false),
-                    Full = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RawMaterialLocations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FinishedGoodStock",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PartNumber = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GoodId = table.Column<int>(type: "int", nullable: true),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    MaxCapacity = table.Column<int>(type: "int", nullable: false),
-                    OutboundLocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FinishedGoodStock", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FinishedGoodStock_FinishedGood_GoodId",
-                        column: x => x.GoodId,
-                        principalTable: "FinishedGood",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_FinishedGoodStock_OutboundLocations_OutboundLocationId",
-                        column: x => x.OutboundLocationId,
-                        principalTable: "OutboundLocations",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_FinishedGoodLocations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,22 +87,56 @@ namespace Inventory_Management_System.Migrations
                     GoodId = table.Column<int>(type: "int", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     MaxCapacity = table.Column<int>(type: "int", nullable: false),
-                    RawMaterialLocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ComponentLocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ComponentStock", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ComponentStock_ComponentLocations_ComponentLocationId",
+                        column: x => x.ComponentLocationId,
+                        principalTable: "ComponentLocations",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_ComponentStock_Component_GoodId",
                         column: x => x.GoodId,
                         principalTable: "Component",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FinishedGoodStock",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PartNumber = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GoodId = table.Column<int>(type: "int", nullable: true),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    MaxCapacity = table.Column<int>(type: "int", nullable: false),
+                    FinishedGoodLocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FinishedGoodStock", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ComponentStock_RawMaterialLocations_RawMaterialLocationId",
-                        column: x => x.RawMaterialLocationId,
-                        principalTable: "RawMaterialLocations",
+                        name: "FK_FinishedGoodStock_FinishedGoodLocations_FinishedGoodLocationId",
+                        column: x => x.FinishedGoodLocationId,
+                        principalTable: "FinishedGoodLocations",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FinishedGoodStock_FinishedGood_GoodId",
+                        column: x => x.GoodId,
+                        principalTable: "FinishedGood",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComponentStock_ComponentLocationId",
+                table: "ComponentStock",
+                column: "ComponentLocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ComponentStock_GoodId",
@@ -139,19 +144,14 @@ namespace Inventory_Management_System.Migrations
                 column: "GoodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ComponentStock_RawMaterialLocationId",
-                table: "ComponentStock",
-                column: "RawMaterialLocationId");
+                name: "IX_FinishedGoodStock_FinishedGoodLocationId",
+                table: "FinishedGoodStock",
+                column: "FinishedGoodLocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FinishedGoodStock_GoodId",
                 table: "FinishedGoodStock",
                 column: "GoodId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FinishedGoodStock_OutboundLocationId",
-                table: "FinishedGoodStock",
-                column: "OutboundLocationId");
         }
 
         /// <inheritdoc />
@@ -164,16 +164,16 @@ namespace Inventory_Management_System.Migrations
                 name: "FinishedGoodStock");
 
             migrationBuilder.DropTable(
+                name: "ComponentLocations");
+
+            migrationBuilder.DropTable(
                 name: "Component");
 
             migrationBuilder.DropTable(
-                name: "RawMaterialLocations");
+                name: "FinishedGoodLocations");
 
             migrationBuilder.DropTable(
                 name: "FinishedGood");
-
-            migrationBuilder.DropTable(
-                name: "OutboundLocations");
         }
     }
 }

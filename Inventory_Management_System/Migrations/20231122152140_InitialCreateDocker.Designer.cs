@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory_Management_System.Migrations
 {
     [DbContext(typeof(InventoryManagementDBContext))]
-    [Migration("20231121121453_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20231122152140_InitialCreateDocker")]
+    partial class InitialCreateDocker
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,9 @@ namespace Inventory_Management_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid?>("ComponentLocationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -104,14 +107,11 @@ namespace Inventory_Management_System.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("RawMaterialLocationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("GoodId");
+                    b.HasIndex("ComponentLocationId");
 
-                    b.HasIndex("RawMaterialLocationId");
+                    b.HasIndex("GoodId");
 
                     b.ToTable("ComponentStock");
                 });
@@ -127,6 +127,9 @@ namespace Inventory_Management_System.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("FinishedGoodLocationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("GoodId")
                         .HasColumnType("int");
 
@@ -137,9 +140,6 @@ namespace Inventory_Management_System.Migrations
                     b.Property<int>("MaxCapacity")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("OutboundLocationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PartNumber")
                         .HasColumnType("int");
 
@@ -148,14 +148,14 @@ namespace Inventory_Management_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GoodId");
+                    b.HasIndex("FinishedGoodLocationId");
 
-                    b.HasIndex("OutboundLocationId");
+                    b.HasIndex("GoodId");
 
                     b.ToTable("FinishedGoodStock");
                 });
 
-            modelBuilder.Entity("Inventory_Management_System.Model.Location.OutboundLocation", b =>
+            modelBuilder.Entity("Inventory_Management_System.Model.Location.ComponentLocation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,10 +179,10 @@ namespace Inventory_Management_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OutboundLocations");
+                    b.ToTable("ComponentLocations");
                 });
 
-            modelBuilder.Entity("Inventory_Management_System.Model.Location.RawMaterialLocation", b =>
+            modelBuilder.Entity("Inventory_Management_System.Model.Location.FinishedGoodLocation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -206,41 +206,41 @@ namespace Inventory_Management_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RawMaterialLocations");
+                    b.ToTable("FinishedGoodLocations");
                 });
 
             modelBuilder.Entity("Inventory_Management_System.Model.HandlingUnit.Box<Inventory_Management_System.Model.Good.Component>", b =>
                 {
+                    b.HasOne("Inventory_Management_System.Model.Location.ComponentLocation", null)
+                        .WithMany("Boxes")
+                        .HasForeignKey("ComponentLocationId");
+
                     b.HasOne("Inventory_Management_System.Model.Good.Component", "Good")
                         .WithMany()
                         .HasForeignKey("GoodId");
-
-                    b.HasOne("Inventory_Management_System.Model.Location.RawMaterialLocation", null)
-                        .WithMany("Boxes")
-                        .HasForeignKey("RawMaterialLocationId");
 
                     b.Navigation("Good");
                 });
 
             modelBuilder.Entity("Inventory_Management_System.Model.HandlingUnit.Box<Inventory_Management_System.Model.Good.FinishedGood>", b =>
                 {
+                    b.HasOne("Inventory_Management_System.Model.Location.FinishedGoodLocation", null)
+                        .WithMany("Boxes")
+                        .HasForeignKey("FinishedGoodLocationId");
+
                     b.HasOne("Inventory_Management_System.Model.Good.FinishedGood", "Good")
                         .WithMany()
                         .HasForeignKey("GoodId");
 
-                    b.HasOne("Inventory_Management_System.Model.Location.OutboundLocation", null)
-                        .WithMany("Boxes")
-                        .HasForeignKey("OutboundLocationId");
-
                     b.Navigation("Good");
                 });
 
-            modelBuilder.Entity("Inventory_Management_System.Model.Location.OutboundLocation", b =>
+            modelBuilder.Entity("Inventory_Management_System.Model.Location.ComponentLocation", b =>
                 {
                     b.Navigation("Boxes");
                 });
 
-            modelBuilder.Entity("Inventory_Management_System.Model.Location.RawMaterialLocation", b =>
+            modelBuilder.Entity("Inventory_Management_System.Model.Location.FinishedGoodLocation", b =>
                 {
                     b.Navigation("Boxes");
                 });

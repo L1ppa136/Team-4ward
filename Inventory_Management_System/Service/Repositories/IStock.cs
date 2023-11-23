@@ -7,10 +7,10 @@ namespace Inventory_Management_System.Service.Repositories
     public interface IStock
     {
         void CreateStorageLocations();
-        Task<List<OutboundLocation>> GetFinishedGoodStockAsync(); //ProductDesignation includes PartNumber as well, easier to query
-        Task<List<RawMaterialLocation>> GetRawMaterialStockAsync(ProductDesignation productDesgination);
-        Task<List<RawMaterialLocation>> GetEmptyRawMaterialLocationsAsync();
-        Task<List<OutboundLocation>> GetEmptyFinishedGoodLocationsAsync();
+        Task<List<FinishedGoodLocation>> GetFinishedGoodStockAsync(); //ProductDesignation includes PartNumber as well, easier to query
+        Task<List<ComponentLocation>> GetRawMaterialStockAsync(ProductDesignation productDesgination);
+        Task<List<ComponentLocation>> GetEmptyRawMaterialLocationsAsync();
+        Task<List<FinishedGoodLocation>> GetEmptyFinishedGoodLocationsAsync();
         Task MoveRawMaterialToProductionAsync(ProductDesignation productDesignation, int quantity);
         Task MoveFinishedGoodToOutboundAsync();
     }

@@ -4,10 +4,10 @@ using Inventory_Management_System.Model.HandlingUnit;
 
 namespace Inventory_Management_System.Model.Location
 {
-    public class RawMaterialLocation : StorageLocation<Component>
+    public class ComponentLocation : StorageLocation<Component>
     {
-        private RawMaterialLocation() { }
-        public RawMaterialLocation(string locationID) : base(locationID, 20)
+        private ComponentLocation() { }
+        public ComponentLocation(string locationID) : base(locationID, 20)
         {
             LocationType = LocationType.RawMaterial;
         }
