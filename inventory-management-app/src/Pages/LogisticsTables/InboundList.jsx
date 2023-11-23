@@ -1,49 +1,81 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import InboundTable from "../../Components/Tables/InboundTable"
-import Loading from "../../Components/Loading" 
+import Loading from "../../Components/Loading"
 import "./Table.css";
+import axios from 'axios';
 
-//CreateFetch Request w/ Axios for the DB, Check role, if role is wrong, navigate to the "NoAuthorization" page.
-
-const fetchInboundComponents = async () =>{
-        return console.log("juj")
+const fetchStoreComponents = async (orderItem) => {
+    try {
+        const response = await axios.post('http://localhost:5179/Logistics/OrderComponent', orderItem);
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error;
+    }
 }
 
-//Kellenek "ál" értékek a componentshez, amiket itt érdemes megkreálni, egy "Inspection status-t" hozzá adunk a componenthez, azt az inspectel megváltoztatjuk
-// és ez engedélyezi a  
-
 const InboundList = () => {
-    const [loading, setLoading] = useState(true)
     const [inboundComponents, setInboundComponents] = useState([])
 
-    const handleInboundFetch = async() =>{
-        let components = []
-        //components = await fetchInboundComponents();
-        var component = {id: 1, ProductDesignation: 1, CreatedAt: 11, PartNumber: 11}
-        components.push(component)
-        setInboundComponents(components);
-        setLoading(false);
-        console.log(inboundComponents);
+    const GenerateOrderList = (Quantity) => {
+        return {
+            Screw: 4 * Quantity,
+            Nut: 4 * Quantity,
+            Cushion: 1 * Quantity,
+            Diffusor: 1 * Quantity,
+            Retrainer: 1 * Quantity,
+            Cover: 1 * Quantity,
+            Emblem: 1 * Quantity,
+            Inflator: 1 * Quantity,
+            Wireharness: 1 * Quantity
+        }
     }
 
-    //Ez a method kiveszi a beérkező componentseket és eltárolja őket az adott raktárba (RawMat).
-    const handleCollect = async(id) =>{
-        
+    const nextOrderList = async () => {
+        let CustomerOrder = localStorage.getItem("OrderList");
+        let CustomerOrderObject = await JSON.parse(CustomerOrder)
+
+        if (CustomerOrderObject && CustomerOrderObject.quantity !== null) {
+            let generatedList = GenerateOrderList(CustomerOrderObject.quantity);
+            let keyValueArr = Object.entries(generatedList).map(([key, value])=>{
+                console.log(key, value)
+                return {key, value}
+            })
+            setInboundComponents(keyValueArr);
+            console.log("Components here!" + inboundComponents.map((comp)=>console.log(comp)));
+            localStorage.removeItem("OrderList");
+            return inboundComponents;
+        }
+        return console.log("No quantity in Order")
     }
 
-    useEffect(()=>{
-        handleInboundFetch()
-    },[])
+    //NEM MÜKÖDIK
+    const handleStore = (quantity, productDesignation) => {
+        var componentToFetch = { "quantity": quantity, "productDesignation": productDesignation };
+        fetchStoreComponents(componentToFetch);
+        removeItem(productDesignation);
+    }
 
-    if (loading) {
-        return <Loading />;
-      };
+    const removeItem = (productDes) => {
+        const updatedOrderList = { ...inboundComponents };
+        delete updatedOrderList[productDes];
+        setInboundComponents(updatedOrderList);
+        console.log(updatedOrderList)
+    };
+
+    useEffect(() => {
+        console.log("HERE", inboundComponents);
+      }, [inboundComponents]);
+
+    useEffect(() => {
+    }, []);
+
 
     return (
-    <InboundTable
-    inboundComponents = {inboundComponents}
-    handleCollect = {handleCollect}
-    />
+        <InboundTable
+            inboundComponents={inboundComponents}
+            handleStore={handleStore}
+            nextOrderList={nextOrderList}
+        />
     )
 }
 
