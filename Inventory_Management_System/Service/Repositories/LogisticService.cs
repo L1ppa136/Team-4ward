@@ -112,7 +112,10 @@ public class LogisticService : IStock, ISupplier
 
     public async Task<List<ComponentLocation>> GetRawMaterialStockAsync(ProductDesignation productDesignation)
     {
-        List<ComponentLocation> rawMaterialLocations = await _dbContext.ComponentLocations.Include(l => l.Boxes).Where(l => l.Full && l.PartNumber == (int)productDesignation).ToListAsync();
+        List<ComponentLocation> rawMaterialLocations = await _dbContext.ComponentLocations
+            .Include(l => l.Boxes)
+            .Where(l => l.Full && l.PartNumber == (int)productDesignation)
+            .ToListAsync();
         return rawMaterialLocations;
     }
 
