@@ -80,6 +80,12 @@ namespace Inventory_Management_System.Service.Authentication
         public async Task<AuthenticationResult> SetRole(string username, string role)
         {
             var managedUser = await _userManager.FindByNameAsync(username);
+            if (managedUser == null)
+            {
+                return InvalidUsername(username);
+            }
+            var roles = await _userManager.GetRolesAsync(managedUser);
+            await _userManager.RemoveFromRolesAsync(managedUser, roles);
             await _userManager.AddToRoleAsync(managedUser, role);
 
             return new AuthenticationResult(true, managedUser.Email, managedUser.UserName, "");
