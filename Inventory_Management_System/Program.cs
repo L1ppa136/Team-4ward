@@ -56,11 +56,19 @@ app.Run();
 
 void DBMigration()
 {
+
     // migrate any database changes on startup (includes initial db creation)
     using (var scope = app.Services.CreateScope())
     {
         var dataContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
-        dataContext.Database.Migrate();
+        if (app.Environment.IsDevelopment())
+        {
+            dataContext.Database.EnsureCreated();
+        }
+        else
+        {
+            dataContext.Database.Migrate();
+        }
     }
 }
 

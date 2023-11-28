@@ -31,10 +31,11 @@ const Login = ({ onLogin, isLoggedIn }) => {
 
             if (responseData && responseData.token) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${responseData.token}`;
+                //felesleges ha az Axiosba menti
                 localStorage.setItem('accessToken', responseData.token);
                 localStorage.setItem('userName', responseData.userName);
                 localStorage.setItem('email', responseData.email);
-
+                //SetTimeOut a backend-es idővel megegyezzővel hogy kitöröljük az axios headerben lévő tokent. Testelésre vár
                 setResponseState(responseData);
                 onLogin(); // Call the onLogin callback from the parent component
             } else {
