@@ -62,7 +62,7 @@ const router = createBrowserRouter([
       {
         path: '/CustomerPlanner',
         element: <CustomerPlannerList />,
-      },
+      }
     ]
   }
 ]);

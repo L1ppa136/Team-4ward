@@ -55,7 +55,7 @@ const Registration = () => {
                 <input type='text' name='username' value={formdata.username} onChange={handleInputChange} required />
                 <label>Password:</label>
                 <input type='password' name='password' value={formdata.password} onChange={handleInputChange} required />
-                <button type='submit'>Submit</button>
+                <button type='submit' className='submitBtn'>Submit</button>
               </form>
             </div>
           ) : (

@@ -54,7 +54,7 @@ const Login = ({ onLogin, isLoggedIn }) => {
         <div className='login'>
             {responseState === '' ? (
                 <div>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className='loginForm'>
                         <label>Username:</label>
                         <input type='text' name='userName' placeholder="enter username" value={formdata.userName} onChange={handleInputChange} required />
                         <label>Password:</label>
@@ -67,7 +67,7 @@ const Login = ({ onLogin, isLoggedIn }) => {
                     <div>
                         {responseState["Bad credentials"][0]}
                         {/* Render the form again to allow the user to try again */}
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} className='loginForm'>
                             <label>Username:</label>
                             <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
                             <label>Password:</label>

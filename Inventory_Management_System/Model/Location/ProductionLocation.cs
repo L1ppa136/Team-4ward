@@ -5,7 +5,7 @@ using Inventory_Management_System.Service.Repositories;
 
 namespace Inventory_Management_System.Model.Location
 {
-    public class ProductionLocation : IProduction
+    public class ProductionLocation
     {
         private readonly Dictionary<ProductDesignation, int> _buildOfMaterial = new Dictionary<ProductDesignation, int>() {
             { ProductDesignation.Screw, 4},
@@ -20,37 +20,31 @@ namespace Inventory_Management_System.Model.Location
         };
 
         public int Id { get; set; }
-
-        public ProductDesignation ProductDesignation { get; set; }
-
         public int PartNumber { get; set; }
-
+        public string LocationName {get ; set; }
         public int Quantity { get; set; }
-
         public List<Box<Component>> Components { get; set; }
         public List<Box<FinishedGood>> FinishedGoods { get; set; }
 
-        public ProductionLocation(List<Box<Component>> components)
+        public ProductionLocation(string locationName)
         {
-            Components = components;
+            LocationName = locationName;
+            Components = new List<Box<Component>>();
             FinishedGoods = new List<Box<FinishedGood>>();
-            ProductDesignation = components.FirstOrDefault().Good.ProductDesignation;
-            PartNumber = components.FirstOrDefault().PartNumber; ;
-            Quantity = components.Count * components.FirstOrDefault().Quantity;
-        }
-
-        public Task<Queue<Box<FinishedGood>>> ProduceAsync()
-        {
-            throw new NotImplementedException();
-            //FinishedGood finishedGood = new FinishedGood(_buildOfMaterial);
-            //while (quantity > 0)
-            //{
-            //    FinishedGoods.Add(new Box<FinishedGood>(finishedGood, finishedGood.BoxCapacity, "Production"));
-            //}
         }
 
         public void StoreComponents(List<Box<Component>> components)
         {
+            var partNumber = components.First().PartNumber;
+            PartNumber = partNumber;
+            var productDesignation = (ProductDesignation)partNumber;
+            LocationName = productDesignation.ToString();
+            foreach(var box in components)
+            {
+                box.LocationName = LocationName;
+            }
+            var boxQuantity = components.First().Quantity;
+            Quantity += components.Count * boxQuantity;
             Components.AddRange(components);
         }
 
@@ -58,5 +52,6 @@ namespace Inventory_Management_System.Model.Location
         {
             return FinishedGoods;
         }
+
     }
 }

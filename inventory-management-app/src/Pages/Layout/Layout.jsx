@@ -3,10 +3,12 @@ import "./Layout.css";
 import { useState } from 'react';
 import Login from "../Login.jsx";
 import mainLogo from './Warehouse01.png';
+import PageSelection from '../../Components/PageSelection.jsx';
 
 const Layout = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const navigate = useNavigate();
+    const [showPageSelection, setShowPageSelection] = useState(false);
 
     const handleLogin = () => {
         setLoggedIn(true);
@@ -20,6 +22,10 @@ const Layout = () => {
         localStorage.removeItem('email');
         navigate('/');
     };
+
+    const handlePageSelect = () => {
+        setShowPageSelection(true);
+    }
 
     return (
         <div className='Layout'>
@@ -52,20 +58,18 @@ const Layout = () => {
                             </Link>
                         ) : (null)}
                     </li>
-                    <li>
-                        <Link to='/SetRole'>
-                            <button>Set Role</button>
-                        </Link>
-                    </li>
                     {/* Logout button (conditionally rendered) */}
                     {isLoggedIn && (
                         <li className='logoutLi'>
                             <button className='logoutBtn' onClick={handleLogout}>Logout</button>
                         </li>
                     )}
-
-
+                    <li>
+                        {!showPageSelection ? (
+                            <button onClick={handlePageSelect}>Select Page</button>):(null)}
+                    </li>
                 </ul>
+                    {showPageSelection && <PageSelection />}
             </nav>
             <Outlet />
         </div>

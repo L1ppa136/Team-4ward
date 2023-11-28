@@ -64,7 +64,7 @@ namespace Inventory_Management_System.Model.Location
             {
                 Full = false;
             }
-            else if(Boxes.Count <= 0)
+            if(Boxes.Count <= 0)
             {
                 ClearPartNumber();
             }
