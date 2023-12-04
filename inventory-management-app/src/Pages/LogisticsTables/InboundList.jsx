@@ -14,7 +14,8 @@ const fetchStoreComponents = async (orderItem) => {
 }
 
 const InboundList = () => {
-    const [inboundComponents, setInboundComponents] = useState([])
+    const [inboundComponents, setInboundComponents] = useState([]);
+    const [Loading, setLoading] = useState(false);
 
     const GenerateOrderList = (Quantity) => {
         return {
@@ -22,11 +23,11 @@ const InboundList = () => {
             Nut: 4 * Quantity,
             Cushion: 1 * Quantity,
             Diffusor: 1 * Quantity,
-            Retrainer: 1 * Quantity,
+            Retainer: 1 * Quantity,
             Cover: 1 * Quantity,
             Emblem: 1 * Quantity,
             Inflator: 1 * Quantity,
-            Wireharness: 1 * Quantity
+            WireHarness: 1 * Quantity
         }
     }
 
@@ -36,12 +37,12 @@ const InboundList = () => {
 
         if (CustomerOrderObject && CustomerOrderObject.quantity !== null) {
             let generatedList = GenerateOrderList(CustomerOrderObject.quantity);
-            let keyValueArr = Object.entries(generatedList).map(([key, value])=>{
+            let keyValueArr = Object.entries(generatedList).map(([key, value]) => {
                 console.log(key, value)
-                return {key, value}
+                return { key, value }
             })
             setInboundComponents(keyValueArr);
-            console.log("Components here!" + inboundComponents.map((comp)=>console.log(comp)));
+            console.log("Components here!" + inboundComponents.map((comp) => console.log(comp)));
             localStorage.removeItem("OrderList");
             return inboundComponents;
         }
@@ -49,33 +50,37 @@ const InboundList = () => {
     }
 
     //NEM MÜKÖDIK
-    const handleStore = (quantity, productDesignation) => {
-        var componentToFetch = { "quantity": quantity, "productDesignation": productDesignation };
-        fetchStoreComponents(componentToFetch);
-        removeItem(productDesignation);
+
+    const handleStore = async (quantity, productDesignation) => {
+        if (quantity !== null && productDesignation !== null) {
+            var componentToFetch = { "quantity": quantity, "productDesignation": productDesignation };
+            await fetchStoreComponents(componentToFetch);
+            removeItem(productDesignation);
+        }
     }
 
     const removeItem = (productDes) => {
-        const updatedOrderList = { ...inboundComponents };
-        delete updatedOrderList[productDes];
-        setInboundComponents(updatedOrderList);
-        console.log(updatedOrderList)
+        setLoading(true);
+        setInboundComponents(prevState => prevState.filter(item => item.key !== productDes));
+        setLoading(false);
     };
 
     useEffect(() => {
         console.log("HERE", inboundComponents);
-      }, [inboundComponents]);
+    }, [inboundComponents]);
 
     useEffect(() => {
     }, []);
 
 
     return (
-        <InboundTable
-            inboundComponents={inboundComponents}
-            handleStore={handleStore}
-            nextOrderList={nextOrderList}
-        />
+        <>{Loading ? (<Loading />) : (
+            <InboundTable
+                inboundComponents={inboundComponents}
+                handleStore={handleStore}
+                nextOrderList={nextOrderList}
+            />)}
+        </>
     )
 }
 
