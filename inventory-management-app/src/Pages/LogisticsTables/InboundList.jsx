@@ -15,6 +15,7 @@ const fetchStoreComponents = async (orderItem) => {
 
 const InboundList = () => {
     const [inboundComponents, setInboundComponents] = useState([])
+    const [Loading, setLoading] = useState(false)
 
     const GenerateOrderList = (Quantity) => {
         return {
@@ -36,12 +37,12 @@ const InboundList = () => {
 
         if (CustomerOrderObject && CustomerOrderObject.quantity !== null) {
             let generatedList = GenerateOrderList(CustomerOrderObject.quantity);
-            let keyValueArr = Object.entries(generatedList).map(([key, value])=>{
+            let keyValueArr = Object.entries(generatedList).map(([key, value]) => {
                 console.log(key, value)
-                return {key, value}
+                return { key, value }
             })
             setInboundComponents(keyValueArr);
-            console.log("Components here!" + inboundComponents.map((comp)=>console.log(comp)));
+            console.log("Components here!" + inboundComponents.map((comp) => console.log(comp)));
             localStorage.removeItem("OrderList");
             return inboundComponents;
         }
@@ -56,26 +57,27 @@ const InboundList = () => {
     }
 
     const removeItem = (productDes) => {
-        const updatedOrderList = { ...inboundComponents };
-        delete updatedOrderList[productDes];
-        setInboundComponents(updatedOrderList);
-        console.log(updatedOrderList)
+        setLoading(true);
+        setInboundComponents(prevState => prevState.filter(item => item.key !== productDes));
+        setLoading(false);
     };
 
     useEffect(() => {
         console.log("HERE", inboundComponents);
-      }, [inboundComponents]);
+    }, [inboundComponents]);
 
     useEffect(() => {
     }, []);
 
 
     return (
-        <InboundTable
+        <>{Loading ? (<Loading />) : (<InboundTable
             inboundComponents={inboundComponents}
             handleStore={handleStore}
             nextOrderList={nextOrderList}
-        />
+        />)}
+        </>
+
     )
 }
 
