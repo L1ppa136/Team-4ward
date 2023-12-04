@@ -1,6 +1,7 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import "./Layout.css";
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import Login from "../Login.jsx";
 import mainLogo from './Warehouse01.png';
 import PageSelection from '../../Components/PageSelection.jsx';
@@ -10,6 +11,14 @@ const Layout = () => {
     const navigate = useNavigate();
     const [showPageSelection, setShowPageSelection] = useState(false);
 
+    const removeUserData = () => {
+        delete axios.defaults.headers.common['Authorization'];
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('email');
+        localStorage.removeItem('roles');
+    };
+
     const handleLogin = () => {
         setLoggedIn(true);
         navigate('/User');
@@ -17,11 +26,22 @@ const Layout = () => {
 
     const handleLogout = () => {
         setLoggedIn(false);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('email');
+        removeUserData();
         navigate('/');
     };
+
+
+    //Deletes all user data after 30 mins
+    useEffect(() => {
+        const logoutTimeout = setTimeout(() => {
+            setLoggedIn(false);
+            removeUserData();
+            navigate('/');
+        }, 1 * 60 * 1000);
+
+        return () => clearTimeout(logoutTimeout);
+    }, [navigate]);
+
 
     const handlePageSelect = () => {
         setShowPageSelection(true);
@@ -66,10 +86,10 @@ const Layout = () => {
                     )}
                     <li>
                         {!showPageSelection ? (
-                            <button onClick={handlePageSelect}>Select Page</button>):(null)}
+                            <button onClick={handlePageSelect}>Select Page</button>) : (null)}
                     </li>
                 </ul>
-                    {showPageSelection && <PageSelection />}
+                {showPageSelection && <PageSelection />}
             </nav>
             <Outlet />
         </div>
