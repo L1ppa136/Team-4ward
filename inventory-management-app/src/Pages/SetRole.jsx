@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import SetRoleForm from '../Components/SetRoleForm';
 
 const SetRole = () => {
     const [formdata, setFormData] = useState({
@@ -45,20 +46,11 @@ const SetRole = () => {
             {responseState === '' ? (
                 <div className='setRole'>
                     <h2>Set Role</h2>
-                    <form onSubmit={handleSubmit}>
-                        <label>Username:</label>
-                        <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
-                        <label>Role:</label>
-                        <select name='role' defaultValue={formdata.role} onChange={handleInputChange} required>
-
-                            <option value={"Forklift Driver"}>Forklift Driver</option>
-                            <option value={"Admin"}>Admin</option>
-                            <option value={"Customer Planner"}>Customer Planner</option>
-                            <option value={"Production Leader"}>Production Leader</option>
-                            <option value={"Warehouse Leader"}>Warehouse Leader</option>
-                        </select>
-                        <button type='submit' className='submitBtn'>Submit</button>
-                    </form>
+                    <SetRoleForm
+                        handleSubmit={handleSubmit}
+                        formdata={formdata}
+                        handleInputChange={handleInputChange}
+                    />
                 </div>
             ) : (
                 responseState.message === 'Request failed with status code 405' ? (
