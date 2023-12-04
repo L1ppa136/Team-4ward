@@ -5,7 +5,7 @@ const PageSelection = () => {
     return (
         <ul className="pageSelection">
             <li>
-                <Link to='/SetRole'><button>Set Role</button></Link>
+                <Link to='/Admin'><button>Admin</button></Link>
             </li>
             <li>
                 <Link to='/Inbound'><button >Inbound</button></Link>

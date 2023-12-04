@@ -1,14 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
 import reportWebVitals from './reportWebVitals';
+import './index.css';
+
 import Registration from './Pages/Registration.jsx';
 import Layout from './Pages/Layout/Layout.jsx';
 import Login from './Pages/Login.jsx';
-
-import SetRole from './Pages/SetRole.jsx';
 import User from './Pages/User.jsx';
 import Home from './Pages/Home.jsx';
 import InboundList from "./Pages/LogisticsTables/InboundList.jsx";
@@ -16,6 +14,7 @@ import OutboundList from "./Pages/LogisticsTables/OutboundList.jsx";
 import ProdSupplyList from "./Pages/LogisticsTables/ProdSupplyList.jsx";
 import ProductionList from "./Pages/LogisticsTables/ProductionList.jsx";
 import CustomerPlannerList from './Pages/LogisticsTables/CustomerPlannerList.jsx';
+import Admin from './Pages/Admin.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,8 +39,8 @@ const router = createBrowserRouter([
         element: <User />,
       },
       {
-        path: '/SetRole',
-        element: <SetRole />,
+        path: '/Admin',
+        element: <Admin />,
       },
       {
         path: '/Inbound',
