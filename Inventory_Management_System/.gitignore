@@ -7,6 +7,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Entity Framework Migrations
+Migrations/
+
 # User-specific files
 *.rsuser
 *.suo

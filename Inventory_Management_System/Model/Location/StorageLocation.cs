@@ -60,11 +60,11 @@ namespace Inventory_Management_System.Model.Location
                 Boxes.Remove(boxOut);
                 removedBoxes.Add(boxOut);
             }
-            if(Boxes.Count <= MaxBoxCapacity)
+            if(Boxes.Count < MaxBoxCapacity)
             {
                 Full = false;
             }
-            if(Boxes.Count <= 0)
+            if(Boxes.Count == 0)
             {
                 ClearPartNumber();
             }

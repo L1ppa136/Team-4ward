@@ -2,6 +2,7 @@
 using Inventory_Management_System.Model.Good;
 using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Service.Repositories;
+using System.Collections.Generic;
 
 namespace Inventory_Management_System.Model.Location
 {
