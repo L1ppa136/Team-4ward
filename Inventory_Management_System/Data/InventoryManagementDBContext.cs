@@ -18,7 +18,6 @@ namespace Inventory_Management_System.Data
 
         public InventoryManagementDBContext(DbContextOptions<InventoryManagementDBContext> options) : base(options)
         {
-            Database.EnsureCreated();
         }
 
         // must extend in accordance of new entities

@@ -1,7 +1,6 @@
 using Inventory_Management_System.Data;
 using Inventory_Management_System.Service.Authentication;
 using Inventory_Management_System.Service.Repositories;
-using Inventory_Management_System.Service.UserService;
 using Inventory_Management_System.Model.Location;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -60,15 +59,12 @@ void DBMigration()
     // migrate any database changes on startup (includes initial db creation)
     using (var scope = app.Services.CreateScope())
     {
-        var dataContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
-        if (app.Environment.IsDevelopment())
-        {
-            dataContext.Database.EnsureCreated();
-        }
-        else
-        {
-            dataContext.Database.Migrate();
-        }
+        var inventoryContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
+        var usersContext = scope.ServiceProvider.GetRequiredService<UsersContext>();
+
+        inventoryContext.Database.Migrate();
+        usersContext.Database.Migrate();
+
     }
 }
 
