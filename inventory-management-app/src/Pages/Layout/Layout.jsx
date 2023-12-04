@@ -3,7 +3,7 @@ import "./Layout.css";
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Login from "../Login.jsx";
-import mainLogo from './Warehouse01.png';
+import mainLogo from '../pictures/Warehouse01.png';
 import PageSelection from '../../Components/PageSelection.jsx';
 
 const Layout = () => {
@@ -13,7 +13,6 @@ const Layout = () => {
 
     const removeUserData = () => {
         delete axios.defaults.headers.common['Authorization'];
-        localStorage.removeItem('accessToken');
         localStorage.removeItem('userName');
         localStorage.removeItem('email');
         localStorage.removeItem('roles');
@@ -37,7 +36,7 @@ const Layout = () => {
             setLoggedIn(false);
             removeUserData();
             navigate('/');
-        }, 1 * 60 * 1000);
+        }, 30 * 60 * 1000);
 
         return () => clearTimeout(logoutTimeout);
     }, [navigate]);
