@@ -27,6 +27,7 @@ function CustomerPlannerList() {
 
     // Log the keys of the object and the original formdata
     console.log(Object.values(locStoreDataObject), Object.keys(locStoreDataObject));
+    window.alert("Order Successful!")
     console.log(formdata);
   }
 

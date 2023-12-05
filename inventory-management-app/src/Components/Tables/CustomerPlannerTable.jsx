@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-function CustomerPlannerTable({ customerDemands, handleOrder, handleInputChange, createComponents }) {
+function CustomerPlannerTable({handleInputChange, createComponents }) {
 
   const [selectedDesignationOption, setSelectedDesignationOption] = useState('');
   const [selectedQuantityOption, setSelectedQuantityOption] = useState('');

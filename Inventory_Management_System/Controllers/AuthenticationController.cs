@@ -4,6 +4,7 @@ using Inventory_Management_System.Service.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 
 namespace Inventory_Management_System.Controllers
 {
