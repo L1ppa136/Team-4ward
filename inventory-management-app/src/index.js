@@ -1,14 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
 import reportWebVitals from './reportWebVitals';
-import Registration from './Pages/Registration.jsx';
-import Layout from './Pages/Layout/Layout.jsx';
-import Login from './Pages/Login.jsx';
+import './index.css';
 
-import SetRole from './Pages/SetRole.jsx';
+import Layout from './Pages/Layout/Layout.jsx';
+import Registration from './Pages/Registration.jsx';
+import Login from './Pages/Login.jsx';
 import User from './Pages/User.jsx';
 import Home from './Pages/Home.jsx';
 import InboundList from "./Pages/LogisticsTables/InboundList.jsx";
@@ -16,6 +14,9 @@ import OutboundList from "./Pages/LogisticsTables/OutboundList.jsx";
 import ProdSupplyList from "./Pages/LogisticsTables/ProdSupplyList.jsx";
 import ProductionList from "./Pages/LogisticsTables/ProductionList.jsx";
 import CustomerPlannerList from './Pages/LogisticsTables/CustomerPlannerList.jsx';
+
+import PrivateRoute from './Components/PrivateRoute.jsx';
+import UserManager from './Pages/UserManager.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,28 +41,28 @@ const router = createBrowserRouter([
         element: <User />,
       },
       {
-        path: '/SetRole',
-        element: <SetRole />,
+        path: '/Users',
+        element: <PrivateRoute element={<UserManager />} roles={['Admin']} />
       },
       {
         path: '/Inbound',
-        element: <InboundList />,
+        element: <PrivateRoute element={<InboundList />} roles={['Admin', 'Forklift Driver', 'Warehouse Leader']} />
       },
       {
         path: '/Outbound',
-        element: <OutboundList />,
+        element: <PrivateRoute element={<OutboundList />} roles={['Admin', 'Forklift Driver', 'Warehouse Leader']} />
       },
       {
         path: '/Prodsupply',
-        element: <ProdSupplyList />,
+        element: <PrivateRoute element={<ProdSupplyList />} roles={['Admin', 'Forklift Driver', 'Warehouse Leader']} />
       },
       {
         path: '/Production',
-        element: <ProductionList />,
+        element: <PrivateRoute element={<ProductionList />} roles={['Admin', 'Production Leader', 'Warehouse Leader']} />
       },
       {
         path: '/CustomerPlanner',
-        element: <CustomerPlannerList />,
+        element: <PrivateRoute element={<CustomerPlannerList />} roles={['Admin', 'Customer Planner', 'Warehouse Leader']} />
       }
     ]
   }

@@ -1,27 +1,43 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-const PageSelection = () => {
+const PageSelection = ({ userRole }) => {
+    const roleToLinksMap = {
+        "Admin": [
+            { link: '/Users', label: 'Users' },
+            { link: '/Inbound', label: 'Inbound' },
+            { link: '/Outbound', label: 'Outbound' },
+            { link: '/ProdSupply', label: 'ProdSupply' },
+            { link: '/Production', label: 'Production' },
+            { link: '/CustomerPlanner', label: 'Customer Planning' }
+        ],
+        "Warehouse Leader": [
+            { link: '/Inbound', label: 'Inbound' },
+            { link: '/Outbound', label: 'Outbound' },
+            { link: '/ProdSupply', label: 'ProdSupply' },
+            { link: '/Production', label: 'Production' },
+            { link: '/CustomerPlanner', label: 'Customer Planning' }
+        ],
+        "Forklift Driver": [
+            { link: '/Inbound', label: 'Inbound' },
+            { link: '/Outbound', label: 'Outbound' },
+            { link: '/ProdSupply', label: 'ProdSupply' }
+        ],
+        "Production Leader": [
+            { link: '/Production', label: 'Production' }
+        ],
+        "Customer Planner": [
+            { link: '/CustomerPlanner', label: 'Customer Planning' }
+        ],
+    };
+
     return (
         <ul className="pageSelection">
-            <li>
-                <Link to='/SetRole'><button>Set Role</button></Link>
-            </li>
-            <li>
-                <Link to='/Inbound'><button >Inbound</button></Link>
-            </li>
-            <li>
-                <Link to='/Outbound'><button >Outbound</button></Link>
-            </li>
-            <li>
-                <Link to='/Prodsupply'><button >Prodsupply</button></Link>
-            </li>
-            <li>
-                <Link to='/Production'><button >Production</button></Link>
-            </li>
-            <li>
-                <Link to='/CustomerPlanner'><button >CustomerPlanner</button></Link>
-            </li>
+            {userRole && roleToLinksMap[userRole] && roleToLinksMap[userRole].map(({ link, label }) => (
+                <li key={link}>
+                    <Link to={link}><button>{label}</button></Link>
+                </li>
+            ))}
         </ul>
     );
 }

@@ -4,6 +4,7 @@ using Inventory_Management_System.Service.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 
 namespace Inventory_Management_System.Controllers
 {
@@ -65,25 +66,6 @@ namespace Inventory_Management_System.Controllers
             }
 
             return Ok(new AuthenticationResponse(result.Email, result.UserName, result.Token));
-        }
-
-        [HttpPatch("SetRole"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<AuthenticationResponse>> ChangeRole([FromBody] SetRoleRequest request)
-        {
-            // if (!ModelState.IsValid)
-            // {
-            //     return BadRequest(ModelState);
-            // }
-
-            var result = await _authenticationService.SetRole(request.UserName, request.Role);
-
-            if (!result.Success)
-            {
-                AddErrors(result);
-                return BadRequest(ModelState);
-            }
-
-            return Ok(new AuthenticationResponse(result.Email, result.UserName, ""));
         }
 
         [HttpPost("Roles")]

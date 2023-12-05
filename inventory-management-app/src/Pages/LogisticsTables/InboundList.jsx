@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const fetchStoreComponents = async (orderItem) => {
     try {
-        const response = await axios.post('http://localhost:5179/Logistics/OrderComponent', orderItem);
+        const response = await axios.post('/CustomerPlanner/OrderComponent', orderItem);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error;
@@ -14,6 +14,8 @@ const fetchStoreComponents = async (orderItem) => {
 }
 
 const InboundList = () => {
+
+
     const [inboundComponents, setInboundComponents] = useState([])
     const [Loading, setLoading] = useState(false)
 
@@ -23,11 +25,11 @@ const InboundList = () => {
             Nut: 4 * Quantity,
             Cushion: 1 * Quantity,
             Diffusor: 1 * Quantity,
-            Retrainer: 1 * Quantity,
+            Retainer: 1 * Quantity,
             Cover: 1 * Quantity,
             Emblem: 1 * Quantity,
             Inflator: 1 * Quantity,
-            Wireharness: 1 * Quantity
+            WireHarness: 1 * Quantity
         }
     }
 
@@ -50,10 +52,13 @@ const InboundList = () => {
     }
 
     //NEM MÜKÖDIK
-    const handleStore = (quantity, productDesignation) => {
-        var componentToFetch = { "quantity": quantity, "productDesignation": productDesignation };
-        fetchStoreComponents(componentToFetch);
-        removeItem(productDesignation);
+
+    const handleStore = async (quantity, productDesignation) => {
+        if (quantity !== null && productDesignation !== null) {
+            var componentToFetch = { "quantity": quantity, "productDesignation": productDesignation };
+            await fetchStoreComponents(componentToFetch);
+            removeItem(productDesignation);
+        }
     }
 
     const removeItem = (productDes) => {
@@ -71,13 +76,13 @@ const InboundList = () => {
 
 
     return (
+
         <>{Loading ? (<Loading />) : (<InboundTable
             inboundComponents={inboundComponents}
             handleStore={handleStore}
             nextOrderList={nextOrderList}
         />)}
         </>
-
     )
 }
 

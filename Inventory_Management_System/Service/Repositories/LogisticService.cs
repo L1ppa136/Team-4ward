@@ -114,7 +114,11 @@ public class LogisticService : IStock, ISupplier
 
     public async Task<List<FinishedGoodLocation>> GetFinishedGoodStockAsync()
     {
-        List<FinishedGoodLocation> outboundLocations = await _dbContext.FinishedGoodLocations.Where(l => l.Full).ToListAsync();
+        List<FinishedGoodLocation> outboundLocations = await _dbContext.FinishedGoodLocations
+            .Include(l=> l.Boxes)
+            .Where(l => l.Boxes.Count > 0)
+            .OrderBy(l => l.Boxes.Count)
+            .ToListAsync();
         return outboundLocations;
     }
 
@@ -122,9 +126,15 @@ public class LogisticService : IStock, ISupplier
     {
         List<ComponentLocation> rawMaterialLocations = await _dbContext.ComponentLocations
             .Include(l => l.Boxes)
-            .Where(l => l.Full && l.PartNumber == (int)productDesignation)
+            .Where(l => l.PartNumber == (int)productDesignation)
+            .OrderBy(l => l.Boxes.Count)
             .ToListAsync();
         return rawMaterialLocations;
+    }
+
+    public async Task<List<ComponentLocation>> GetAllRawMaterialStockAsync()
+    {
+        return await _dbContext.ComponentLocations.Where(l=> l.Boxes.Count > 0).ToListAsync();
     }
 
     //public async Task<Component> GetComponentByDesignation(ProductDesignation productDesignation)
@@ -154,19 +164,18 @@ public class LogisticService : IStock, ISupplier
 
     private async Task<bool> ResourcesAvailable(int orderedQuantity)
     {
-        var productionLocations = await GetProductionLocations();
-        int resources = 0;
+        var productionLocations = await GetAllProductionLocationsAsync();
         foreach(var material in _buildOfMaterial)
         {
-            foreach(var location in productionLocations)
+            bool isMaterialAvailable = productionLocations
+                .Any(l => l.LocationName == material.Key.ToString() && l.Quantity / material.Value >= orderedQuantity);
+
+            if (!isMaterialAvailable)
             {
-                if(location.LocationName == material.Key.ToString())
-                {
-                    resources += location.Quantity / material.Value;
-                }
+                return false;
             }
         }
-        return resources >= orderedQuantity;
+        return true;
     }
 
     public async Task MoveFinishedGoodToOutboundAsync()
@@ -174,13 +183,13 @@ public class LogisticService : IStock, ISupplier
         throw new NotImplementedException();
     }
 
-    public async Task<ProductionLocation> GetProductionLocationByComponent(ProductDesignation componentDesignation)
+    public async Task<ProductionLocation> GetProductionLocationByComponentAsync(ProductDesignation componentDesignation)
     {
         ProductionLocation productionLocation = await _dbContext.ProductionLocations.FirstOrDefaultAsync(p => p.LocationName == componentDesignation.ToString());
         return productionLocation;
     }
 
-    public async Task<List<ProductionLocation>> GetProductionLocations()
+    public async Task<List<ProductionLocation>> GetAllProductionLocationsAsync()
     {
         return await _dbContext.ProductionLocations.ToListAsync();
     }
@@ -209,7 +218,7 @@ public class LogisticService : IStock, ISupplier
             }
         }
 
-        var productionLocation = await GetProductionLocationByComponent(productDesignation);
+        var productionLocation = await GetProductionLocationByComponentAsync(productDesignation);
         productionLocation.StoreComponents(neededComponents);
         await _dbContext.SaveChangesAsync();
     }

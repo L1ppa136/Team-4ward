@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const User = () => {
-    const [roles, setRoles] = useState([]);
+    const [role, setRole] = useState([]);
     const [userName, setUserName] = useState(null);
     const [email, setEmail] = useState(null);
 
@@ -16,11 +16,11 @@ const User = () => {
                 setEmail(storedEmail);
 
                 try {
-                    const response = await axios.post('http://localhost:5179/Authentication/Roles', { userName: storedUserName });
+                    const response = await axios.post('/Authentication/Roles', { userName: storedUserName });
 
                     if (response && response.data) {
-                        setRoles(response.data);
-                        localStorage.setItem('roles', JSON.stringify(response.data));
+                        setRole(response.data[0]);
+                        localStorage.setItem('role', JSON.stringify(response.data[0]));
                     } else {
                         console.error('Invalid response:', response);
                     }
@@ -37,17 +37,11 @@ const User = () => {
 
     return (
         <div className='userData'>
-            {userName && roles.length > 0 && (
+            {userName && role && (
                 <ul>
                     <div className='name'>{userName}</div>
                     <div>e-mail: {email}</div>
-                    <div>roles:
-                        <ul>
-                            {roles.map((role, index) => (
-                                <div key={index}>{role}</div>
-                            ))}
-                        </ul>
-                    </div>
+                    <div>role: {role} </div>
                 </ul>
             )}
         </div>
