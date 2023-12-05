@@ -55,16 +55,11 @@ app.Run();
 
 void DBMigration()
 {
-
     // migrate any database changes on startup (includes initial db creation)
     using (var scope = app.Services.CreateScope())
     {
         var inventoryContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
-        var usersContext = scope.ServiceProvider.GetRequiredService<UsersContext>();
-
         inventoryContext.Database.Migrate();
-        usersContext.Database.Migrate();
-
     }
 }
 
