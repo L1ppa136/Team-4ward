@@ -14,8 +14,10 @@ const fetchStoreComponents = async (orderItem) => {
 }
 
 const InboundList = () => {
-    const [inboundComponents, setInboundComponents] = useState([]);
-    const [Loading, setLoading] = useState(false);
+
+
+    const [inboundComponents, setInboundComponents] = useState([])
+    const [Loading, setLoading] = useState(false)
 
     const GenerateOrderList = (Quantity) => {
         return {
@@ -74,12 +76,12 @@ const InboundList = () => {
 
 
     return (
-        <>{Loading ? (<Loading />) : (
-            <InboundTable
-                inboundComponents={inboundComponents}
-                handleStore={handleStore}
-                nextOrderList={nextOrderList}
-            />)}
+
+        <>{Loading ? (<Loading />) : (<InboundTable
+            inboundComponents={inboundComponents}
+            handleStore={handleStore}
+            nextOrderList={nextOrderList}
+        />)}
         </>
     )
 }
