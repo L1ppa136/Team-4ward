@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const fetchStoreComponents = async (orderItem) => {
     try {
-        const response = await axios.post('http://localhost:5179/Logistics/OrderComponent', orderItem);
+        const response = await axios.post('http://localhost:5179/CustomerPlanner/OrderComponent', orderItem);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error;

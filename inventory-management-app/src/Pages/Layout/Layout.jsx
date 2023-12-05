@@ -37,7 +37,7 @@ const Layout = () => {
             setLoggedIn(false);
             removeUserData();
             navigate('/');
-        }, 1 * 60 * 1000);
+        }, 30 * 60 * 1000);
 
         return () => clearTimeout(logoutTimeout);
     }, [navigate]);

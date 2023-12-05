@@ -4,49 +4,84 @@ import Loading from "../../Components/Loading";
 import axios from 'axios';
 import "./Table.css";
 
-const fetchOutboundComponents = async() =>{
-    let response = await axios.get("//ENDPOINT")
+ const fetchOutboundComponents = async() =>{
+    try {
+      const response = await axios.get('http://localhost:5179/CustomerPlanner/OrderComponent');
+      return response.data;
+  } catch (error) {
+      throw error.response ? error.response.data : error;
+  }
 }
-
-const fetchShipItem = async (id) =>{
-  let response = await axios.post("//ENDPOINT", "shippedMaterialsFile")
+ 
+const fetchShipItem = async (formdata) =>{
+  let response = await axios.post("http://localhost:5179/ForkliftDriver/MoveToProduction", "shippedMaterialsFile")
 }
-
+//KÉSZ levő dolgok Production kommunikál a OUTBOUND -> Order -> Produce (if OK, then disappear)
+//FINISHGOOD Lekérdezed -> mennyiség alapján Send to Customer-t alkalmazol.
 const OutboundList = () => {
-
-     //CREATE FETCH REQUEST FOR THE DB, CHECK USER ROLE, IF ROLE IS WRONG NAVIGATE TO THE "NO AUTHORIZATION" PAGE
-     const [loading, setLoading] = useState(true)
+ //CREATE FETCH REQUEST FOR THE DB, CHECK USER ROLE, IF ROLE IS WRONG NAVIGATE TO THE "NO AUTHORIZATION" PAGE
+     const [loading, setLoading] = useState(false)
      const [outboundComponents, setOutboundComponents] = useState([])
- 
-     const handleOutboundFetch = async() =>{
-         let components = []
-         //components = await fetchOutboundComponents();
-         var component = {id: 1, ProductDesignation: 1, CreatedAt: 11, PartNumber: 11}
-         components.push(component)
-         setOutboundComponents(components);
-         setLoading(false);
-         console.log(outboundComponents);
-     }
- 
-     //Ez a method kiveszi a beérkező componentseket és eltárolja őket az adott raktárba (RawMat).
-     const handleShipping = async(id) =>{
-      fetchShipItem(id)
+     const [checkToShip, setCheckToShip] = useState(false)
+     //Check order of keys if non-working
+     const [formdata, setFormData] = useState({
+      "quantity": '',
+      "productDesignation": ''
+    });
+
+     const handleInputChange = (e) => {
+      setFormData({ ...formdata, [e.target.name]: e.target.value });
+    }
+    const fetchOutboundComponentsTest = () => {
+      return new Promise((resolve) => {
+          // Simulating a delay to mimic an async operation
+          setTimeout(() => {
+              resolve([
+                  { ProductDesignation: "Something", quantity: 1000 },
+                  { ProductDesignation: "Something2", quantity: 1000 },
+              ]);
+          }, 1000);
+      });
+  };
+  const handleOutboundFetch = () => {
+    setLoading(true);
+    fetchOutboundComponentsTest()
+        .then((components) => {
+            if (components && components.length > 0) {
+                setOutboundComponents(components);
+            } else {
+                console.error("Error fetching components");
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching components:", error);
+        })
+        .finally(() => {
+            setLoading(false);
+            console.log(outboundComponents);
+        });
+};
+     
+     const handleShipping = async(productDesignation, quantity) =>{
+      //fetchShipItem(formdata)
+      console.log(productDesignation)
+      console.log(quantity)
      }
  
  
      useEffect(()=>{
-         handleOutboundFetch()
+        handleOutboundFetch()
      },[])
  
-     if (loading) {
-         return <Loading />;
-       };
- 
      return (
-     <OutboundTable
-     outboundComponents = {outboundComponents}
-     handleShipping = {handleShipping}
-     />
+      <>{loading ? (<Loading />) :
+        (<OutboundTable
+        outboundComponents = {outboundComponents}
+        handleShipping = {handleShipping}
+        handleInputChange={handleInputChange}
+        />)}
+      </>
+
      )
 }
 
