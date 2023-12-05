@@ -66,7 +66,26 @@ namespace Inventory_Management_System.Controllers
         }
 
         [HttpGet("MoveFinishedGoodsFromProduction")]
-        //Endpoint to be created
+        public async Task<IActionResult> MoveFinishedGoodsFromProduction()
+        {
+            try
+            {
+                var result = await _stockService.MoveFinishedGoodToOutboundAsync();
+                if(result.Success)
+                {
+                    return Ok(result.Message);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+                              
+
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         //GET all finishedGoodStock
         [HttpGet("GetFinishedGoodStock")]

@@ -21,7 +21,7 @@ namespace Inventory_Management_System.Controllers
             _stockService = stockService;
         }
 
-        [HttpGet("CreateLocations"), Authorize(Roles = "Admin")]
+        [HttpGet("CreateLocations")]
         public IActionResult Create()
         {
             _stockService.CreateStorageLocations();

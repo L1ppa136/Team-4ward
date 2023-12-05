@@ -88,5 +88,12 @@ namespace Inventory_Management_System.Model.Location
             Quantity += finishedGoods.Count * boxQuantity;
             FinishedGoods.AddRange(finishedGoods);
         }
+
+        public void ClearFinishedGoods()
+        {
+            Quantity = 0;
+            PartNumber = 0;
+            FinishedGoods.Clear();
+        }
     }
 }
