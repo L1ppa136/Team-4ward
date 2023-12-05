@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function OutboundTable({ handleInputChange, outboundComponents, handleOutboundping }) {
+function ShipTable({ handleInputChange, shipComponents, handleShipping }) {
 
   /*   const [selectedQuantityOption, setSelectedQuantityOption] = useState('');
   
@@ -9,7 +9,7 @@ function OutboundTable({ handleInputChange, outboundComponents, handleOutboundpi
     }, [selectedQuantityOption])
   
     useEffect(() => {
-      console.log(OutboundComponents)
+      console.log(ShipComponents)
     }, [])
   
     //this won't work with the current setup
@@ -31,7 +31,7 @@ function OutboundTable({ handleInputChange, outboundComponents, handleOutboundpi
   };
 
   return (
-    <div className="OutboundTable">
+    <div className="ShipTable">
       <table>
         <thead>
           <tr>
@@ -41,7 +41,7 @@ function OutboundTable({ handleInputChange, outboundComponents, handleOutboundpi
           </tr>
         </thead>
         <tbody>
-          {outboundComponents && outboundComponents.map((component) => (
+          {shipComponents && shipComponents.map((component) => (
             <tr key={component.ProductDesignation}>
               <td>
                 <p value={component.ProductDesignation}>{component.ProductDesignation}</p>
@@ -61,7 +61,7 @@ function OutboundTable({ handleInputChange, outboundComponents, handleOutboundpi
                 </select>
               </td>
               <td>
-                <button type="button" onClick={() => handleOutboundping(component.ProductDesignation, selectedQuantities[component.ProductDesignation])}>Outbound to Customer</button>
+                <button type="button" onClick={() => handleShipping(component.ProductDesignation, selectedQuantities[component.ProductDesignation])}>Ship to Customer</button>
               </td>
             </tr>
           ))}
@@ -71,4 +71,4 @@ function OutboundTable({ handleInputChange, outboundComponents, handleOutboundpi
   )
 }
 
-export default OutboundTable
+export default ShipTable

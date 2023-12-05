@@ -1,51 +1,116 @@
-import React, {useState,useEffect} from 'react'
-import Loading from '../../Components/Loading'
-import ProductionTable from '../../Components/Tables/ProductionTable'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import ProductionTable from '../../Components/Tables/ProductionTable';
 import "./Table.css";
 
-//Endpointról kikell szedni a Bill of materials -> ez alapján lehessen rendelni.
 
-const fetchProductionPlans = async() =>{
-  let response = await axios.get("ENDPOINT")
+
+const fetchProduce = async (ItemToProduce) => {
+  try {
+    const response = await axios.post('/ProductionLeader/Produce', ItemToProduce);
+    console.log(ItemToProduce);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
 }
 
-const createProductionOrder= async(order) =>{
-  let response = await axios.post("//ENDPOINT", "order")
+const fetchProductionStock = async (ItemToProduce) => {
+  try {
+    const response = await axios.get('/ProductionLeader/GetProductionStock', ItemToProduce);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
 }
 
-const ProductionList = () => {
-  const [loading, setLoading] = useState(true)
-  const [productionPlans, setProductionPlans] = useState([])
+function ProductionList() {
+  const [productionStock, setProductionStock] = useState([]);
+  const [formdata, setFormData] = useState({
+    "quantity": '',
+    "productDesignation": 'Airbag'
+  });
 
-  const handlePlanFetch = async() =>{
-      let plans = []
-      //plans = await fetchProductionPlans();
-      var component = {id: 1, ProductDesignation: 1, CreatedAt: 11, PartNumber: 11}
-      plans.push(component)
-      setProductionPlans(plans);
-      setLoading(false);
-      console.log(productionPlans);
+  const GenerateOrderList = (Quantity) => {
+    return {
+      Screw: 4 * Quantity,
+      Nut: 4 * Quantity,
+      Cushion: 1 * Quantity,
+      Diffusor: 1 * Quantity,
+      Retrainer: 1 * Quantity,
+      Cover: 1 * Quantity,
+      Emblem: 1 * Quantity,
+      Inflator: 1 * Quantity,
+      Wireharness: 1 * Quantity
+    }
   }
 
-  //Ez a method kiveszi a beérkező componentseket és eltárolja őket az adott raktárba (RawMat).
-  const handleProductionOrder = async(id) =>{
-      
-  }
-
-  useEffect(()=>{
-      handlePlanFetch()
-  },[])
-
-  if (loading) {
-      return <Loading />;
+  useEffect(() => {
+    const fetchData = async () => {
+      let response = await fetchProductionStock(formdata);
+      setProductionStock(JSON.stringify(response));
     };
 
+    fetchData();
+  }, [formdata]);
+
+  function checkMaterialAvailability(stock, requirements) {
+    for (const item of stock) {
+      const itemName = item.locationName;
+      const requiredQuantity = requirements[itemName];
+      if (requiredQuantity !== undefined && item.quantity < requiredQuantity) {
+        console.log(`Not enough ${itemName}. Required: ${requiredQuantity}, Available: ${item.quantity}`);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formdata, [e.target.name]: e.target.value });
+  }
+
+  const handleOrderingFromWarehouse = (quantity, productDesignation) => {
+    var componentToProduce = { "quantity": quantity, "productDesignation": productDesignation };
+    orderComponentsFromWarehouse(componentToProduce);
+  }
+
+  const handleProduce = async (quantity, productDesignation) => {
+    var componentToProduce = { "quantity": quantity, "productDesignation": productDesignation };
+    let response = await fetchProductionStock(componentToProduce);
+    setProductionStock(JSON.stringify(response));
+    if (checkMaterialAvailability(productionStock, GenerateOrderList(quantity))) {
+      await fetchProduce(componentToProduce);
+    }
+    else {
+      window.alert("There is not enough material on the production, please contact the Warehouse Leader!")
+    }
+  }
+
+  const orderComponentsFromWarehouse = () => {
+    // Convert the formdata object to a JSON string before storing
+    const formDataString = JSON.stringify(formdata);
+
+    // Store the JSON string in localStorage
+    localStorage.setItem("OrderFromWarehouse", formDataString);
+
+    // Retrieve the JSON string from localStorage
+    const locStoreDataString = localStorage.getItem("OrderFromWarehouse");
+
+    // Parse the JSON string back to an object
+    const locStoreDataObject = JSON.parse(locStoreDataString);
+
+    // Log the keys of the object and the original formdata
+    console.log(Object.values(locStoreDataObject), Object.keys(locStoreDataObject));
+    console.log(formdata);
+  }
+
   return (
-  <ProductionTable
-  productionPlans = {productionPlans}
-  handleProductionOrder = {handleProductionOrder}
-  />
+    <ProductionTable
+      handleInputChange={handleInputChange}
+      handleOrderingFromWarehouse={handleOrderingFromWarehouse}
+      handleProduce={handleProduce}
+    />
   )
 }
 

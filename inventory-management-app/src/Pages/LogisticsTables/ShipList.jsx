@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import OutboundTable from '../../Components/Tables/OutboundTable';
+import ShipTable from '../../Components/Tables/ShipTable';
 import Loading from "../../Components/Loading";
 import axios from 'axios';
 import "./Table.css";
 
-const fetchOutboundComponents = async () => {
+const fetchShipComponents = async () => {
     try {
         const response = await axios.get('/ForkliftDriver/GetProductionStock');
         return response.data;
@@ -13,16 +13,18 @@ const fetchOutboundComponents = async () => {
     }
 }
 
-const fetchOutboundItem = async (formdata) => {
-    let response = await axios.post("/ForkliftDriver/MoveFinishedGoodsFromProduction", "OutboundpedMaterialsFile")
+const fetchShipItem = async (formdata) => {
+    let response = await axios.post("/ForkliftDriver/MoveFinishedGoodsFromProduction", "shippedMaterialsFile")
 }
-//This list collects thing from Production Location to store in the FinishedGoodsWarhouse
-//Collect -> Move To FinishedGood warehouse Outbound -> Move Out of  (RENAME THIS TO OutboundPING!  )
-const OutboundList = () => {
+//KÉSZ levő dolgok Production kommunikál a Ship -> Order -> Produce (if OK, then disappear)
+//FINISHGOOD Lekérdezed -> mennyiség alapján Send to Customer-t alkalmazol.
+
+//Collect -> Move To FinishedGood warehouse Ship -> Move Out of  (RENAME THIS TO SHIPPING!  )
+const ShipList = () => {
     //CREATE FETCH REQUEST FOR THE DB, CHECK USER ROLE, IF ROLE IS WRONG NAVIGATE TO THE "NO AUTHORIZATION" PAGE
     const [loading, setLoading] = useState(false)
-    const [outboundComponents, setOutboundComponents] = useState([])
-    const [checkToOutbound, setCheckToOutbound] = useState(false)
+    const [shipComponents, setShipComponents] = useState([])
+    const [checkToShip, setCheckToShip] = useState(false)
     //Check order of keys if non-working
     const [formdata, setFormData] = useState({
         "quantity": '',
@@ -32,7 +34,7 @@ const OutboundList = () => {
     const handleInputChange = (e) => {
         setFormData({ ...formdata, [e.target.name]: e.target.value });
     }
-    const fetchOutboundComponentsTest = () => {
+    const fetchShipComponentsTest = () => {
         return new Promise((resolve) => {
             // Simulating a delay to mimic an async operation
             setTimeout(() => {
@@ -43,12 +45,12 @@ const OutboundList = () => {
             }, 1000);
         });
     };
-    const handleOutboundFetch = () => {
+    const handleShipFetch = () => {
         setLoading(true);
-        fetchOutboundComponentsTest()
+        fetchShipComponentsTest()
             .then((components) => {
                 if (components && components.length > 0) {
-                    setOutboundComponents(components);
+                    setShipComponents(components);
                 } else {
                     console.error("Error fetching components");
                 }
@@ -58,26 +60,26 @@ const OutboundList = () => {
             })
             .finally(() => {
                 setLoading(false);
-                console.log(outboundComponents);
+                console.log(shipComponents);
             });
     };
 
-    const handleOutboundping = async (productDesignation, quantity) => {
-        //fetchOutboundItem(formdata)
+    const handleShipping = async (productDesignation, quantity) => {
+        //fetchShipItem(formdata)
         console.log(productDesignation)
         console.log(quantity)
     }
 
 
     useEffect(() => {
-        handleOutboundFetch()
+        handleShipFetch()
     }, [])
 
     return (
         <>{loading ? (<Loading />) :
-            (<OutboundTable
-                outboundComponents={outboundComponents}
-                handleOutboundping={handleOutboundping}
+            (<ShipTable
+                shipComponents={shipComponents}
+                handleShipping={handleShipping}
                 handleInputChange={handleInputChange}
             />)}
         </>
@@ -85,4 +87,4 @@ const OutboundList = () => {
     )
 }
 
-export default OutboundList
+export default ShipList

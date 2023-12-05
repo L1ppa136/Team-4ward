@@ -1,29 +1,64 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-function ProductionTable({productionPlans, handleProductionOrder}) {
+
+function ProductionTable({ handleInputChange, handleProduce, handleOrderingFromWarehouse }) {
+
+  const [selectedDesignationOption, setSelectedDesignationOption] = useState('');
+  const [selectedQuantityOption, setSelectedQuantityOption] = useState('');
+  const [hasBeenOrdered, setHasBeenOrdered] = useState(false);
+
+  useEffect(() => {
+    console.log(selectedQuantityOption)
+  }, [selectedQuantityOption])
+
+  const handleOptionAndChangeForQuantity = (eTargetValue) => {
+    setSelectedQuantityOption(eTargetValue.target.value);
+    handleInputChange(eTargetValue);
+  }
+
+  const handleOptionAndChangeForDesignation = (eTargetValue) => {
+    setSelectedDesignationOption(eTargetValue.target.value);
+    handleInputChange(eTargetValue);
+  }
+
+  const handleOrder = () => {
+    handleOrderingFromWarehouse();
+    setHasBeenOrdered(true);
+  }
+
   return (
     <div className="ProductionTable">
-    <table>
-      <thead>
-        <tr>
-          <th>Good</th>
-          <th>Quantity</th>
-          <th>Order</th>
-        </tr>
-      </thead>
-      <tbody>
-        {productionPlans && productionPlans.map((plan)=>(
-          <tr key={plan.Name}>
-            <td>{plan.ProductDesignation}</td>
-            <td>dropdownmenuhere</td>
+      <table>
+        <thead>
+          <tr>
+            <th>Product Designation</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
             <td>
-              <button type="button" onClick={()=> handleProductionOrder(plan.id)}>Order</button> 
+              <select placeholder='Designation' name="productDesignation" value={selectedDesignationOption} onChange={(e) => handleOptionAndChangeForDesignation(e)}>
+                <option value="" disabled selected>Select your option</option>
+                <option value="Airbag">Airbag</option>
+              </select>
+            </td>
+            <td>
+              <select placeholder='Quantity' name="quantity" value={selectedQuantityOption} onChange={(e) => handleOptionAndChangeForQuantity(e)}>
+                <option value="" disabled selected hidden>Select your option</option>
+                <option value="200">200</option>
+                <option value="400">400</option>
+                <option value="600">600</option>
+              </select>
+            </td>
+            <td>
+              <>{!hasBeenOrdered ? (<button type="button" onClick={() => handleOrder()}>Order Components</button>) : (<button type="button" onClick={() => handleProduce()}>Produce</button>)}</>
             </td>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+        </tbody>
+      </table>
+    </div >
   )
 }
 
