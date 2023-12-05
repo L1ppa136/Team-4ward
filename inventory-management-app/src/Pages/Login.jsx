@@ -18,7 +18,7 @@ const Login = ({ onLogin, isLoggedIn }) => {
 
     const loginUser = async (formData) => {
         try {
-            const response = await axios.post('http://localhost:5179/Authentication/Login', formData);
+            const response = await axios.post('/Authentication/Login', formData);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error;

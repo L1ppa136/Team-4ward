@@ -16,7 +16,7 @@ const User = () => {
                 setEmail(storedEmail);
 
                 try {
-                    const response = await axios.post('http://localhost:5179/Authentication/Roles', { userName: storedUserName });
+                    const response = await axios.post('/Authentication/Roles', { userName: storedUserName });
 
                     if (response && response.data) {
                         setRole(response.data[0]);

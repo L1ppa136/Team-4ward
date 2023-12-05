@@ -19,7 +19,7 @@ const SetRole = () => {
         console.log("role: ", formdata.role);
         console.log("name: ", formdata.userName);
         try {
-            const response = await axios.patch('http://localhost:5179/Authentication/SetRole', formdata);
+            const response = await axios.patch('/Admin/SetRole', formdata);
 
             if (response && response.data) {
                 // Add the token to the axios defaults for subsequent requests

@@ -21,7 +21,7 @@ const Registration = () => {
     console.log(formdata);
 
     try {
-      const response = await axios.post('http://localhost:5179/Authentication/Register', formdata);
+      const response = await axios.post('/Authentication/Register', formdata);
 
       // Check if 'response' is defined and has a 'data' property
       if (response && response.data) {

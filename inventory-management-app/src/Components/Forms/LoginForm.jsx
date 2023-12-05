@@ -7,7 +7,7 @@ const LoginForm = ({handleSubmit, formdata, handleInputChange }) => {
             <input type='text' name='userName' placeholder="enter username" value={formdata.userName} onChange={handleInputChange} required />
             <label>Password:</label>
             <input type='password' name='password' placeholder="enter password" value={formdata.password} onChange={handleInputChange} required />
-            <button type='submit'>Submit</button>
+            <button type='submit'>Login</button>
         </form>
     )
 };

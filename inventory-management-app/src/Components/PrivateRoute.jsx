@@ -8,7 +8,7 @@ const PrivateRoute = ({ element, roles }) => {
         userRole && roles.includes(userRole) ? (
             element
         ) : (
-            <Link to='/Login'><button>Login as {roles.join(' or ')}</button></Link>
+            <div>Login as {roles.join(' or ')}</div>
         )
     );
 };

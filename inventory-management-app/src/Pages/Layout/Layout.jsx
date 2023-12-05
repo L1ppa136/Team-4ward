@@ -13,6 +13,8 @@ const Layout = () => {
     const [showPageSelection, setShowPageSelection] = useState(false);
     const userRole = JSON.parse(localStorage.getItem('role'));
 
+    axios.defaults.baseURL='http://localhost:5179';
+
     useEffect(() => {
         if (location.pathname === '/User') {
             setShowPageSelection(false);
