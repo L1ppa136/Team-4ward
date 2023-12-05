@@ -16,5 +16,8 @@ namespace Inventory_Management_System.Service.Repositories
         Task MoveFinishedGoodToOutboundAsync();
         Task<ProductionLocation> GetProductionLocationByComponentAsync(ProductDesignation componentDesignation);
         Task<List<ProductionLocation>> GetAllProductionLocationsAsync();
+
+        //Only for test purposes:
+        Task ClearUsedUpComponentStockAsync();
     }
 }

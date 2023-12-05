@@ -38,21 +38,55 @@ namespace Inventory_Management_System.Model.Location
         {
             var partNumber = components.First().PartNumber;
             PartNumber = partNumber;
+
             var productDesignation = (ProductDesignation)partNumber;
             LocationName = productDesignation.ToString();
+
             foreach(var box in components)
             {
                 box.LocationName = LocationName;
             }
+
             var boxQuantity = components.First().Quantity;
             Quantity += components.Count * boxQuantity;
+            
             Components.AddRange(components);
+            Components = Components.OrderBy(box => box.CreatedAt).ToList();
         }
 
-        public List<Box<FinishedGood>> MoveFinishedGoodFromLine()
+        public void UseUpComponents(int quantity)
         {
-            return FinishedGoods;
+            if (Quantity >= quantity)
+            {                
+                var boxQuantity = Components.First().Quantity;
+                var numberOfBoxes = Quantity / boxQuantity;
+                Quantity -= quantity;
+                Components.RemoveRange(0, numberOfBoxes);
+            }
+            else
+            {
+                throw new Exception($"Location does not have enough components, we need {quantity - Quantity} pcs of {LocationName}.");
+            }
+
+            if(Quantity == 0)
+            {
+                PartNumber = 0;
+            }
         }
 
+        public void StoreFinishedGoods(List<Box<FinishedGood>> finishedGoods)
+        {
+            var partNumber = finishedGoods.First().PartNumber;
+            PartNumber = partNumber;
+            var productDesignation = (ProductDesignation)partNumber;
+            LocationName = productDesignation.ToString();
+            foreach (var box in finishedGoods)
+            {
+                box.LocationName = LocationName;
+            }
+            var boxQuantity = finishedGoods.First().Quantity;
+            Quantity += finishedGoods.Count * boxQuantity;
+            FinishedGoods.AddRange(finishedGoods);
+        }
     }
 }

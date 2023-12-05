@@ -1,5 +1,4 @@
 ﻿using Inventory_Management_System.Contracts;
-using Inventory_Management_System.Model.Employee;
 using Microsoft.AspNetCore.Identity;
 using System.Runtime.CompilerServices;
 

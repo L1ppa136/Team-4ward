@@ -1,3 +1,4 @@
+using Inventory_Management_System.Contracts;
 using Inventory_Management_System.Data;
 using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
@@ -8,7 +9,7 @@ using System.Resources;
 
 namespace Inventory_Management_System.Service.Repositories;
 
-public class LogisticService : IStock, ISupplier
+public class LogisticService : IStock, ISupplier, IProduction
 {
     private readonly InventoryManagementDBContext _dbContext;
     //private readonly IProduction _production;
@@ -137,30 +138,92 @@ public class LogisticService : IStock, ISupplier
         return await _dbContext.ComponentLocations.Where(l=> l.Boxes.Count > 0).ToListAsync();
     }
 
-    //public async Task<Component> GetComponentByDesignation(ProductDesignation productDesignation)
-    //{
-    //    return await ;
-    //}
+    private async Task<List<Box<Component>>> GetUsedUpComponentStock()
+    {
+        return await _dbContext.ComponentStock.Where(b => b.Quantity == 0).ToListAsync();
+    }
 
-    //public async Task<List<Box<FinishedGood>>> ProduceAsnyc(int orderedQuantity)
-    //{
-    //    if(await ResourcesAvailable(orderedQuantity))
-    //    {
-    //        var productionLocations = await GetProductionLocations();
-    //        foreach (var material in _buildOfMaterial)
-    //        {
-    //            foreach (var location in productionLocations)
-    //            {
-    //                location.Quantity -= material.Value;
-    //                if(location.Quantity <= 0)
-    //                {
-    //                    var component = await GetComponentByDesignation(material.Key);
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return new List<Box<FinishedGood>>();
-    //}
+    private async Task<List<Box<Component>>> GetComponentStockAsync(ProductDesignation productDesignation)
+    {
+        return await _dbContext.ComponentStock.Where(b => b.PartNumber == (int)productDesignation).ToListAsync();
+    }
+
+    public async Task ClearUsedUpComponentStockAsync()
+    {
+        var usedUpBoxes = await GetUsedUpComponentStock();
+
+        foreach (var box in usedUpBoxes)
+        {
+            _dbContext.ComponentStock.Remove(box);
+        }
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<ProductionResult> ProduceAsync(int orderedQuantity)
+    {
+        try
+        {
+            if (await ResourcesAvailable(orderedQuantity))
+            {
+                var productionLocations = await GetAllProductionLocationsAsync();
+                FinishedGood airbag = new FinishedGood();
+                List<Box<FinishedGood>> producedFinishedGoods = new List<Box<FinishedGood>>();
+
+                foreach (var material in _buildOfMaterial)
+                {
+                    foreach (var location in productionLocations)
+                    {
+                        if (location.LocationName == material.Key.ToString())
+                        {
+                            int neededQuantity = orderedQuantity * material.Value;
+
+                            try
+                            {
+                                location.UseUpComponents(neededQuantity);
+                                var componentStock = await GetComponentStockAsync(material.Key);
+                                int removeFromBoxQuantity = neededQuantity / componentStock.Count;
+                                foreach(var box in componentStock)
+                                {
+                                    box.Quantity -= removeFromBoxQuantity;
+                                    neededQuantity -= removeFromBoxQuantity;
+                                    if(neededQuantity <= 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                return new ProductionResult(false, ex.Message);
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < orderedQuantity / airbag.BoxCapacity; i++)
+                {
+                    Box<FinishedGood> newBox = new Box<FinishedGood>(airbag, airbag.BoxCapacity, "Airbag");
+                    producedFinishedGoods.Add(newBox);
+                }
+
+                var finishedGoodLocation = await GetProductionLocationByComponentAsync(ProductDesignation.Airbag);
+                finishedGoodLocation.StoreFinishedGoods(producedFinishedGoods);
+                await _dbContext.SaveChangesAsync();
+                return new ProductionResult(true, $"{orderedQuantity} pcs of Airbag produced and can be found on the production line!");
+            }
+            else
+            {
+                return new ProductionResult(false, "Quantity cannot be produced!");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle other exceptions if needed
+            return new ProductionResult(false, $"Unhandled exception: {ex.Message}");
+        }
+    }
+
 
     private async Task<bool> ResourcesAvailable(int orderedQuantity)
     {
@@ -191,7 +254,7 @@ public class LogisticService : IStock, ISupplier
 
     public async Task<List<ProductionLocation>> GetAllProductionLocationsAsync()
     {
-        return await _dbContext.ProductionLocations.ToListAsync();
+        return await _dbContext.ProductionLocations.Include(l => l.Components).Include(l => l.FinishedGoods).ToListAsync();
     }
 
     public async Task MoveRawMaterialToProductionAsync(ProductDesignation productDesignation, int quantity)

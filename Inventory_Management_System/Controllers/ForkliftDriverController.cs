@@ -21,7 +21,7 @@ namespace Inventory_Management_System.Controllers
         }
 
         [HttpPost("StoreComponent")]
-        public async Task<IActionResult> StoreComponent([FromBody] ComponentOrderRequest request)
+        public async Task<IActionResult> StoreComponent([FromBody] OrderRequest request)
         {
             try
             {
@@ -46,8 +46,8 @@ namespace Inventory_Management_System.Controllers
             }
         }
 
-        [HttpPost("MoveToProduction")]
-        public async Task<IActionResult> ComponentToProduction([FromBody] ComponentOrderRequest request)
+        [HttpPost("MoveComponentToProduction")]
+        public async Task<IActionResult> ComponentToProduction([FromBody] OrderRequest request)
         {
             if (request.Quantity <= 0)
             {
@@ -64,6 +64,9 @@ namespace Inventory_Management_System.Controllers
                 return BadRequest("Incorrect productDesignation!");
             }
         }
+
+        [HttpGet("MoveFinishedGoodsFromProduction")]
+        //Endpoint to be created
 
         //GET all finishedGoodStock
         [HttpGet("GetFinishedGoodStock")]
