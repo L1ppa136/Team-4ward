@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 
-function OutboundTable({ handleInputChange, outboundComponents, handleOutboundping }) {
+function OutboundTable({ productionStock, handleOutbound }) {
 
+  //Ezeket nem töröltem ki mert hasznos lehet, a handleOptionAndChangeForQuantity képes option-ökhez hozzácsatolni dolgokat.
   /*   const [selectedQuantityOption, setSelectedQuantityOption] = useState('');
   
     useEffect(() => {
@@ -9,7 +10,7 @@ function OutboundTable({ handleInputChange, outboundComponents, handleOutboundpi
     }, [selectedQuantityOption])
   
     useEffect(() => {
-      console.log(OutboundComponents)
+      console.log(OutboundoundComponents)
     }, [])
   
     //this won't work with the current setup
@@ -17,21 +18,21 @@ function OutboundTable({ handleInputChange, outboundComponents, handleOutboundpi
       setSelectedQuantityOption(eTargetValue.target.value);
       handleInputChange(eTargetValue);
     } */
+  /* 
+    const [selectedQuantities, setSelectedQuantities] = useState({});
+  
+    const handleOptionAndChangeForQuantity = (component, selectedValue) => {
+      setSelectedQuantities((prevSelectedQuantities) => ({
+        ...prevSelectedQuantities,
+        [component.ProductDesignation]: selectedValue,
+      })); */
 
-  const [selectedQuantities, setSelectedQuantities] = useState({});
-
-  const handleOptionAndChangeForQuantity = (component, selectedValue) => {
-    setSelectedQuantities((prevSelectedQuantities) => ({
-      ...prevSelectedQuantities,
-      [component.ProductDesignation]: selectedValue,
-    }));
-
-    // If you need to propagate the change to the parent component
-    //handleInputChange({ target: { name: 'quantity', value: selectedValue } });
-  };
+  // If you need to propagate the change to the parent component
+  //handleInputChange({ target: { name: 'quantity', value: selectedValue } });
+  //};
 
   return (
-    <div className="OutboundTable">
+    <div className="OutboundoundTable">
       <table>
         <thead>
           <tr>
@@ -41,27 +42,16 @@ function OutboundTable({ handleInputChange, outboundComponents, handleOutboundpi
           </tr>
         </thead>
         <tbody>
-          {outboundComponents && outboundComponents.map((component) => (
+          {productionStock.map((component) => (
             <tr key={component.ProductDesignation}>
               <td>
                 <p value={component.ProductDesignation}>{component.ProductDesignation}</p>
               </td>
               <td>
-                <select
-                  placeholder='Quantity'
-                  name="quantity"
-                  value={selectedQuantities[component.ProductDesignation] || ''}
-                  onChange={(e) => handleOptionAndChangeForQuantity(component, e.target.value)}>
-                  <option value="" disabled hidden>Select your option</option>
-                  {Array.from({ length: component.quantity / 200 }, (_, index) => (
-                    <option key={index} value={(index + 1) * 200}>
-                      {(index + 1) * 200}
-                    </option>
-                  ))}
-                </select>
+                <p placeholder='Quantity' name="quantity" value={component.quantity}>{component.quantity}</p>
               </td>
               <td>
-                <button type="button" onClick={() => handleOutboundping(component.ProductDesignation, selectedQuantities[component.ProductDesignation])}>Outbound to Customer</button>
+                <button type="button" onClick={() => handleOutbound(component.ProductDesignation, component.quantity)}>Collect</button>
               </td>
             </tr>
           ))}

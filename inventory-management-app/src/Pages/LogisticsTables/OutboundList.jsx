@@ -4,7 +4,7 @@ import Loading from "../../Components/Loading";
 import axios from 'axios';
 import "./Table.css";
 
-const fetchOutboundComponents = async () => {
+const fetchProductionStock = async () => {
     try {
         const response = await axios.get('/ForkliftDriver/GetProductionStock');
         return response.data;
@@ -13,42 +13,30 @@ const fetchOutboundComponents = async () => {
     }
 }
 
-const fetchOutboundItem = async (formdata) => {
-    let response = await axios.post("/ForkliftDriver/MoveFinishedGoodsFromProduction", "OutboundpedMaterialsFile")
+// Finishing endpoint
+const fetchSendProductionToWarehouse = async () => {
+    try {
+        let response = await axios.get("/ForkliftDriver/MoveFinishedGoodsFromProduction")
+        return response.data
+    } catch (error) {
+        throw error.response ? error.response.data : error;
+    }
 }
+
 //This list collects thing from Production Location to store in the FinishedGoodsWarhouse
-//Collect -> Move To FinishedGood warehouse Outbound -> Move Out of  (RENAME THIS TO OutboundPING!  )
+//Collect -> Move To FinishedGood warehouse Outbound -> Move Out of  (RENAME THIS TO Outbound!  )
 const OutboundList = () => {
     //CREATE FETCH REQUEST FOR THE DB, CHECK USER ROLE, IF ROLE IS WRONG NAVIGATE TO THE "NO AUTHORIZATION" PAGE
-    const [loading, setLoading] = useState(false)
-    const [outboundComponents, setOutboundComponents] = useState([])
-    const [checkToOutbound, setCheckToOutbound] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [productionStock, setProductionStock] = useState([]);
     //Check order of keys if non-working
-    const [formdata, setFormData] = useState({
-        "quantity": '',
-        "productDesignation": ''
-    });
 
-    const handleInputChange = (e) => {
-        setFormData({ ...formdata, [e.target.name]: e.target.value });
-    }
-    const fetchOutboundComponentsTest = () => {
-        return new Promise((resolve) => {
-            // Simulating a delay to mimic an async operation
-            setTimeout(() => {
-                resolve([
-                    { ProductDesignation: "Something", quantity: 1000 },
-                    { ProductDesignation: "Something2", quantity: 1000 },
-                ]);
-            }, 1000);
-        });
-    };
     const handleOutboundFetch = () => {
         setLoading(true);
-        fetchOutboundComponentsTest()
+        fetchProductionStock()
             .then((components) => {
                 if (components && components.length > 0) {
-                    setOutboundComponents(components);
+                    setProductionStock(components);
                 } else {
                     console.error("Error fetching components");
                 }
@@ -58,16 +46,15 @@ const OutboundList = () => {
             })
             .finally(() => {
                 setLoading(false);
-                console.log(outboundComponents);
+                console.log(productionStock);
             });
     };
 
-    const handleOutboundping = async (productDesignation, quantity) => {
-        //fetchOutboundItem(formdata)
+    const handleOutbound = async (productDesignation, quantity) => {
+        await fetchSendProductionToWarehouse()
         console.log(productDesignation)
         console.log(quantity)
     }
-
 
     useEffect(() => {
         handleOutboundFetch()
@@ -76,9 +63,8 @@ const OutboundList = () => {
     return (
         <>{loading ? (<Loading />) :
             (<OutboundTable
-                outboundComponents={outboundComponents}
-                handleOutboundping={handleOutboundping}
-                handleInputChange={handleInputChange}
+                productionStock={productionStock}
+                handleOutbound={handleOutbound}
             />)}
         </>
 

@@ -4,9 +4,9 @@ import Loading from "../../Components/Loading";
 import axios from 'axios';
 import "./Table.css";
 
-const fetchShipComponents = async () => {
+const fetchFinishedGoodStockFromWarehouse = async () => {
     try {
-        const response = await axios.get('/ForkliftDriver/GetProductionStock');
+        const response = await axios.get('/ForkliftDriver/GetFinishedGoodStock');
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error;
@@ -14,8 +14,14 @@ const fetchShipComponents = async () => {
 }
 
 const fetchShipItem = async (formdata) => {
-    let response = await axios.post("/ForkliftDriver/MoveFinishedGoodsFromProduction", "shippedMaterialsFile")
+    try {
+        let response = await axios.get("/ForkliftDriver/MoveFinishedGoodsFromProduction", formdata)
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error;
+    }
 }
+
 //KÉSZ levő dolgok Production kommunikál a Ship -> Order -> Produce (if OK, then disappear)
 //FINISHGOOD Lekérdezed -> mennyiség alapján Send to Customer-t alkalmazol.
 
@@ -23,34 +29,23 @@ const fetchShipItem = async (formdata) => {
 const ShipList = () => {
     //CREATE FETCH REQUEST FOR THE DB, CHECK USER ROLE, IF ROLE IS WRONG NAVIGATE TO THE "NO AUTHORIZATION" PAGE
     const [loading, setLoading] = useState(false)
-    const [shipComponents, setShipComponents] = useState([])
-    const [checkToShip, setCheckToShip] = useState(false)
+    const [shipFinishedGoods, setShipFinishedGoods] = useState([])
     //Check order of keys if non-working
     const [formdata, setFormData] = useState({
         "quantity": '',
-        "productDesignation": ''
+        "productDesignation": 'Airbag'
     });
 
     const handleInputChange = (e) => {
         setFormData({ ...formdata, [e.target.name]: e.target.value });
     }
-    const fetchShipComponentsTest = () => {
-        return new Promise((resolve) => {
-            // Simulating a delay to mimic an async operation
-            setTimeout(() => {
-                resolve([
-                    { ProductDesignation: "Something", quantity: 1000 },
-                    { ProductDesignation: "Something2", quantity: 1000 },
-                ]);
-            }, 1000);
-        });
-    };
+
     const handleShipFetch = () => {
         setLoading(true);
-        fetchShipComponentsTest()
+        fetchFinishedGoodStockFromWarehouse()
             .then((components) => {
                 if (components && components.length > 0) {
-                    setShipComponents(components);
+                    setShipFinishedGoods(components);
                 } else {
                     console.error("Error fetching components");
                 }
@@ -60,16 +55,15 @@ const ShipList = () => {
             })
             .finally(() => {
                 setLoading(false);
-                console.log(shipComponents);
+                console.log(shipFinishedGoods);
             });
     };
 
     const handleShipping = async (productDesignation, quantity) => {
-        //fetchShipItem(formdata)
+        await fetchShipItem(formdata)
         console.log(productDesignation)
         console.log(quantity)
     }
-
 
     useEffect(() => {
         handleShipFetch()
@@ -78,7 +72,7 @@ const ShipList = () => {
     return (
         <>{loading ? (<Loading />) :
             (<ShipTable
-                shipComponents={shipComponents}
+                shipFinishedGoods={shipFinishedGoods}
                 handleShipping={handleShipping}
                 handleInputChange={handleInputChange}
             />)}
