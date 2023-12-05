@@ -1,7 +1,7 @@
 import React from 'react';
 import SetRole from './SetRole.jsx';
 
-const Admin = () => {
+const UserManager = () => {
     return (
         <div>
             <h2>Manage Users</h2>
@@ -11,4 +11,4 @@ const Admin = () => {
     )
 };
 
-export default Admin;
+export default UserManager;

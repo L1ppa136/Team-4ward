@@ -1,12 +1,13 @@
 .Layout nav {
   background-color: black;
 }
-.Layout nav ul {
+.main-ul {
     margin-right: 10%;
     margin-left:10%;
     list-style-type: none;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0.5rem;
 
     color: white;
@@ -15,13 +16,15 @@
  
   }
 
-  .Layout nav ul{
-    margin-left: auto;
+  .Layout nav ul li {
+    display: flex;
+    justify-content: center;
+    text-align: center;
   }
 
   .Layout nav button {
-    padding: 0.7rem 1.7rem;
     font-weight: bold;
+    padding: 10px;
     color: white;
     background: none;
     border: none;
@@ -33,13 +36,8 @@
     color: #f6e839;
   }
   .mainLogo{
-    width: 50px;
-    padding-right: 30px;
-  }
-
-  .imageLi{
-    margin-left: 10%;
-    margin-right: auto;
+    padding: 10px;
+    height: 40px;
   }
 
   .loginLi {

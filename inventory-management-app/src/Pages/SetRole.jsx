@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import SetRoleForm from '../Components/SetRoleForm';
+import SetRoleForm from '../Components/Forms/SetRoleForm';
 
 const SetRole = () => {
     const [formdata, setFormData] = useState({

@@ -7,7 +7,7 @@ const SetRoleForm = ({handleSubmit, formdata, handleInputChange}) => {
                         <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
                         <label>Role:</label>
                         <select name='role' defaultValue={formdata.role} onChange={handleInputChange} required>
-
+                            <option value="" disabled>Select Role</option>
                             <option value={"Forklift Driver"}>Forklift Driver</option>
                             <option value={"Admin"}>Admin</option>
                             <option value={"Customer Planner"}>Customer Planner</option>

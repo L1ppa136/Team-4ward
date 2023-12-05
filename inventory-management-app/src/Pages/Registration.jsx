@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import RegisterForm from '../Components/RegisterForm';
+import RegisterForm from '../Components/Forms/RegisterForm';
 
 const Registration = () => {
   const [formdata, setFormData] = useState({
