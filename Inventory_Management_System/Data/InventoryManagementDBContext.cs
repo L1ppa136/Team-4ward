@@ -1,5 +1,4 @@
-﻿using Inventory_Management_System.Model.Employee;
-using Inventory_Management_System.Model.Location;
+﻿using Inventory_Management_System.Model.Location;
 using Inventory_Management_System.Model.Good;
 using Microsoft.EntityFrameworkCore;
 using Inventory_Management_System.Model.HandlingUnit;
