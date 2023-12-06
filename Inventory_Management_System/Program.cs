@@ -111,13 +111,11 @@ public class Program
         {
             builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
             {
-                options.UseSqlServer($"Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password={configuration["ConnectionStringPassword"]};Encrypt=False;");
-            });
+                options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));});
 
             builder.Services.AddDbContext<UsersContext>(options =>
             {
-                options.UseSqlServer($"Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password={configuration["ConnectionStringPassword"]};Encrypt=False;");
-            });
+                options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));});
 
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             //builder.Services.AddScoped<IProduction, ProductionLocation>();

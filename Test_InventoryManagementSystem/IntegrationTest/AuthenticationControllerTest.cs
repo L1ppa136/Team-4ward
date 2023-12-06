@@ -12,7 +12,6 @@ public class AuthenticationControllerTest : IDisposable
 {
     private ImsAppFactory _factory;
     private HttpClient _client;
-
     public AuthenticationControllerTest()
     {
         _factory = new ImsAppFactory();
@@ -33,8 +32,10 @@ public class AuthenticationControllerTest : IDisposable
             "application/json");
         var expectedAuthResult = new AuthenticationResult(true, "user1@email.com", "user1", "userToken");
         
-        _factory.AuthenticationServiceMock.Setup(authService => authService.LoginAsync("user1", "password123"))
-            .ReturnsAsync(expectedAuthResult);
+        
+        
+        // _factory.AuthenticationServiceMock.Setup(authService => authService.LoginAsync("user1", "password123"))
+        //     .ReturnsAsync(expectedAuthResult);
         
         //Act
         var response = await _client.PostAsync("/Authentication/Login", requestJson);
