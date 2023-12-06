@@ -18,7 +18,7 @@ namespace Inventory_Management_System.Model.Good
         {
             ProductDesignation = productDesignation;
             PartNumber = (int)productDesignation;
-            CreatedAt = DateTime.Now;
+            CreatedAt = DateTime.Now.ToUniversalTime();
         }
     }
 }
