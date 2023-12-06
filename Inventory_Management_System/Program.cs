@@ -9,83 +9,87 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 
-var builder = WebApplication.CreateBuilder(args);
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-var configuration = builder.Configuration;
+        var configuration = builder.Configuration;
 
-AddServices();
-ConfigureSwagger();
-AddDbContext(configuration);
-AddAuthentication();
-AddIdentity();
+        AddServices();
+        ConfigureSwagger();
+        AddDbContext(configuration);
+        AddAuthentication();
+        AddIdentity();
 
-var app = builder.Build();
+        var app = builder.Build();
 
 //Adding all roles to AspNetRoles
-AddRoles();
+        AddRoles();
 
 //Add admin if not exists
-AddAdmin();
+        AddAdmin();
 
 //Migrate InventoryManagementDBContext
-DBMigration();
+        DBMigration();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 // Add CORS middleware here
-app.UseCors(builder =>
-{
-    builder.WithOrigins("http://localhost:3000")
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        ;
-});
+        app.UseCors(builder =>
+        {
+            builder.WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                ;
+        });
 
-app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
 //Authentication and Authorization
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-app.Run();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
 
-void DBMigration()
-{
-    // migrate any database changes on startup (includes initial db creation)
-    using (var scope = app.Services.CreateScope())
-    {
-        var inventoryContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
-        inventoryContext.Database.Migrate();
-    }
-}
-
-void AddServices()
-{
-    // Add services to the container.
-    builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
-}
-
-void ConfigureSwagger()
-{
-    builder.Services.AddSwaggerGen(options =>
-    {
-        options.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
-
-        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        void DBMigration()
         {
-            In = ParameterLocation.Header,
-            Description = "Please enter a valid token",
-            Name = "Authorization",
-            Type = SecuritySchemeType.Http,
-            BearerFormat = "JWT",
-            Scheme = "Bearer"
-        });
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            // migrate any database changes on startup (includes initial db creation)
+            using (var scope = app.Services.CreateScope())
+            {
+                var inventoryContext = scope.ServiceProvider.GetRequiredService<InventoryManagementDBContext>();
+                inventoryContext.Database.Migrate();
+            }
+        }
+
+        void AddServices()
+        {
+            // Add services to the container.
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+        }
+
+        void ConfigureSwagger()
+        {
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -100,148 +104,150 @@ void ConfigureSwagger()
 
                     }
                 });
-    });
-}
+            });
+        }
 
-void AddDbContext(IConfiguration configuration)
-{
-    builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
-    {
-        options.UseSqlServer($"Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password={configuration["ConnectionStringPassword"]};Encrypt=False;");
-    });
-
-    builder.Services.AddDbContext<UsersContext>(options =>
-    {
-        options.UseSqlServer($"Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password={configuration["ConnectionStringPassword"]};Encrypt=False;");
-    });
-
-    builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-    //builder.Services.AddScoped<IProduction, ProductionLocation>();
-    builder.Services.AddScoped<IStock, LogisticService>();
-    builder.Services.AddScoped<ISupplier, LogisticService>();
-    builder.Services.AddScoped<ITokenService, TokenService>();
-}    
-
-
-void AddAuthentication()
-{
-    //This will add a JWT token authentication scheme to your API. This piece of code is required to validate a JWT.
-    builder.Services
-        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
+        void AddDbContext(IConfiguration configuration)
         {
-            options.TokenValidationParameters = new TokenValidationParameters()
+            builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
             {
-                ClockSkew = TimeSpan.Zero,
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = "apiWithAuthBackend",
-                ValidAudience = "apiWithAuthBackend",
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes("!SomethingSecret!")
+                options.UseSqlServer($"Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password={configuration["ConnectionStringPassword"]};Encrypt=False;");
+            });
+
+            builder.Services.AddDbContext<UsersContext>(options =>
+            {
+                options.UseSqlServer($"Server=localhost,1433;Database=InventoryManagementSystem;User Id=sa;Password={configuration["ConnectionStringPassword"]};Encrypt=False;");
+            });
+
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            //builder.Services.AddScoped<IProduction, ProductionLocation>();
+            builder.Services.AddScoped<IStock, LogisticService>();
+            builder.Services.AddScoped<ISupplier, LogisticService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+        }    
+
+
+        void AddAuthentication()
+        {
+            //This will add a JWT token authentication scheme to your API. This piece of code is required to validate a JWT.
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ClockSkew = TimeSpan.Zero,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "apiWithAuthBackend",
+                        ValidAudience = "apiWithAuthBackend",
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes("!SomethingSecret!")
                 
                     
-                    ),
+                        ),
                 
-            };
-        });
-}
+                    };
+                });
+        }
 
-void AddIdentity()
-{
-    //User requirements
-    builder.Services
-        .AddIdentityCore<IdentityUser>(options =>
+        void AddIdentity()
         {
-            options.SignIn.RequireConfirmedAccount = false;
-            options.User.RequireUniqueEmail = true;
-            options.Password.RequireDigit = false;
-            options.Password.RequiredLength = 6;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireLowercase = false;
-        }).AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<UsersContext>();
-}
+            //User requirements
+            builder.Services
+                .AddIdentityCore<IdentityUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.User.RequireUniqueEmail = true;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
+                }).AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<UsersContext>();
+        }
 
-void AddRoles()
-{
-    using var scope = app.Services.CreateScope();
-
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    var tAdmin = CreateAdminRole(roleManager);
-    tAdmin.Wait();
-
-    var tUser = CreateUserRole(roleManager);
-    tUser.Wait();
-
-    var tCustomerPlanner = CreateCustomerPlannerRole(roleManager);
-    tCustomerPlanner.Wait();
-
-    var tForkliftDriver = CreateForkliftdriverRole(roleManager);
-    tForkliftDriver.Wait();
-
-    var tProductionLeader = CreateProductionLeaderRole(roleManager);
-    tProductionLeader.Wait();
-
-    var tWareouseLeader = CreateWarehouseLeaderRole(roleManager);
-    tWareouseLeader.Wait();
-}
-
-async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
-{
-    await roleManager.CreateAsync(new IdentityRole("Admin"));
-}
-
-async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
-{
-    await roleManager.CreateAsync(new IdentityRole("User"));
-}
-
-async Task CreateCustomerPlannerRole(RoleManager<IdentityRole> roleManager)
-{
-    await roleManager.CreateAsync(new IdentityRole("Customer Planner"));
-}
-
-async Task CreateForkliftdriverRole(RoleManager<IdentityRole> roleManager)
-{
-    await roleManager.CreateAsync(new IdentityRole("Forklift Driver"));
-}
-
-async Task CreateProductionLeaderRole(RoleManager<IdentityRole> roleManager)
-{
-    await roleManager.CreateAsync(new IdentityRole("Production Leader"));
-}
-
-async Task CreateWarehouseLeaderRole(RoleManager<IdentityRole> roleManager)
-{
-    await roleManager.CreateAsync(new IdentityRole("Warehouse Leader"));
-}
-
-void AddAdmin()
-{
-    var tAdmin = CreateAdminIfNotExists();
-    tAdmin.Wait();
-}
-
-async Task CreateAdminIfNotExists()
-{
-    using var scope = app.Services.CreateScope();
-    var userManager =
-        scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-
-    var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
-    if (adminInDb == null)
-    {
-        var admin = new IdentityUser { UserName = "admin", Email = "admin@admin.com" };
-        var adminCreated = await userManager.CreateAsync(admin, "Admin123");
-
-        if (adminCreated.Succeeded)
+        void AddRoles()
         {
-            await userManager.AddToRoleAsync(admin, "Admin");
+            using var scope = app.Services.CreateScope();
+
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            var tAdmin = CreateAdminRole(roleManager);
+            tAdmin.Wait();
+
+            var tUser = CreateUserRole(roleManager);
+            tUser.Wait();
+
+            var tCustomerPlanner = CreateCustomerPlannerRole(roleManager);
+            tCustomerPlanner.Wait();
+
+            var tForkliftDriver = CreateForkliftdriverRole(roleManager);
+            tForkliftDriver.Wait();
+
+            var tProductionLeader = CreateProductionLeaderRole(roleManager);
+            tProductionLeader.Wait();
+
+            var tWareouseLeader = CreateWarehouseLeaderRole(roleManager);
+            tWareouseLeader.Wait();
+        }
+
+        async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
+        {
+            await roleManager.CreateAsync(new IdentityRole("Admin"));
+        }
+
+        async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
+        {
+            await roleManager.CreateAsync(new IdentityRole("User"));
+        }
+
+        async Task CreateCustomerPlannerRole(RoleManager<IdentityRole> roleManager)
+        {
+            await roleManager.CreateAsync(new IdentityRole("Customer Planner"));
+        }
+
+        async Task CreateForkliftdriverRole(RoleManager<IdentityRole> roleManager)
+        {
+            await roleManager.CreateAsync(new IdentityRole("Forklift Driver"));
+        }
+
+        async Task CreateProductionLeaderRole(RoleManager<IdentityRole> roleManager)
+        {
+            await roleManager.CreateAsync(new IdentityRole("Production Leader"));
+        }
+
+        async Task CreateWarehouseLeaderRole(RoleManager<IdentityRole> roleManager)
+        {
+            await roleManager.CreateAsync(new IdentityRole("Warehouse Leader"));
+        }
+
+        void AddAdmin()
+        {
+            var tAdmin = CreateAdminIfNotExists();
+            tAdmin.Wait();
+        }
+
+        async Task CreateAdminIfNotExists()
+        {
+            using var scope = app.Services.CreateScope();
+            var userManager =
+                scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+            var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
+            if (adminInDb == null)
+            {
+                var admin = new IdentityUser { UserName = "admin", Email = "admin@admin.com" };
+                var adminCreated = await userManager.CreateAsync(admin, "Admin123");
+
+                if (adminCreated.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, "Admin");
+                }
+            }
         }
     }
 }
