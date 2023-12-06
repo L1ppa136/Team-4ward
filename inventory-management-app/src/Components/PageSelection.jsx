@@ -9,19 +9,22 @@ const PageSelection = ({ userRole }) => {
             { link: '/Outbound', label: 'Outbound' },
             { link: '/ProdSupply', label: 'ProdSupply' },
             { link: '/Production', label: 'Production' },
-            { link: '/CustomerPlanner', label: 'Customer Planning' }
+            { link: '/CustomerPlanner', label: 'Customer Planning' },
+            { link: '/ShipList', label: 'Shipping' }
         ],
         "Warehouse Leader": [
             { link: '/Inbound', label: 'Inbound' },
             { link: '/Outbound', label: 'Outbound' },
             { link: '/ProdSupply', label: 'ProdSupply' },
             { link: '/Production', label: 'Production' },
-            { link: '/CustomerPlanner', label: 'Customer Planning' }
+            { link: '/CustomerPlanner', label: 'Customer Planning' },
+            { link: '/ShipList', label: 'Shipping' }
         ],
         "Forklift Driver": [
             { link: '/Inbound', label: 'Inbound' },
             { link: '/Outbound', label: 'Outbound' },
-            { link: '/ProdSupply', label: 'ProdSupply' }
+            { link: '/ProdSupply', label: 'ProdSupply' },
+            { link: '/ShipList', label: 'Shipping' }
         ],
         "Production Leader": [
             { link: '/Production', label: 'Production' }

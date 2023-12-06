@@ -1,41 +1,84 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import ProdSupplyTable from '../../Components/Tables/ProdSupplyTable';
-import Loading from '../../Components/Loading';
+import Loading from "../../Components/Loading"
 import "./Table.css";
+import axios from 'axios';
+
+const fetchStoreComponentToProduction = async (orderItem) => {
+  try {
+    const response = await axios.post('/ForkliftDriver/MoveComponentToProduction', orderItem);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+}
 
 const ProdSupplyList = () => {
+  const [goodsToSupply, setGoodsToSupply] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  const [loading, setLoading] = useState(true)
-  const [products, setProducts] = useState([])
-
-  const handleProdSupplyFetch = async() =>{
-      let products = []
-      //components = await fetchInboundComponents();
-      var component = {id: 1, ProductDesignation: 1, CreatedAt: 11, PartNumber: 11}
-      products.push(component)
-      setProducts(products);
-      setLoading(false);
-      console.log(products);
+  const GenerateOrderList = (Quantity) => {
+    return {
+      Screw: 4 * Quantity,
+      Nut: 4 * Quantity,
+      Cushion: 1 * Quantity,
+      Diffusor: 1 * Quantity,
+      Retrainer: 1 * Quantity,
+      Cover: 1 * Quantity,
+      Emblem: 1 * Quantity,
+      Inflator: 1 * Quantity,
+      Wireharness: 1 * Quantity
+    }
   }
 
-  //Ez a method kiveszi a beérkező componentseket és eltárolja őket az adott raktárba (RawMat).
-  const handleDelivery = async(id) =>{
-      
+  const nextOrderList = async () => {
+    //var componentToProduceTEST = { "quantity": 1000, "productDesignation": "Airbag" }
+    let productionOrder = localStorage.getItem("OrderFromWarehouse");
+    let productionOrderObject = await JSON.parse(productionOrder)
+    //let productionOrderObject = componentToProduceTEST
+
+    if (productionOrderObject && productionOrderObject.quantity !== null) {
+      let generatedList = GenerateOrderList(productionOrderObject.quantity);
+      let keyValueArr = Object.entries(generatedList).map(([key, value]) => {
+        console.log(key, value)
+        return { key, value }
+      })
+      setGoodsToSupply(keyValueArr);
+      console.log("Components here!" + goodsToSupply.map((comp) => console.log(comp)));
+      localStorage.removeItem("OrderFromWarehouse");
+      return goodsToSupply;
+    }
+    return console.log("No quantity in Order")
   }
 
-  useEffect(()=>{
-      handleProdSupplyFetch()
-  },[])
+  const handleStore = async (quantity, productDesignation) => {
+    var componentToFetch = { "quantity": quantity, "productDesignation": productDesignation };
+    await fetchStoreComponentToProduction(componentToFetch);
+    removeItem(productDesignation);
+  }
 
-  if (loading) {
-      return <Loading />;
-    };
+  const removeItem = (productDes) => {
+    setLoading(true);
+    setGoodsToSupply(prevState => prevState.filter(item => item.key !== productDes));
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    console.log("HERE", goodsToSupply);
+  }, [goodsToSupply]);
+
+  useEffect(() => {
+  }, []);
+
 
   return (
-  <ProdSupplyTable
-  prodSupplyComponents = {products}
-  handleDelivery = {handleDelivery}
-  />
+    <>{loading ? (<Loading />) : (<ProdSupplyTable
+      goodsToSupply={goodsToSupply}
+      handleStore={handleStore}
+      nextOrderList={nextOrderList}
+    />)}
+    </>
+
   )
 }
 

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
-
 import Layout from './Pages/Layout/Layout.jsx';
 import Registration from './Pages/Registration.jsx';
 import Login from './Pages/Login.jsx';
@@ -14,7 +13,7 @@ import OutboundList from "./Pages/LogisticsTables/OutboundList.jsx";
 import ProdSupplyList from "./Pages/LogisticsTables/ProdSupplyList.jsx";
 import ProductionList from "./Pages/LogisticsTables/ProductionList.jsx";
 import CustomerPlannerList from './Pages/LogisticsTables/CustomerPlannerList.jsx';
-
+import ShipList from "./Pages/LogisticsTables/ShipList.jsx";
 import PrivateRoute from './Components/PrivateRoute.jsx';
 import UserManager from './Pages/UserManager.jsx';
 
@@ -58,11 +57,15 @@ const router = createBrowserRouter([
       },
       {
         path: '/Production',
-        element: <PrivateRoute element={<ProductionList />} roles={['Admin', 'Production Leader', 'Warehouse Leader']} />
+        element: <PrivateRoute element={<ProductionList />} roles={['Admin', 'Production Leader']} />
       },
       {
         path: '/CustomerPlanner',
         element: <PrivateRoute element={<CustomerPlannerList />} roles={['Admin', 'Customer Planner', 'Warehouse Leader']} />
+      },
+      {
+        path: '/ShipList',
+        element: <PrivateRoute element={<ShipList />} roles={['Admin', 'Warehouse Leader', 'Forklift Driver']} />
       }
     ]
   }
