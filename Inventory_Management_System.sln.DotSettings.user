@@ -1,0 +1,10 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=63423871_002Dfb51_002D4a72_002Db8ba_002D94c0e2650537/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="LoginAsync_ValidCredentials_ReturnsLoggedInUser" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;Project Location="C:\Users\UpgradePC\Desktop\Codecool\Advanced\TW\Team-4ward\Team-4ward\Test_InventoryManagementSystem" Presentation="&amp;lt;Test_InventoryManagementSystem&amp;gt;" /&gt;&#xD;
+    &lt;TestAncestor&gt;&#xD;
+      &lt;TestId&gt;xUnit::AA76EA6C-2DDB-4E47-B348-07FB4879CDF3::net7.0::Inventory_Integration_Test.AuthenticationTest.Test_Registration&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::AA76EA6C-2DDB-4E47-B348-07FB4879CDF3::net7.0::Inventory_Integration_Test.AuthenticationTest&lt;/TestId&gt;&#xD;
+    &lt;/TestAncestor&gt;&#xD;
+  &lt;/Or&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
