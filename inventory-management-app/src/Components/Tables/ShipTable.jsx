@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 function ShipTable({ handleInputChange, shipFinishedGoods, handleShipping }) {
 
   const [selectedQuantityOption, setSelectedQuantityOption] = useState('');
 
   //this won't work with the current setup
-  const handleOptionAndChangeForQuantity = (eTargetValue) => {
-    setSelectedQuantityOption(eTargetValue.target.value);
-    handleInputChange(eTargetValue);
+  const handleOptionAndChangeForQuantity = (e) => {
+    setSelectedQuantityOption(e.target.value);
+    handleInputChange(e);
   }
+
+  useEffect(()=>{
+    console.log(selectedQuantityOption);
+  })
 
   /* const [selectedQuantities, setSelectedQuantities] = useState({});
 
@@ -33,7 +37,7 @@ function ShipTable({ handleInputChange, shipFinishedGoods, handleShipping }) {
           </tr>
         </thead>
         <tbody>
-          {shipFinishedGoods && ((shipFinishedGoods) => (
+          {shipFinishedGoods && 
             <tr key={shipFinishedGoods.name}>
               <td>
                 <p value={shipFinishedGoods.name}>{shipFinishedGoods.name}</p>
@@ -42,8 +46,8 @@ function ShipTable({ handleInputChange, shipFinishedGoods, handleShipping }) {
                 <select
                   placeholder='Quantity'
                   name="quantity"
-                  value={shipFinishedGoods.quantity}
-                  onChange={(e) => handleOptionAndChangeForQuantity(e.target.value)}>
+                  value={shipFinishedGoods ? selectedQuantityOption : 0}
+                  onChange={(e) => handleOptionAndChangeForQuantity(e)}>
                   <option value="" disabled hidden>Select your option</option>
                   {Array.from({ length: shipFinishedGoods.quantity / 200 }, (_, index) => (
                     <option key={index} value={(index + 1) * 200}>
@@ -56,7 +60,7 @@ function ShipTable({ handleInputChange, shipFinishedGoods, handleShipping }) {
                 <button type="button" onClick={() => handleShipping(shipFinishedGoods.name, selectedQuantityOption)}>Ship to Customer</button>
               </td>
             </tr>
-          ))}
+          }
         </tbody>
       </table>
     </div >

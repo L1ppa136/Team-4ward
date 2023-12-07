@@ -15,7 +15,7 @@ const fetchFinishedGoodStockFromWarehouse = async () => {
 
 const fetchShipItem = async (formdata) => {
     try {
-        let response = await axios.get("/ForkliftDriver/MoveFinishedGoodsFromProduction", formdata)
+        let response = await axios.post("/ForkliftDriver/Deliver", formdata)
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error;
@@ -47,9 +47,8 @@ const ShipList = () => {
             const components = await fetchFinishedGoodStockFromWarehouse();
             const goodsObj = await handleSummerize(components);
 
-            console.log("ITT AZ OBJECT", goodsObj);
-
             if (goodsObj) {
+                console.log("ITT AZ OBJECT", goodsObj);
                 setShipFinishedGoods(goodsObj);
             } else {
                 console.error("Error fetching components");
@@ -62,8 +61,16 @@ const ShipList = () => {
         }
     };
 
+    useEffect(()=>{
+        console.log(shipFinishedGoods)
+    },[shipFinishedGoods])
+
     const handleShipping = async (productDesignation, quantity) => {
-        await fetchShipItem(formdata)
+        let object = {
+            quantity:quantity,
+            ProductDesignation: productDesignation
+        }
+        await fetchShipItem(object)
         console.log(productDesignation)
         console.log(quantity)
     }
@@ -84,11 +91,11 @@ const ShipList = () => {
 
     const handleSummerize = async (components) => {
         let summQuantity = 0
-        summQuantity = await components.reduce(async (accumulator, location) => {
-            const locationTotal = await location.boxes.reduce(async (locationAccumulator, box) => {
+        summQuantity = components.reduce((accumulator, location) => {
+            const locationTotal = location.boxes.reduce((locationAccumulator, box) => {
                 if (box.quantity && box.quantity > 0) {
-                    locationAccumulator += await box.quantity;
-                    return await locationAccumulator;
+                    locationAccumulator += box.quantity;
+                    return locationAccumulator;
                 }
             }, 0);
             accumulator += locationTotal;
