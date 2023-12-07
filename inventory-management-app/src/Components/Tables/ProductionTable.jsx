@@ -11,18 +11,18 @@ function ProductionTable({ handleInputChange, handleProduce, handleOrderingFromW
     console.log(selectedQuantityOption)
   }, [selectedQuantityOption])
 
-  const handleOptionAndChangeForQuantity = (eTargetValue) => {
-    setSelectedQuantityOption(eTargetValue.target.value);
-    handleInputChange(eTargetValue);
+  const handleOptionAndChangeForQuantity = (event) => {
+    setSelectedQuantityOption(event.target.value);
+    handleInputChange(event);
   }
 
-  const handleOptionAndChangeForDesignation = (eTargetValue) => {
-    setSelectedDesignationOption(eTargetValue.target.value);
-    handleInputChange(eTargetValue);
+  const handleOptionAndChangeForDesignation = (event) => {
+    setSelectedDesignationOption(event.target.value);
+    handleInputChange(event);
   }
 
   const handleOrder = () => {
-    handleOrderingFromWarehouse();
+    handleOrderingFromWarehouse(selectedQuantityOption, selectedDesignationOption);
     setHasBeenOrdered(true);
   }
 
@@ -47,13 +47,13 @@ function ProductionTable({ handleInputChange, handleProduce, handleOrderingFromW
             <td>
               <select placeholder='Quantity' name="quantity" value={selectedQuantityOption} onChange={(e) => handleOptionAndChangeForQuantity(e)}>
                 <option value="" disabled selected hidden>Select your option</option>
-                <option value="200">200</option>
-                <option value="400">400</option>
-                <option value="600">600</option>
+                <option value="2000">2000</option>
+                <option value="4000">4000</option>
+                <option value="6000">6000</option>
               </select>
             </td>
             <td>
-              <>{!hasBeenOrdered ? (<button type="button" onClick={() => handleOrder()}>Order Components</button>) : (<button type="button" onClick={() => handleProduce()}>Produce</button>)}</>
+              <>{!hasBeenOrdered ? (<button type="button" onClick={() => handleOrder()}>Order Components</button>) : (<button type="button" onClick={() => handleProduce(selectedQuantityOption, selectedDesignationOption)}>Produce</button>)}</>
             </td>
           </tr>
         </tbody>
