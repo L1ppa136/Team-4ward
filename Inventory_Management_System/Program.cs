@@ -107,12 +107,12 @@ void AddDbContext(IConfiguration configuration)
 {
     builder.Services.AddDbContext<InventoryManagementDBContext>(options =>
     {
-        options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));    
+        options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));
     });
 
     builder.Services.AddDbContext<UsersContext>(options =>
     {
-        options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));    
+        options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));
     });
 
     builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();

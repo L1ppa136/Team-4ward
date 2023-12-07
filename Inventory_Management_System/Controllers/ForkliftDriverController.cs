@@ -49,19 +49,33 @@ namespace Inventory_Management_System.Controllers
         [HttpPost("MoveComponentToProduction")]
         public async Task<IActionResult> ComponentToProduction([FromBody] OrderRequest request)
         {
-            if (request.Quantity <= 0)
+            try
             {
-                return BadRequest("Requested quantity can not be zero or negative!");
-            }
-            // might need a look into the generic type
-            if (Enum.TryParse(typeof(ProductDesignation), request.ProductDesignation, out object parsedValue))
+                if (request.Quantity <= 0)
+                {
+                    return BadRequest("Requested quantity can not be zero or negative!");
+                }
+                // might need a look into the generic type
+                if (Enum.TryParse(typeof(ProductDesignation), request.ProductDesignation, out object parsedValue))
+                {
+                    var result = await _stockService.MoveRawMaterialToProductionAsync((ProductDesignation)parsedValue, request.Quantity);
+                    if (result.Success)
+                    {
+                        return Ok(result.Message);
+
+                    }
+                    else
+                    {
+                        return NotFound(result.Message);
+                    }
+                }
+                else
+                {
+                    return BadRequest("Incorrect productDesignation!");
+                }
+            }catch (Exception ex)
             {
-                await _stockService.MoveRawMaterialToProductionAsync((ProductDesignation)parsedValue, request.Quantity);
-                return Ok($"{request.Quantity} pcs of {request.ProductDesignation} successfully moved to production line.");
-            }
-            else
-            {
-                return BadRequest("Incorrect productDesignation!");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -82,6 +96,34 @@ namespace Inventory_Management_System.Controllers
                               
 
             }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("Deliver")]
+        public async Task<IActionResult> DeliverToCustomer([FromBody] OrderRequest request)
+        {
+            try
+            {
+                if (request.Quantity <= 0)
+                {
+                    return BadRequest("Invalid quantity, must be greater than zero.");
+                }
+
+                var result = await _stockService.DeliverFinishedGoodsToCustomer(request.Quantity);
+
+                if (result.Success)
+                {
+                    return Ok(result.Message);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

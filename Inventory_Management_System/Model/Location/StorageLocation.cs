@@ -51,14 +51,27 @@ namespace Inventory_Management_System.Model.Location
 
         public virtual List<Box<T>> RemoveBoxes(T good, int quantity)
         {
-            int numberOfBoxes = quantity / good.BoxCapacity;
+            int numberOfBoxes = Boxes.Count;
             List<Box<T>> removedBoxes = new List<Box<T>>();
             List<Box<T>> boxesCopy = Boxes.OrderBy(b => b.CreatedAt).ToList();
             for (int i = 0; i < numberOfBoxes; i++)
             {
                 Box<T> boxOut = boxesCopy[i];
-                Boxes.Remove(boxOut);
+                int removeQuantity = Math.Min(quantity, boxOut.Quantity);
+                if (removeQuantity < boxOut.Quantity)
+                {
+                    boxOut.Quantity -= removeQuantity;
+                }
                 removedBoxes.Add(boxOut);
+                Boxes.Remove(boxOut);
+                
+                quantity -= removeQuantity;
+                
+                if(quantity <= 0)
+                {
+                    break;
+                }
+
             }
             if(Boxes.Count < MaxBoxCapacity)
             {

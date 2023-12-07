@@ -44,11 +44,8 @@ namespace Inventory_Management_System.Model.Location
 
             foreach(var box in components)
             {
-                box.LocationName = LocationName;
+                Quantity += box.Quantity;
             }
-
-            var boxQuantity = components.First().Quantity;
-            Quantity += components.Count * boxQuantity;
             
             Components.AddRange(components);
             Components = Components.OrderBy(box => box.CreatedAt).ToList();
@@ -56,19 +53,30 @@ namespace Inventory_Management_System.Model.Location
 
         public void UseUpComponents(int quantity)
         {
+            var quantityCopy = quantity;
             if (Quantity >= quantity)
-            {                
-                var boxQuantity = Components.First().Quantity;
-                var numberOfBoxes = Quantity / boxQuantity;
-                Quantity -= quantity;
-                Components.RemoveRange(0, numberOfBoxes);
+            {
+                var boxesToBeRemoved = new List<Box<Component>>();
+                foreach(var box in Components)
+                {   
+                    var removeQuantity = Math.Min(box.Quantity, quantity);
+                    box.Quantity -= removeQuantity;
+                    quantity -= removeQuantity;
+                    boxesToBeRemoved.Add(box);
+                    if(quantity <= 0)
+                    {
+                        break;
+                    }
+                }
+                Quantity -= quantityCopy;
+                Components.RemoveRange(0, boxesToBeRemoved.Count);
             }
             else
             {
                 throw new Exception($"Location does not have enough components, we need {quantity - Quantity} pcs of {LocationName}.");
             }
 
-            if(Quantity == 0)
+            if (Quantity == 0)
             {
                 PartNumber = 0;
             }
