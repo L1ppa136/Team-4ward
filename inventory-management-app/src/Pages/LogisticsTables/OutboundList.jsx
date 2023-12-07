@@ -36,7 +36,7 @@ const OutboundList = () => {
         fetchProductionStock()
             .then((components) => {
                 if (components && components.length > 0) {
-                    setProductionStock(components.filter(component => component.productDesignation === 'Airbag'));
+                    setProductionStock(components);
                 } else {
                     console.error("Error fetching components");
                 }
@@ -52,10 +52,15 @@ const OutboundList = () => {
 
     const handleOutbound = async (productDesignation, quantity) => {
         setLoading(true);
-        await fetchSendProductionToWarehouse()
+        if (quantity <= 0) {
+            window.alert("No good on stock!")
+        } else {
+            await fetchSendProductionToWarehouse()
+            setProductionStock([])
+        }
+        setLoading(false)
         console.log(productDesignation)
         console.log(quantity)
-        setLoading(false);
     }
 
     useEffect(() => {
