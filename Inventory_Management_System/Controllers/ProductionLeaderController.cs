@@ -7,7 +7,7 @@ namespace Inventory_Management_System.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize(Roles = "Production Leader, Admin")]
+    [Authorize(Roles = "Production Leader, Admin")]
     public class ProductionLeaderController : ControllerBase
     {
         private readonly IStock _stockService;

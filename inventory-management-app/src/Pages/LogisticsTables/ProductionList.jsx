@@ -82,6 +82,7 @@ function ProductionList() {
     if (checkMaterialAvailability(productionStock, GenerateOrderList(quantity))) {
       console.log("ElementsToProduce:", componentToProduce);
       await fetchProduce(componentToProduce);
+      window.alert(`${quantity} item has been produced.`)
     }
     else {
       console.log(componentToProduce);

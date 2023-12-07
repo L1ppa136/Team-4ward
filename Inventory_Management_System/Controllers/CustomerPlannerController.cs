@@ -8,7 +8,7 @@ namespace Inventory_Management_System.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize(Roles = "Customer Planner, Admin")]
+    [Authorize(Roles = "Customer Planner, Admin")]
     public class CustomerPlannerController : ControllerBase
     {
         private readonly IStock _stockService;

@@ -8,7 +8,7 @@ namespace Inventory_Management_System.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize(Roles = "Forklift Driver, Admin")]
+    [Authorize(Roles = "Forklift Driver, Warehouse Leader, Admin")]
     public class ForkliftDriverController : ControllerBase
     {
         private readonly IStock _stockService;

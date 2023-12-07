@@ -61,16 +61,17 @@ const ShipList = () => {
         }
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(shipFinishedGoods)
-    },[shipFinishedGoods])
+    }, [shipFinishedGoods])
 
     const handleShipping = async (productDesignation, quantity) => {
         let object = {
-            quantity:quantity,
+            quantity: quantity,
             ProductDesignation: productDesignation
         }
         await fetchShipItem(object)
+        window.alert(`${quantity} finished good has been shipped.`)
         console.log(productDesignation)
         console.log(quantity)
     }
