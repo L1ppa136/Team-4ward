@@ -1,3 +1,4 @@
+using Inventory_Management_System.Contracts;
 using Inventory_Management_System.Data;
 using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
@@ -8,7 +9,7 @@ using System.Resources;
 
 namespace Inventory_Management_System.Service.Repositories;
 
-public class LogisticService : IStock, ISupplier
+public class LogisticService : IStock, ISupplier, IProduction
 {
     private readonly InventoryManagementDBContext _dbContext;
     //private readonly IProduction _production;
@@ -33,18 +34,18 @@ public class LogisticService : IStock, ISupplier
     {
         //throw new NotImplementedException();
         //Create Raw material locations
-        for (int i = 1; i < 10; i++)
-        {
-            for (int j = 1; j < 10; j++)
-            {
-                for (int k = 1; k < 6; k++)
-                {
-                    var componentLocation = new ComponentLocation($"{i}-{j}-{k}");
-                    _dbContext.ComponentLocations.Add(componentLocation);
-                    _dbContext.SaveChanges();
-                }
-            }
-        }
+        //for (int i = 1; i < 10; i++)
+        //{
+        //    for (int j = 1; j < 10; j++)
+        //    {
+        //        for (int k = 1; k < 6; k++)
+        //        {
+        //            var componentLocation = new ComponentLocation($"{i}-{j}-{k}");
+        //            _dbContext.ComponentLocations.Add(componentLocation);
+        //            _dbContext.SaveChanges();
+        //        }
+        //    }
+        //}
 
         //Create Finished good material locations
         for (int i = 10; i < 20; i++)
@@ -61,13 +62,13 @@ public class LogisticService : IStock, ISupplier
         }
 
         //Create productionlocations
-        var enumArray = Enum.GetNames(typeof(ProductDesignation));
-        for(int i = 0; i < enumArray.Length; i++)
-        {
-            var productionLocation = new ProductionLocation(enumArray[i].ToString());
-            _dbContext.ProductionLocations.Add(productionLocation);
-            _dbContext.SaveChanges();
-        }
+        //var enumArray = Enum.GetNames(typeof(ProductDesignation));
+        //for(int i = 0; i < enumArray.Length; i++)
+        //{
+        //    var productionLocation = new ProductionLocation(enumArray[i].ToString());
+        //    _dbContext.ProductionLocations.Add(productionLocation);
+        //    _dbContext.SaveChanges();
+        //}
     }
 
     // Rules: Each location must be filled completely (until Full == true)
@@ -137,30 +138,97 @@ public class LogisticService : IStock, ISupplier
         return await _dbContext.ComponentLocations.Where(l=> l.Boxes.Count > 0).ToListAsync();
     }
 
-    //public async Task<Component> GetComponentByDesignation(ProductDesignation productDesignation)
-    //{
-    //    return await ;
-    //}
+    private async Task<List<Box<Component>>> GetUsedUpComponentStock()
+    {
+        return await _dbContext.ComponentStock.Where(b => b.Quantity == 0).ToListAsync();
+    }
 
-    //public async Task<List<Box<FinishedGood>>> ProduceAsnyc(int orderedQuantity)
-    //{
-    //    if(await ResourcesAvailable(orderedQuantity))
-    //    {
-    //        var productionLocations = await GetProductionLocations();
-    //        foreach (var material in _buildOfMaterial)
-    //        {
-    //            foreach (var location in productionLocations)
-    //            {
-    //                location.Quantity -= material.Value;
-    //                if(location.Quantity <= 0)
-    //                {
-    //                    var component = await GetComponentByDesignation(material.Key);
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return new List<Box<FinishedGood>>();
-    //}
+    private async Task<List<Box<Component>>> GetComponentStockAsync(ProductDesignation productDesignation)
+    {
+        return await _dbContext.ComponentStock.Where(b => b.PartNumber == (int)productDesignation).ToListAsync();
+    }
+
+    private async Task<List<Box<FinishedGood>>> GetEmptiedFinishedGoodProductionLocationAsync()
+    {
+        return await _dbContext.FinishedGoodStock.Where(b => b.LocationName == "Airbag").ToListAsync();
+    }
+
+    public async Task ClearUsedUpComponentStockAsync()
+    {
+        var usedUpBoxes = await GetUsedUpComponentStock();
+
+        foreach (var box in usedUpBoxes)
+        {
+            _dbContext.ComponentStock.Remove(box);
+        }
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<ProductionResult> ProduceAsync(int orderedQuantity)
+    {
+        try
+        {
+            if (await ResourcesAvailable(orderedQuantity))
+            {
+                var productionLocations = await GetAllProductionLocationsAsync();
+                FinishedGood airbag = new FinishedGood();
+                List<Box<FinishedGood>> producedFinishedGoods = new List<Box<FinishedGood>>();
+
+                foreach (var material in _buildOfMaterial)
+                {
+                    foreach (var location in productionLocations)
+                    {
+                        if (location.LocationName == material.Key.ToString())
+                        {
+                            int neededQuantity = orderedQuantity * material.Value;
+
+                            try
+                            {
+                                location.UseUpComponents(neededQuantity);
+                                var componentStock = await GetComponentStockAsync(material.Key);
+                                int removeFromBoxQuantity = neededQuantity / componentStock.Count;
+                                foreach(var box in componentStock)
+                                {
+                                    box.Quantity -= removeFromBoxQuantity;
+                                    neededQuantity -= removeFromBoxQuantity;
+                                    if(neededQuantity <= 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                return new ProductionResult(false, ex.Message);
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < orderedQuantity / airbag.BoxCapacity; i++)
+                {
+                    Box<FinishedGood> newBox = new Box<FinishedGood>(airbag, airbag.BoxCapacity, "Airbag");
+                    producedFinishedGoods.Add(newBox);
+                }
+
+                var finishedGoodLocation = await GetProductionLocationByComponentAsync(ProductDesignation.Airbag);
+                finishedGoodLocation.StoreFinishedGoods(producedFinishedGoods);
+                await _dbContext.SaveChangesAsync();
+                return new ProductionResult(true, $"{orderedQuantity} pcs of Airbag produced and can be found on the production line!");
+            }
+            else
+            {
+                return new ProductionResult(false, "Quantity cannot be produced!");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle other exceptions if needed
+            return new ProductionResult(false, $"Unhandled exception: {ex.Message}");
+        }
+    }
+
 
     private async Task<bool> ResourcesAvailable(int orderedQuantity)
     {
@@ -178,20 +246,59 @@ public class LogisticService : IStock, ISupplier
         return true;
     }
 
-    public async Task MoveFinishedGoodToOutboundAsync()
+    public async Task<ProductionResult> MoveFinishedGoodToOutboundAsync()
     {
-        throw new NotImplementedException();
+        var finishedGoodLocation = await GetProductionLocationByComponentAsync(ProductDesignation.Airbag);
+        var emptyFinishedGoodLocations = await GetEmptyFinishedGoodLocationsAsync();
+        var locationsToRemove = new List<FinishedGoodLocation>();
+        int storedOnLineQuantity = finishedGoodLocation.Quantity;
+        if(storedOnLineQuantity <= 0)
+        {
+            return new ProductionResult(false, $"There is no finished good on production line!");
+        }
+        var finishedGood = new FinishedGood();
+        foreach (var location in emptyFinishedGoodLocations)
+        {
+            var fillingQuantity = Math.Min(storedOnLineQuantity, finishedGood.BoxCapacity * location.MaxBoxCapacity);
+            location.FillGoods(finishedGood, fillingQuantity);
+            storedOnLineQuantity -= fillingQuantity;
+
+            if (location.Full)
+            {
+                locationsToRemove.Add(location);
+            }
+
+            if (storedOnLineQuantity <= 0)
+            {
+                break;
+            }
+        }
+
+        foreach (var location in locationsToRemove)
+        {
+            emptyFinishedGoodLocations.Remove(location);
+        }
+        int movedQuantity = finishedGoodLocation.Quantity;
+        var finishedGoodStock = await GetEmptiedFinishedGoodProductionLocationAsync();
+        foreach (var box in finishedGoodStock) 
+        {
+            _dbContext.FinishedGoodStock.Remove(box);
+        }
+        finishedGoodLocation.ClearFinishedGoods();
+
+        await _dbContext.SaveChangesAsync();
+        return new ProductionResult(true, $"{movedQuantity} pcs of Airbag moved from production line to Outbound Area!");
     }
 
     public async Task<ProductionLocation> GetProductionLocationByComponentAsync(ProductDesignation componentDesignation)
     {
-        ProductionLocation productionLocation = await _dbContext.ProductionLocations.FirstOrDefaultAsync(p => p.LocationName == componentDesignation.ToString());
+        var productionLocation = await _dbContext.ProductionLocations.FirstOrDefaultAsync(p => p.LocationName == componentDesignation.ToString());
         return productionLocation;
     }
 
     public async Task<List<ProductionLocation>> GetAllProductionLocationsAsync()
     {
-        return await _dbContext.ProductionLocations.ToListAsync();
+        return await _dbContext.ProductionLocations.Include(l => l.Components).Include(l => l.FinishedGoods).ToListAsync();
     }
 
     public async Task MoveRawMaterialToProductionAsync(ProductDesignation productDesignation, int quantity)
@@ -220,6 +327,67 @@ public class LogisticService : IStock, ISupplier
 
         var productionLocation = await GetProductionLocationByComponentAsync(productDesignation);
         productionLocation.StoreComponents(neededComponents);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<ProductionResult> DeliverFinishedGoodsToCustomer(int orderQuantity)
+    {
+        try
+        {
+            var finishedGoodLocations = await GetFinishedGoodStockAsync();
+            if (IsSufficientFinishedGoodStockAvailable(orderQuantity, finishedGoodLocations))
+            {
+                List<Box<FinishedGood>> neededGoods = new List<Box<FinishedGood>>();
+                var finishedGood = new FinishedGood();
+
+                foreach (var location in finishedGoodLocations)
+                {
+                    var quantity = orderQuantity;
+                    var removeQuantity = Math.Min(quantity, finishedGood.BoxCapacity * location.MaxBoxCapacity);
+                    neededGoods.AddRange(location.RemoveBoxes(finishedGood, removeQuantity));
+                    quantity -= removeQuantity;
+
+                    if (quantity <= 0)
+                    {
+                        break;
+                    }
+                }
+
+                await ClearDeliveredFinishedGoodStockAsync(neededGoods);
+                await _dbContext.SaveChangesAsync();
+                return new ProductionResult(true, $"{orderQuantity} of airbags have been successfully delivered to customer.");
+            }
+            else
+            {
+                return new ProductionResult(false, $"There are not enough finished good on stock to fulfill delivery needs.");
+            }
+        }catch(Exception ex)
+        {
+            return new ProductionResult(false, $"{ex.Message}");
+        }
+                
+    }
+
+    private bool IsSufficientFinishedGoodStockAvailable(int quantity, List<FinishedGoodLocation> finishedGoodLocations)
+    {
+        int sum = 0;
+        foreach (var location in finishedGoodLocations)
+        {
+            foreach (var box in location.Boxes)
+            {
+                sum += box.Quantity;
+            }
+        }
+        return sum >= quantity; 
+    }
+
+    private async Task ClearDeliveredFinishedGoodStockAsync(List<Box<FinishedGood>> boxesToRemove)
+    {
+        foreach (var box in boxesToRemove)
+        {
+            _dbContext.FinishedGoodStock.Remove(box);
+        }
+
         await _dbContext.SaveChangesAsync();
     }
 }

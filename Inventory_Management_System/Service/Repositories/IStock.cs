@@ -1,4 +1,5 @@
-﻿using Inventory_Management_System.Model.Enums;
+﻿using Inventory_Management_System.Contracts;
+using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
 using Inventory_Management_System.Model.Location;
 
@@ -13,8 +14,10 @@ namespace Inventory_Management_System.Service.Repositories
         Task<List<ComponentLocation>> GetEmptyRawMaterialLocationsAsync();
         Task<List<FinishedGoodLocation>> GetEmptyFinishedGoodLocationsAsync();
         Task MoveRawMaterialToProductionAsync(ProductDesignation productDesignation, int quantity);
-        Task MoveFinishedGoodToOutboundAsync();
+        Task<ProductionResult> MoveFinishedGoodToOutboundAsync();
         Task<ProductionLocation> GetProductionLocationByComponentAsync(ProductDesignation componentDesignation);
         Task<List<ProductionLocation>> GetAllProductionLocationsAsync();
+        Task<ProductionResult> DeliverFinishedGoodsToCustomer(int orderQuantity);
+        Task ClearUsedUpComponentStockAsync();
     }
 }

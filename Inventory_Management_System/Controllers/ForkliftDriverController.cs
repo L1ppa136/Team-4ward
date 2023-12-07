@@ -21,7 +21,7 @@ namespace Inventory_Management_System.Controllers
         }
 
         [HttpPost("StoreComponent")]
-        public async Task<IActionResult> StoreComponent([FromBody] ComponentOrderRequest request)
+        public async Task<IActionResult> StoreComponent([FromBody] OrderRequest request)
         {
             try
             {
@@ -46,8 +46,8 @@ namespace Inventory_Management_System.Controllers
             }
         }
 
-        [HttpPost("MoveToProduction")]
-        public async Task<IActionResult> ComponentToProduction([FromBody] ComponentOrderRequest request)
+        [HttpPost("MoveComponentToProduction")]
+        public async Task<IActionResult> ComponentToProduction([FromBody] OrderRequest request)
         {
             if (request.Quantity <= 0)
             {
@@ -62,6 +62,55 @@ namespace Inventory_Management_System.Controllers
             else
             {
                 return BadRequest("Incorrect productDesignation!");
+            }
+        }
+
+        [HttpGet("MoveFinishedGoodsFromProduction")]
+        public async Task<IActionResult> MoveFinishedGoodsFromProduction()
+        {
+            try
+            {
+                var result = await _stockService.MoveFinishedGoodToOutboundAsync();
+                if(result.Success)
+                {
+                    return Ok(result.Message);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }                           
+
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("Deliver")]
+        public async Task<IActionResult> DeliverToCustomer([FromBody]OrderRequest request)
+        {
+            try
+            {
+                if(request.Quantity <= 0)
+                {
+                    return BadRequest("Invalid quantity, must be greater than zero.");
+                }
+
+                var result = await _stockService.DeliverFinishedGoodsToCustomer(request.Quantity);
+
+                if (result.Success)
+                {
+                    return Ok(result.Message);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-function CustomerPlannerTable({handleInputChange, createComponents }) {
+function CustomerPlannerTable({ handleInputChange, createComponents }) {
 
   const [selectedDesignationOption, setSelectedDesignationOption] = useState('');
   const [selectedQuantityOption, setSelectedQuantityOption] = useState('');
@@ -40,9 +40,9 @@ function CustomerPlannerTable({handleInputChange, createComponents }) {
             <td>
               <select placeholder='Quantity' name="quantity" value={selectedQuantityOption} onChange={(e) => handleOptionAndChangeForQuantity(e)}>
                 <option value="" disabled selected hidden>Select your option</option>
-                <option value="200">200</option>
-                <option value="400">400</option>
-                <option value="600">600</option>
+                <option value="2000">2000</option>
+                <option value="4000">4000</option>
+                <option value="6000">6000</option>
               </select>
             </td>
             <td>

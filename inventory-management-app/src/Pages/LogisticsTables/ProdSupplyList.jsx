@@ -23,11 +23,11 @@ const ProdSupplyList = () => {
       Nut: 4 * Quantity,
       Cushion: 1 * Quantity,
       Diffusor: 1 * Quantity,
-      Retrainer: 1 * Quantity,
+      Retainer: 1 * Quantity,
       Cover: 1 * Quantity,
       Emblem: 1 * Quantity,
       Inflator: 1 * Quantity,
-      Wireharness: 1 * Quantity
+      WireHarness: 1 * Quantity
     }
   }
 
@@ -53,6 +53,7 @@ const ProdSupplyList = () => {
 
   const handleStore = async (quantity, productDesignation) => {
     var componentToFetch = { "quantity": quantity, "productDesignation": productDesignation };
+    console.log("componentsToProduction:", componentToFetch)
     await fetchStoreComponentToProduction(componentToFetch);
     removeItem(productDesignation);
   }

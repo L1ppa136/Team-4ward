@@ -11,7 +11,7 @@ namespace Inventory_Management_System.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class WareHouseCreatorController : ControllerBase
     {
         private readonly IStock _stockService;
@@ -21,7 +21,7 @@ namespace Inventory_Management_System.Controllers
             _stockService = stockService;
         }
 
-        [HttpGet("CreateLocations"), Authorize(Roles = "Admin")]
+        [HttpGet("CreateLocations")]
         public IActionResult Create()
         {
             _stockService.CreateStorageLocations();

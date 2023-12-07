@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import InboundTable from "../../Components/Tables/InboundTable"
-import Loading from "../../Components/Loading"
 import "./Table.css";
 import axios from 'axios';
 
 const fetchStoreComponents = async (orderItem) => {
     try {
-        const response = await axios.post('/CustomerPlanner/OrderComponent', orderItem);
+        const response = await axios.post('/ForkliftDriver/StoreComponent', orderItem);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error;
@@ -68,7 +67,7 @@ const InboundList = () => {
     };
 
     useEffect(() => {
-        console.log("HERE", inboundComponents);
+        console.log("inboundComponents HERE", inboundComponents);
     }, [inboundComponents]);
 
     useEffect(() => {
