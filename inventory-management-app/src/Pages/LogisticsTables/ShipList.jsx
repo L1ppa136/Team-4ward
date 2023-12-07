@@ -45,7 +45,7 @@ const ShipList = () => {
         fetchFinishedGoodStockFromWarehouse()
             .then((components) => {
                 if (components && components.length > 0) {
-                    setShipFinishedGoods(components);
+                    setShipFinishedGoods(components.filter(component => component.productDesignation === 'Airbag'));
                 } else {
                     console.error("Error fetching components");
                 }
