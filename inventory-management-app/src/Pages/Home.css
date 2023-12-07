@@ -1,0 +1,16 @@
+body{
+    background-color:  lightgrey;
+}
+
+.homeLogo{
+    display: block;
+    margin-left: auto;
+    margin-right: 10%;
+    
+}
+
+.homeText{
+    border-top: 3px solid black;
+    margin-left:10%;
+    margin-right: 10%;
+}
