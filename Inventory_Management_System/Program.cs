@@ -123,8 +123,7 @@ public class Program
             builder.Services.AddScoped<ISupplier, LogisticService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
         }    
-
-
+        
         void AddAuthentication()
         {
             //This will add a JWT token authentication scheme to your API. This piece of code is required to validate a JWT.

@@ -1,9 +1,15 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using Inventory_Management_System.Contracts;
+using Inventory_Management_System.Model.Enums;
+using Inventory_Management_System.Model.Good;
+using Inventory_Management_System.Model.HandlingUnit;
+using Inventory_Management_System.Model.Location;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -64,24 +70,82 @@ public class AuthenticationTest : IDisposable
                 Encoding.UTF8, "application/json"));
 
         var authResponse = JsonConvert.DeserializeObject<AuthenticationResponse>(await loginResponse.Content.ReadAsStringAsync());
+        var adminToken = authResponse.Token;
+        Assert.NotNull(authResponse.Token);
+        Assert.Equal("admin@admin.com", authResponse.Email);
+        Assert.Equal("admin", authResponse.UserName);
+
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
         
-            Assert.NotNull(authResponse.Token);
-            Assert.Equal("admin@admin.com", authResponse.Email);
-            Assert.Equal("admin", authResponse.UserName);
+
         //Role request user1-re, az alapján változtassuk
         var setRoleRequest = new SetRoleRequest("user1", "Forklift Driver");
 
-        var setRoleResponse = await _client.PostAsync("/Admin/SetRole", new StringContent(JsonConvert.SerializeObject(setRoleRequest), 
-                Encoding.UTF8, "application/json"));
+        var setRoleResponse = await _client.PatchAsync("/Admin/SetRole", new StringContent(JsonConvert.SerializeObject(setRoleRequest), 
+            Encoding.UTF8, "application/json"));
         
-        var setRoleResponseArr = JsonConvert.DeserializeObject(await setRoleResponse.Content.ReadAsStringAsync());
+        //setRoleResponse.EnsureSuccessStatusCode();
+        //_output.WriteLine(setRoleResponse);
+        Assert.Equal(HttpStatusCode.OK, setRoleResponse.StatusCode);
 
-        _output.WriteLine(setRoleResponseArr.ToString().IsNullOrEmpty() ? setRoleResponseArr.ToString() : "");
+        var roleRequest = new RoleRequest("user1");
+
+        var roleResponse = await _client.PostAsync(
+            "/Authentication/Roles",
+            new StringContent(JsonConvert.SerializeObject(roleRequest),
+                Encoding.UTF8,
+                "application/json"));
         
-        Assert.Equal("admin@admin.com", setRoleResponse.Content.Headers.);
-        Assert.Equal("admin", authResponse.UserName);
+        var roleResponseStrArr = JsonConvert.DeserializeObject<string[]>(await roleResponse.Content.ReadAsStringAsync());
+        
+        Assert.Equal("Forklift Driver",roleResponseStrArr![0]);
     }
 
+    [Fact]
+    public async Task Test_NoAuthorization()
+    {
+        var loginRequest = new AuthenticationRequest("user1", "password1");
+        
+        var loginResponse = await _client.PostAsync("/Authentication/Login",
+            new StringContent(JsonConvert.SerializeObject(loginRequest), 
+                Encoding.UTF8, "application/json"));
+        var authResponse = JsonConvert.DeserializeObject<AuthenticationResponse>(await loginResponse.Content.ReadAsStringAsync());
+        Assert.NotNull(authResponse.Token);
+        var userToken = authResponse.Token;
+        
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
+        
+        var setRoleRequest = new SetRoleRequest("user2", "Forklift Driver");
+
+        var setRoleResponse = await _client.PatchAsync("/Admin/SetRole", new StringContent(JsonConvert.SerializeObject(setRoleRequest), 
+            Encoding.UTF8, "application/json"));
+        
+        Assert.Equal(HttpStatusCode.Forbidden, setRoleResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task Test_Forklift_Driver()
+    {
+        var loginRequest = new AuthenticationRequest("user1", "password1");
+        
+        var loginResponse = await _client.PostAsync("/Authentication/Login",
+            new StringContent(JsonConvert.SerializeObject(loginRequest), 
+                Encoding.UTF8, "application/json"));
+        var authResponse = JsonConvert.DeserializeObject<AuthenticationResponse>(await loginResponse.Content.ReadAsStringAsync());
+        Assert.NotNull(authResponse.Token);
+        var userToken = authResponse.Token;
+        
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
+
+        var forkLiftDriverResponse = await _client.GetAsync("/ForkliftDriver/GetComponentStock");
+        
+        var boxResponse = JsonConvert.DeserializeObject<List<ComponentLocation>>(await forkLiftDriverResponse.Content.ReadAsStringAsync());
+        
+        var firstComponentLocationType = boxResponse.First().LocationType;
+        
+        Assert.Equal(LocationType.RawMaterial, firstComponentLocationType);
+    }
+    
     public void Dispose()
     {
         _factory.Dispose();
