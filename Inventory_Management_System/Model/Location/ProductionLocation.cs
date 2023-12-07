@@ -59,7 +59,7 @@ namespace Inventory_Management_System.Model.Location
             if (Quantity >= quantity)
             {                
                 var boxQuantity = Components.First().Quantity;
-                var numberOfBoxes = Quantity / boxQuantity;
+                var numberOfBoxes = quantity / boxQuantity;
                 Quantity -= quantity;
                 Components.RemoveRange(0, numberOfBoxes);
             }

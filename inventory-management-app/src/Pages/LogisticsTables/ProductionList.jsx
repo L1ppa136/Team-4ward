@@ -7,7 +7,7 @@ import "./Table.css";
 
 const fetchProduce = async (ItemToProduce) => {
   try {
-    const response = await axios.post('/ProductionLeader/Produce', ItemToProduce);
+    const response = await axios.post('/ProductionLeader/ProduceFinishedGoods', ItemToProduce);
     console.log(ItemToProduce);
     return response.data;
   } catch (error) {
@@ -15,9 +15,9 @@ const fetchProduce = async (ItemToProduce) => {
   }
 }
 
-const fetchProductionStock = async (ItemToProduce) => {
+const fetchProductionStock = async (ItemToOrder) => {
   try {
-    const response = await axios.get('/ProductionLeader/GetProductionStock', ItemToProduce);
+    const response = await axios.get('/ProductionLeader/GetProductionStock', ItemToOrder);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
@@ -37,11 +37,11 @@ function ProductionList() {
       Nut: 4 * Quantity,
       Cushion: 1 * Quantity,
       Diffusor: 1 * Quantity,
-      Retrainer: 1 * Quantity,
+      Retainer: 1 * Quantity,
       Cover: 1 * Quantity,
       Emblem: 1 * Quantity,
       Inflator: 1 * Quantity,
-      Wireharness: 1 * Quantity
+      WireHarness: 1 * Quantity
     }
   }
 
@@ -80,6 +80,7 @@ function ProductionList() {
     let response = await fetchProductionStock(componentToProduce);
     setProductionStock(JSON.stringify(response));
     if (checkMaterialAvailability(productionStock, GenerateOrderList(quantity))) {
+      console.log(componentToProduce);
       await fetchProduce(componentToProduce);
     }
     else {
