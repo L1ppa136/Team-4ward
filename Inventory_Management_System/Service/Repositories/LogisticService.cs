@@ -329,4 +329,65 @@ public class LogisticService : IStock, ISupplier, IProduction
         productionLocation.StoreComponents(neededComponents);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<ProductionResult> DeliverFinishedGoodsToCustomer(int orderQuantity)
+    {
+        try
+        {
+            var finishedGoodLocations = await GetFinishedGoodStockAsync();
+            if (IsSufficientFinishedGoodStockAvailable(orderQuantity, finishedGoodLocations))
+            {
+                List<Box<FinishedGood>> neededGoods = new List<Box<FinishedGood>>();
+                var finishedGood = new FinishedGood();
+
+                foreach (var location in finishedGoodLocations)
+                {
+                    var quantity = orderQuantity;
+                    var removeQuantity = Math.Min(quantity, finishedGood.BoxCapacity * location.MaxBoxCapacity);
+                    neededGoods.AddRange(location.RemoveBoxes(finishedGood, removeQuantity));
+                    quantity -= removeQuantity;
+
+                    if (quantity <= 0)
+                    {
+                        break;
+                    }
+                }
+
+                await ClearDeliveredFinishedGoodStockAsync(neededGoods);
+                await _dbContext.SaveChangesAsync();
+                return new ProductionResult(true, $"{orderQuantity} of airbags have been successfully delivered to customer.");
+            }
+            else
+            {
+                return new ProductionResult(false, $"There are not enough finished good on stock to fulfill delivery needs.");
+            }
+        }catch(Exception ex)
+        {
+            return new ProductionResult(false, $"{ex.Message}");
+        }
+                
+    }
+
+    private bool IsSufficientFinishedGoodStockAvailable(int quantity, List<FinishedGoodLocation> finishedGoodLocations)
+    {
+        int sum = 0;
+        foreach (var location in finishedGoodLocations)
+        {
+            foreach (var box in location.Boxes)
+            {
+                sum += box.Quantity;
+            }
+        }
+        return sum >= quantity; 
+    }
+
+    private async Task ClearDeliveredFinishedGoodStockAsync(List<Box<FinishedGood>> boxesToRemove)
+    {
+        foreach (var box in boxesToRemove)
+        {
+            _dbContext.FinishedGoodStock.Remove(box);
+        }
+
+        await _dbContext.SaveChangesAsync();
+    }
 }

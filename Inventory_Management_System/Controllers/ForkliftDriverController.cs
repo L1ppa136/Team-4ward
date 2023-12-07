@@ -78,10 +78,37 @@ namespace Inventory_Management_System.Controllers
                 else
                 {
                     return BadRequest(result.Message);
-                }
-                              
+                }                           
 
             }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("Deliver")]
+        public async Task<IActionResult> DeliverToCustomer([FromBody]OrderRequest request)
+        {
+            try
+            {
+                if(request.Quantity <= 0)
+                {
+                    return BadRequest("Invalid quantity, must be greater than zero.");
+                }
+
+                var result = await _stockService.DeliverFinishedGoodsToCustomer(request.Quantity);
+
+                if (result.Success)
+                {
+                    return Ok(result.Message);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
