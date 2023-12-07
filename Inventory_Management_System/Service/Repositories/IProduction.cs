@@ -3,6 +3,7 @@ using Inventory_Management_System.Model.HandlingUnit;
 
 namespace Inventory_Management_System.Service.Repositories
 {
+    //NOT USED, TO BE DELETED!
     public interface IProduction
     {
         Task<Queue<Box<FinishedGood>>> ProduceAsync();

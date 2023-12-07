@@ -5,6 +5,7 @@ using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Location;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Inventory_Management_System.Service.Repositories;
 
@@ -162,6 +163,7 @@ public class LogisticService : IStock, ISupplier
     //    return new List<Box<FinishedGood>>();
     //}
 
+    //TO BE REVIEWED
     private async Task<bool> ResourcesAvailable(int orderedQuantity)
     {
         var productionLocations = await GetAllProductionLocationsAsync();

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Inventory_Management_System.Model.Employee
 {
+    //NOT USED, TO BE DELETED
     public class Admin : User, IAdmin, ICustomerPlanner, IForkliftDriver, IProductionLeader, IShiftLeader
     {
         private readonly IUserRepository _userRepository;

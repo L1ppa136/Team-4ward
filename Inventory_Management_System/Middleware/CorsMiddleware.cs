@@ -25,7 +25,7 @@
             return _next(httpContext);
         }
     }
-
+    //TO BE REVIEWED
     public static class CorsMiddlewareExtensions
     {
         public static IApplicationBuilder UseCorsMiddleware(this IApplicationBuilder builder)
