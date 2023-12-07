@@ -67,7 +67,7 @@ const InboundList = () => {
     };
 
     useEffect(() => {
-        console.log("HERE", inboundComponents);
+        console.log("inboundComponents HERE", inboundComponents);
     }, [inboundComponents]);
 
     useEffect(() => {
