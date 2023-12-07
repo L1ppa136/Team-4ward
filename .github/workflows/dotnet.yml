@@ -23,6 +23,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./Inventory_Management_System.sln
     - name: Build
-      run: dotnet build --no-restore ./Inventory_Management_System/Inventory_Management_System.sln
+      run: dotnet build --no-restore ./Inventory_Management_System.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal ./Inventory_Management_System.sln
