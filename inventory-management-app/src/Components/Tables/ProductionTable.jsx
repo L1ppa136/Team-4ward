@@ -47,7 +47,7 @@ function ProductionTable({ handleInputChange, handleProduce, handleOrderingFromW
             <td>
               <select placeholder='Quantity' name="quantity" value={selectedQuantityOption} onChange={(e) => handleOptionAndChangeForQuantity(e)}>
                 <option value="" disabled selected hidden>Select your option</option>
-                <option value="2000">2000</option>
+                <option value="200">200</option>
                 <option value="4000">4000</option>
                 <option value="6000">6000</option>
               </select>

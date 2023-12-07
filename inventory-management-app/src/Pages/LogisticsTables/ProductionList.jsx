@@ -80,10 +80,11 @@ function ProductionList() {
     let response = await fetchProductionStock(componentToProduce);
     setProductionStock(JSON.stringify(response));
     if (checkMaterialAvailability(productionStock, GenerateOrderList(quantity))) {
-      console.log(componentToProduce);
+      console.log("ElementsToProduce:", componentToProduce);
       await fetchProduce(componentToProduce);
     }
     else {
+      console.log(componentToProduce);
       window.alert("There is not enough material on the production, please contact the Warehouse Leader!")
     }
   }

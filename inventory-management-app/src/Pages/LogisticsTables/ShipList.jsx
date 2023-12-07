@@ -29,7 +29,7 @@ const fetchShipItem = async (formdata) => {
 const ShipList = () => {
     //CREATE FETCH REQUEST FOR THE DB, CHECK USER ROLE, IF ROLE IS WRONG NAVIGATE TO THE "NO AUTHORIZATION" PAGE
     const [loading, setLoading] = useState(false)
-    const [shipFinishedGoods, setShipFinishedGoods] = useState([])
+    const [shipFinishedGoods, setShipFinishedGoods] = useState()
     //Check order of keys if non-working
     const [formdata, setFormData] = useState({
         "quantity": '',
@@ -40,23 +40,26 @@ const ShipList = () => {
         setFormData({ ...formdata, [e.target.name]: e.target.value });
     }
 
-    const handleShipFetch = () => {
+    const handleShipFetch = async () => {
         setLoading(true);
-        fetchFinishedGoodStockFromWarehouse()
-            .then((components) => {
-                if (components && components.length > 0) {
-                    setShipFinishedGoods(components.filter(component => component.productDesignation === 'Airbag'));
-                } else {
-                    console.error("Error fetching components");
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching components:", error);
-            })
-            .finally(() => {
-                setLoading(false);
-                console.log(shipFinishedGoods);
-            });
+
+        try {
+            const components = await fetchFinishedGoodStockFromWarehouse();
+            const goodsObj = await handleSummerize(components);
+
+            console.log("ITT AZ OBJECT", goodsObj);
+
+            if (goodsObj) {
+                setShipFinishedGoods(goodsObj);
+            } else {
+                console.error("Error fetching components");
+            }
+        } catch (error) {
+            console.error("Error fetching components:", error);
+        } finally {
+            setLoading(false);
+            console.log(shipFinishedGoods);
+        }
     };
 
     const handleShipping = async (productDesignation, quantity) => {
@@ -64,6 +67,66 @@ const ShipList = () => {
         console.log(productDesignation)
         console.log(quantity)
     }
+
+    //This function is needed if there are two or more finished goods but it is too simple as i doesn't look at locations(This might be best handled in the backend)
+    const handleCreationOfGoodsArr = async (rawComponents) => {
+        const Arr = await rawComponents.reduce((accumlator, rawComponentBox) => {
+            const existingBox = accumlator.find(item => item.partNumber === rawComponentBox.partNumber)
+            if (existingBox) {
+                existingBox.quantity += rawComponentBox.quantity
+            } else {
+                accumlator.push({ name: rawComponentBox.partNumber, quantity: rawComponentBox.quantity })
+            }
+            return accumlator;
+        }, [])
+        return Arr
+    }
+
+    const handleSummerize = async (components) => {
+        let summQuantity = 0
+        summQuantity = await components.reduce(async (accumulator, location) => {
+            const locationTotal = await location.boxes.reduce(async (locationAccumulator, box) => {
+                if (box.quantity && box.quantity > 0) {
+                    locationAccumulator += await box.quantity;
+                    return await locationAccumulator;
+                }
+            }, 0);
+            accumulator += locationTotal;
+            return accumulator;
+        }, 0);
+        console.log("Summ quantity" + summQuantity)
+        let airbagObj = {
+            name: "Airbag",
+            quantity: summQuantity
+        }
+        return airbagObj
+    }
+
+    const handleSummerizeOld = async (components) => {
+        let summQuantity = 0;
+        summQuantity = await components.reduce(async (accumulator, location) => {
+            const locationTotal = await location.boxes.reduce(async (locationAccumulator, box) => {
+                if (box.quantity && box.quantity > 0) {
+                    const currentLocationAccumulator = await locationAccumulator;
+                    return currentLocationAccumulator + box.quantity;
+                }
+                return await locationAccumulator;
+            }, Promise.resolve(0));
+
+            accumulator += locationTotal;
+            return accumulator;
+        }, 0);
+        console.log("Summ quantity" + summQuantity)
+
+
+        let airbagObj = {
+            name: "Airbag",
+            quantity: summQuantity
+        };
+
+        return airbagObj;
+    }
+
 
     useEffect(() => {
         handleShipFetch()

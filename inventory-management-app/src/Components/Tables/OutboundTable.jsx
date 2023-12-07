@@ -43,15 +43,15 @@ function OutboundTable({ productionStock, handleOutbound }) {
         </thead>
         <tbody>
           {productionStock.map((component) => (
-            <tr key={component.ProductDesignation}>
+            <tr key={component.locationName}>
               <td>
-                <p value={component.ProductDesignation}>{component.ProductDesignation}</p>
+                <p value={component.locationName}>{component.locationName}</p>
               </td>
               <td>
                 <p placeholder='Quantity' name="quantity" value={component.quantity}>{component.quantity}</p>
               </td>
               <td>
-                <button type="button" onClick={() => handleOutbound(component.ProductDesignation, component.quantity)}>Collect</button>
+                <button type="button" onClick={() => handleOutbound(component.locationName, component.quantity)}>Collect</button>
               </td>
             </tr>
           ))}

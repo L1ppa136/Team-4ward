@@ -1,35 +1,27 @@
 import React, { useState } from 'react'
 
-function ShipTable({ handleInputChange, shipComponents, handleShipping }) {
+function ShipTable({ handleInputChange, shipFinishedGoods, handleShipping }) {
 
-  /*   const [selectedQuantityOption, setSelectedQuantityOption] = useState('');
-  
-    useEffect(() => {
-      console.log(selectedQuantityOption)
-    }, [selectedQuantityOption])
-  
-    useEffect(() => {
-      console.log(ShipComponents)
-    }, [])
-  
-    //this won't work with the current setup
-    const handleOptionAndChangeForQuantity = (eTargetValue) => {
-      setSelectedQuantityOption(eTargetValue.target.value);
-      handleInputChange(eTargetValue);
-    } */
+  const [selectedQuantityOption, setSelectedQuantityOption] = useState('');
 
-  const [selectedQuantities, setSelectedQuantities] = useState({});
+  //this won't work with the current setup
+  const handleOptionAndChangeForQuantity = (eTargetValue) => {
+    setSelectedQuantityOption(eTargetValue.target.value);
+    handleInputChange(eTargetValue);
+  }
 
-  const handleOptionAndChangeForQuantity = (component, selectedValue) => {
+  /* const [selectedQuantities, setSelectedQuantities] = useState({});
+
+  const handleOptionAndChangeForQuantity = (shipFinishedGoods, selectedValue) => {
     setSelectedQuantities((prevSelectedQuantities) => ({
       ...prevSelectedQuantities,
-      [component.ProductDesignation]: selectedValue,
+      [shipFinishedGoods.name]: selectedValue,
     }));
 
-    // If you need to propagate the change to the parent component
+    // If you need to propagate the change to the parent shipFinishedGoods
     //handleInputChange({ target: { name: 'quantity', value: selectedValue } });
   };
-
+ */
   return (
     <div className="ShipTable">
       <table>
@@ -41,19 +33,19 @@ function ShipTable({ handleInputChange, shipComponents, handleShipping }) {
           </tr>
         </thead>
         <tbody>
-          {shipComponents && shipComponents.map((component) => (
-            <tr key={component.ProductDesignation}>
+          {shipFinishedGoods && ((shipFinishedGoods) => (
+            <tr key={shipFinishedGoods.name}>
               <td>
-                <p value={component.ProductDesignation}>{component.ProductDesignation}</p>
+                <p value={shipFinishedGoods.name}>{shipFinishedGoods.name}</p>
               </td>
               <td>
                 <select
                   placeholder='Quantity'
                   name="quantity"
-                  value={selectedQuantities[component.ProductDesignation] || ''}
-                  onChange={(e) => handleOptionAndChangeForQuantity(component, e.target.value)}>
+                  value={shipFinishedGoods.quantity}
+                  onChange={(e) => handleOptionAndChangeForQuantity(e.target.value)}>
                   <option value="" disabled hidden>Select your option</option>
-                  {Array.from({ length: component.quantity / 200 }, (_, index) => (
+                  {Array.from({ length: shipFinishedGoods.quantity / 200 }, (_, index) => (
                     <option key={index} value={(index + 1) * 200}>
                       {(index + 1) * 200}
                     </option>
@@ -61,7 +53,7 @@ function ShipTable({ handleInputChange, shipComponents, handleShipping }) {
                 </select>
               </td>
               <td>
-                <button type="button" onClick={() => handleShipping(component.ProductDesignation, selectedQuantities[component.ProductDesignation])}>Ship to Customer</button>
+                <button type="button" onClick={() => handleShipping(shipFinishedGoods.name, selectedQuantityOption)}>Ship to Customer</button>
               </td>
             </tr>
           ))}
