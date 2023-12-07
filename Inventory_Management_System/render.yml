@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: backend
+    buildCommand: dotnet publish -c Release
+    startCommand: dotnet Inventory_Management_System.dll
+    envVars:
+      DATABASE_CONNECTION_STRING: "User ID=inventorymanagementsystem_user;Password=ky2zWbADa5k06pv26Ru5lTBcVIZAIwjA;Host=dpg-clmu4jnfeb2c73ecrsn0-a.frankfurt-postgres.render.com;Port=5432;Database=inventorymanagementsystem;"
