@@ -3,7 +3,7 @@ using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Service.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+//Render
 namespace Inventory_Management_System.Controllers
 {
     [ApiController]
