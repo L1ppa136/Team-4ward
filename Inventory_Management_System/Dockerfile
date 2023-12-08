@@ -2,6 +2,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 
+EXPOSE 5179
+
 # Copy all files
 COPY . .
 
@@ -15,4 +17,6 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 ENTRYPOINT ["dotnet", "Inventory_Management_System.dll"]
+
+ENV ASPNETCORE_URLS=http://+:5179/
 

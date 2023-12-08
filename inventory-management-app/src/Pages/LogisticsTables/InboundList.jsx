@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const fetchStoreComponents = async (orderItem) => {
     try {
-        const response = await axios.post('/ForkliftDriver/StoreComponent', orderItem);
+        const response = await axios.post('api/ForkliftDriver/StoreComponent', orderItem);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error;

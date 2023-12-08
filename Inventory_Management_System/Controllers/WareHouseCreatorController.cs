@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Inventory_Management_System.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     public class WareHouseCreatorController : ControllerBase
     {

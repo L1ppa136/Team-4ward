@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Inventory_Management_System.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Forklift Driver, Warehouse Leader, Admin")]
     public class ForkliftDriverController : ControllerBase
     {
