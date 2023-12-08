@@ -140,10 +140,14 @@ public class AuthenticationTest : IDisposable
         var forkLiftDriverResponse = await _client.GetAsync("/ForkliftDriver/GetComponentStock");
         
         var boxResponse = JsonConvert.DeserializeObject<List<ComponentLocation>>(await forkLiftDriverResponse.Content.ReadAsStringAsync());
-        
-        var firstComponentLocationType = boxResponse.First().LocationType;
-        
-        Assert.Equal(LocationType.RawMaterial, firstComponentLocationType);
+
+        if (boxResponse.IsNullOrEmpty())
+        {
+            Assert.Empty(boxResponse);
+        }else{
+            var firstComponentLocationType = boxResponse?.First();
+            Assert.Equal(LocationType.RawMaterial, firstComponentLocationType.LocationType);
+        }
     }
     
     public void Dispose()

@@ -27,4 +27,14 @@
       <ProjectReference Include="..\Inventory_Management_System\Inventory_Management_System.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="obj\Debug\net7.0\InventoryManagement_Integration_Test.csproj.CopyComplete" />
+      <Content Include="obj\Debug\net7.0\InventoryManagement_Integration_Test.csproj.CoreCompileInputs.cache" />
+      <Content Include="obj\Debug\net7.0\InventoryManagement_Integration_Test.csproj.FileListAbsolute.txt" />
+      <Content Include="obj\Debug\net7.0\InventoryManagement_Integration_Test.dll" />
+      <Content Include="obj\Debug\net7.0\InventoryManagement_Integration_Test.genruntimeconfig.cache" />
+      <Content Include="obj\Debug\net7.0\InventoryManagement_Integration_Test.pdb" />
+      <Content Include="obj\Debug\net7.0\MvcTestingAppManifest.json" />
+    </ItemGroup>
+
 </Project>
