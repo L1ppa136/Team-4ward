@@ -3,11 +3,11 @@ using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Service.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+//Render
 namespace Inventory_Management_System.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Forklift Driver, Warehouse Leader, Admin")]
     public class ForkliftDriverController : ControllerBase
     {

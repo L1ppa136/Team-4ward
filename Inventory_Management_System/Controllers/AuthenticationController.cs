@@ -9,7 +9,7 @@ using Microsoft.Net.Http.Headers;
 namespace Inventory_Management_System.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AuthenticationController : ControllerBase
     {
         private readonly string _defaultRole = "User";

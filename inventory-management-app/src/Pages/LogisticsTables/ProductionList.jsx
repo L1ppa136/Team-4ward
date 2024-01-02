@@ -7,7 +7,7 @@ import "./Table.css";
 
 const fetchProduce = async (ItemToProduce) => {
   try {
-    const response = await axios.post('/ProductionLeader/ProduceFinishedGoods', ItemToProduce);
+    const response = await axios.post('api/ProductionLeader/ProduceFinishedGoods', ItemToProduce);
     console.log(ItemToProduce);
     return response.data;
   } catch (error) {
@@ -17,7 +17,7 @@ const fetchProduce = async (ItemToProduce) => {
 
 const fetchProductionStock = async (ItemToOrder) => {
   try {
-    const response = await axios.get('/ProductionLeader/GetProductionStock', ItemToOrder);
+    const response = await axios.get('api/ProductionLeader/GetProductionStock', ItemToOrder);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;

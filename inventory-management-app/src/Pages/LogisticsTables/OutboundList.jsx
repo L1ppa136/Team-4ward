@@ -6,7 +6,7 @@ import "./Table.css";
 
 const fetchProductionStock = async () => {
     try {
-        const response = await axios.get('/ForkliftDriver/GetProductionStock');
+        const response = await axios.get('api/ForkliftDriver/GetProductionStock');
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error;
@@ -16,7 +16,7 @@ const fetchProductionStock = async () => {
 // Finishing endpoint
 const fetchSendProductionToWarehouse = async () => {
     try {
-        let response = await axios.get("/ForkliftDriver/MoveFinishedGoodsFromProduction")
+        let response = await axios.get("api/ForkliftDriver/MoveFinishedGoodsFromProduction")
         return response.data
     } catch (error) {
         throw error.response ? error.response.data : error;
