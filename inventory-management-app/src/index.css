@@ -31,6 +31,7 @@ code {
 }
 
 .pageSelection {
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -45,23 +46,21 @@ code {
 
 .pageBtn{
   background-color: transparent;
-  border:none;
+  border: 1px solid transparent;
   text-transform: uppercase;
   font-weight: bold;
   padding: 10px;
 }
 
 .pageSelection button:hover{
-  margin:0%;
   background-color: grey;
-  border: 2px solid #f6e939a1;
+  border: 1px solid #f6e939a1;
 }
 
 .pageSelection li {
   display: flex;
   align-items: center;
   text-align: center;
-  justify-content: space-around;
 }
 
 .activeBtn {
