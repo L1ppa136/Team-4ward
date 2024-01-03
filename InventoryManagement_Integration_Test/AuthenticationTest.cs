@@ -6,6 +6,7 @@ using Inventory_Management_System.Model.Enums;
 using Inventory_Management_System.Model.Good;
 using Inventory_Management_System.Model.HandlingUnit;
 using Inventory_Management_System.Model.Location;
+using InventoryManagement_Integration_Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -57,12 +58,12 @@ public class AuthenticationTest : IDisposable
 
             Assert.Equal(HttpStatusCode.BadRequest, registrationResponse.StatusCode);
         }
- 
     }
     
     [Fact]
     public async Task Test_SetRole()
     {
+        //Register userSetRoleTest -> alapból user role -> átállítom Forklift Driverré
         var loginRequest = new AuthenticationRequest("admin", "Admin123");
         
         var loginResponse = await _client.PostAsync("/Authentication/Login",
@@ -78,7 +79,7 @@ public class AuthenticationTest : IDisposable
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
         
 
-        //Role request user1-re, az alapján változtassuk
+        //Role request user1-re, az alapján változtassuk, a user1-et lekell képezni a testek elején
         var setRoleRequest = new SetRoleRequest("user1", "Forklift Driver");
 
         var setRoleResponse = await _client.PatchAsync("/Admin/SetRole", new StringContent(JsonConvert.SerializeObject(setRoleRequest), 
@@ -126,6 +127,7 @@ public class AuthenticationTest : IDisposable
     [Fact]
     public async Task Test_Forklift_Driver()
     {
+        //put component stock in DB
         var loginRequest = new AuthenticationRequest("user1", "password1");
         
         var loginResponse = await _client.PostAsync("/Authentication/Login",

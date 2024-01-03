@@ -8,7 +8,7 @@ function InboundTable({ inboundComponents, handleStore, nextOrderList }) {
   if(inboundComponents.length === 0){
     return(
     <div>
-    <button type="button" onClick={() => nextOrderList()}>Next Order List</button>
+    <button className='orderButton' type="button" onClick={() => nextOrderList()}>Next Order List</button>
     </div>
     )
     

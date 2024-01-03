@@ -55,3 +55,23 @@ body {
     background-color: #2f8d43; /* Dark gray on hover for buttons */
     border: 1px solid #555; /* Dark gray border on hover for buttons */
   }
+
+  .orderButton {
+    background-color: #000; /* Black button background color */
+    color: #fff; /* White button text color */
+    border: 1px solid #000; /* Black button border */
+    padding: 5px 10px; /* Add padding to buttons for a better appearance */
+    font-size: larger;
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 5%;
+    padding-right: 5%;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .orderButton:hover{
+    background-color: #2f8d43; /* Dark gray on hover for buttons */
+    border: 1px solid #555; /* Dark gray border on hover for buttons */
+  }
