@@ -27,7 +27,7 @@ function ShipTable({ handleInputChange, shipFinishedGoods, handleShipping }) {
   };
  */
   return (
-    <div className="ShipTable">
+    <div className="Table">
       <table>
         <thead>
           <tr>

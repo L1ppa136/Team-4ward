@@ -37,12 +37,14 @@ const User = () => {
 
     return (
         <div className='userData'>
+            <p className='profileBanner'>Profile</p>
             {userName && role && (
-                <ul>
-                    <li className='name'>{userName}</li>
-                    <li>e-mail: {email}</li>
-                    <li>role: {role} </li>
-                </ul>
+                <>
+                    <p className='usernameBanner'>Username</p>
+                    <p className='name'>{userName}</p>
+                    <p>E-mail: {email}</p>
+                    <p>Role: {role} </p>
+                    </>
             )}
         </div>
     );

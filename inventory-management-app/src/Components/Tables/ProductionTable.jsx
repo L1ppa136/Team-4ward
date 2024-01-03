@@ -27,7 +27,7 @@ function ProductionTable({ handleInputChange, handleProduce, handleOrderingFromW
   }
 
   return (
-    <div className="ProductionTable">
+    <div className="Table">
       <table>
         <thead>
           <tr>

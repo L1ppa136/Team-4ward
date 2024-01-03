@@ -12,7 +12,7 @@ function ProdSupplyTable({ goodsToSupply, handleStore, nextOrderList }) {
   }
 
   return (
-    <div className="ProdSupplyTable">
+    <div className="Table">
       <table>
         <thead>
           <tr>

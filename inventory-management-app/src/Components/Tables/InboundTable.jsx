@@ -14,7 +14,7 @@ function InboundTable({ inboundComponents, handleStore, nextOrderList }) {
     
   }
   return (
-    <div className="InboundTable">
+    <div className="Table">
       <table>
         <thead>
           <tr>

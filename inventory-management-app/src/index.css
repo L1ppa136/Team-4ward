@@ -14,20 +14,37 @@ code {
 }
 
 .userData {
-  height: 50vh;
-  font-weight: bold;
-  margin: 3%;
+  height:auto;
+  width:fit-content;
+  font-weight: medium;
+  margin: auto;
   margin-top: 0%;
-  border: 2px solid #58595b;
+  border: 5px solid #58595b;
   border-radius: 5px;
   color: black;
   margin-top: 2%;
   padding: 2%;
 }
 
+.profileBanner{
+  font-weight: bold;
+  text-align: center;
+}
+
+.usernameBanner{
+  text-align:center;
+  margin-bottom: 0%;
+}
+
 .name {
+  font-weight: bolder;
+  color:gold;
+  -webkit-text-stroke-width:medium;
+  -webkit-text-stroke-color: black;
+  margin-top: 0%;
+  font-size: 38px;
   border-bottom: 1px solid #58595b;
-  width: 300px;
+  text-align: center;
 }
 
 .pageSelection {

@@ -41,7 +41,7 @@ body {
   }
   
   /* Style buttons inside the table */
-  button {
+  .Table button {
     background-color: #000; /* Black button background color */
     color: #fff; /* White button text color */
     border: 1px solid #000; /* Black button border */
@@ -51,7 +51,7 @@ body {
     cursor: pointer;
   }
   
-  button:hover {
+  .Table button:hover {
     background-color: #2f8d43; /* Dark gray on hover for buttons */
     border: 1px solid #555; /* Dark gray border on hover for buttons */
   }

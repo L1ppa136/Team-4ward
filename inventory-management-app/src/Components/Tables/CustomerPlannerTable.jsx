@@ -20,7 +20,7 @@ function CustomerPlannerTable({ handleInputChange, createComponents }) {
   }
 
   return (
-    <div className="CustomerPlannerTable">
+    <div className="Table">
       <table>
         <thead>
           <tr>

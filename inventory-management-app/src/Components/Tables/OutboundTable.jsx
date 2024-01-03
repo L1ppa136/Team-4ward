@@ -32,7 +32,7 @@ function OutboundTable({ productionStock, handleOutbound }) {
   //};
 
   return (
-    <div className="OutboundoundTable">
+    <div className="Table">
       <table>
         <thead>
           <tr>
