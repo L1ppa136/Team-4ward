@@ -2,8 +2,8 @@ import { React, useState} from "react";
 import { Link } from 'react-router-dom';
 import '../index.css';
 
-const PageSelection = ({ userRole }) => {
-    const [lastClickedButton, setLastClickedButton] = useState(null);
+const PageSelection = ({ userRole, setLastClickedButton, lastClickedButton }) => {
+    
 
     const handleClick = (label) => {
         setLastClickedButton(label);
