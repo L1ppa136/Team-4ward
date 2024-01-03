@@ -72,6 +72,7 @@ const ShipList = () => {
         }
         await fetchShipItem(object)
         window.alert(`${quantity} finished good has been shipped.`)
+        handleShipFetch()
         console.log(productDesignation)
         console.log(quantity)
     }

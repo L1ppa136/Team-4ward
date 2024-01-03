@@ -52,8 +52,7 @@ const Layout = () => {
         }, 30 * 60 * 1000);
 
         return () => clearTimeout(logoutTimeout);
-    }, [navigate]);
-
+    }, []);
 
     return (
         <div className='Layout'>

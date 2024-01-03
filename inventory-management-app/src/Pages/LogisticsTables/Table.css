@@ -6,9 +6,8 @@ body {
   
   /* Style the table */
   table {
-    width:90%;
+    width:100%;
     border-collapse:separate;
-    margin: 20px; /* Add margin to center the table */
   }
   
   /* Style table header */
@@ -40,6 +39,12 @@ body {
     color: #555; /* Dark gray on hover for links */
   }
   
+  .Table {
+    margin-left: 5%;
+    margin-right: 5%;
+    justify-content: center;
+  }
+
   /* Style buttons inside the table */
   .Table button {
     background-color: #000; /* Black button background color */

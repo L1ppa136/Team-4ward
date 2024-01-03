@@ -58,7 +58,7 @@ function ProductionList() {
     for (const item of stock) {
       const itemName = item.locationName;
       const requiredQuantity = requirements[itemName];
-      if (requiredQuantity !== undefined && item.quantity < requiredQuantity) {
+      if (requiredQuantity === undefined || item.quantity < requiredQuantity) {
         console.log(`Not enough ${itemName}. Required: ${requiredQuantity}, Available: ${item.quantity}`);
         return false;
       }

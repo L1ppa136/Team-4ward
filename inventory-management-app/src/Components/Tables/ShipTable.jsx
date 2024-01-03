@@ -12,7 +12,7 @@ function ShipTable({ handleInputChange, shipFinishedGoods, handleShipping }) {
 
   useEffect(()=>{
     console.log(selectedQuantityOption);
-  })
+  },[])
 
   /* const [selectedQuantities, setSelectedQuantities] = useState({});
 
