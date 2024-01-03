@@ -9745,19 +9745,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Eriaos\\.nuget\\packages\\": {}
+    "C:\\Users\\UpgradePC\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Codecool\\Advanced.NET\\Inventory-Management-System (TW)\\Team-4ward\\InventoryManagement_Integration_Test\\InventoryManagement_Integration_Test.csproj",
+      "projectUniqueName": "C:\\Users\\UpgradePC\\Desktop\\Codecool\\Advanced\\TW\\Team-4ward\\InventoryManagement_Integration_Test\\InventoryManagement_Integration_Test.csproj",
       "projectName": "InventoryManagement_Integration_Test",
-      "projectPath": "E:\\Codecool\\Advanced.NET\\Inventory-Management-System (TW)\\Team-4ward\\InventoryManagement_Integration_Test\\InventoryManagement_Integration_Test.csproj",
-      "packagesPath": "C:\\Users\\Eriaos\\.nuget\\packages\\",
-      "outputPath": "E:\\Codecool\\Advanced.NET\\Inventory-Management-System (TW)\\Team-4ward\\InventoryManagement_Integration_Test\\obj\\",
+      "projectPath": "C:\\Users\\UpgradePC\\Desktop\\Codecool\\Advanced\\TW\\Team-4ward\\InventoryManagement_Integration_Test\\InventoryManagement_Integration_Test.csproj",
+      "packagesPath": "C:\\Users\\UpgradePC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\UpgradePC\\Desktop\\Codecool\\Advanced\\TW\\Team-4ward\\InventoryManagement_Integration_Test\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Eriaos\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\UpgradePC\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -9769,8 +9769,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "E:\\Codecool\\Advanced.NET\\Inventory-Management-System (TW)\\Team-4ward\\Inventory_Management_System\\Inventory_Management_System.csproj": {
-              "projectPath": "E:\\Codecool\\Advanced.NET\\Inventory-Management-System (TW)\\Team-4ward\\Inventory_Management_System\\Inventory_Management_System.csproj"
+            "C:\\Users\\UpgradePC\\Desktop\\Codecool\\Advanced\\TW\\Team-4ward\\Inventory_Management_System\\Inventory_Management_System.csproj": {
+              "projectPath": "C:\\Users\\UpgradePC\\Desktop\\Codecool\\Advanced\\TW\\Team-4ward\\Inventory_Management_System\\Inventory_Management_System.csproj"
             }
           }
         }
@@ -9826,7 +9826,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
       }
     }
   }

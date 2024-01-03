@@ -16,8 +16,10 @@ import CustomerPlannerList from './Pages/LogisticsTables/CustomerPlannerList.jsx
 import ShipList from "./Pages/LogisticsTables/ShipList.jsx";
 import PrivateRoute from './Components/PrivateRoute.jsx';
 import UserManager from './Pages/UserManager.jsx';
+import { AuthProvider } from './Components/AuthContext.jsx';
 
 const router = createBrowserRouter([
+
   {
     path: '/',
     element: <Layout />,
@@ -33,7 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/Login',
-        element: <Login />,
+        element: <Login/>,
       },
       {
         path: '/User',
@@ -73,7 +75,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router}>{router.route}</RouterProvider>
+    <AuthProvider>
+        <RouterProvider router={router}>
+          {router.route}
+        </RouterProvider>
+      </AuthProvider>
   </React.StrictMode>
 );
 

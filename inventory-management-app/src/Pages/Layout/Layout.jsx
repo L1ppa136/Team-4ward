@@ -1,24 +1,18 @@
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import "./Layout.css";
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import {useEffect} from 'react';
 import mainLogo from '../pictures/Warehouse01.png';
-import Login from "../Login.jsx";
 import PageSelection from '../../Components/PageSelection.jsx';
+import { useAuth } from '../../Components/AuthContext.jsx';
 
 const Layout = () => {
+
+    const { loggedIn, logout, login } = useAuth();;
     const navigate = useNavigate();
-    const location = useLocation();
-    const [isLoggedIn, setLoggedIn] = useState(false);
-    const [showPageSelection, setShowPageSelection] = useState(false);
     const userRole = JSON.parse(localStorage.getItem('role'));
 
-
-    useEffect(() => {
-        if (location.pathname === '/User') {
-            setShowPageSelection(false);
-        }
-    }, [location]);
+    axios.defaults.baseURL = 'http://localhost:5179';
 
     const removeUserData = () => {
         delete axios.defaults.headers.common['Authorization'];
@@ -27,23 +21,32 @@ const Layout = () => {
         localStorage.removeItem('role');
     };
 
-    const handleLogin = () => {
-        setLoggedIn(true);
-        navigate('/User');
-    };
-
     const handleLogout = () => {
-        setLoggedIn(false);
         removeUserData();
+        logout();
         navigate('/');
     };
+
+
+    useEffect(() => {
+        // Check if user data is present in local storage
+        const storedUserRole = JSON.parse(localStorage.getItem('role'));
+
+        // Update the component state if user data is present
+        if (storedUserRole) {
+            login();
+            // Assuming you have a function to set user data in your AuthContext
+            // Adjust this based on your actual AuthContext implementation
+            // For example, setUserData({ role: storedUserRole });
+        }
+    }, []);  // Run this effect only once when the component mounts
 
 
     //Deletes all user data after 30 mins
     useEffect(() => {
         const logoutTimeout = setTimeout(() => {
-            setLoggedIn(false);
             removeUserData();
+            logout();
             navigate('/');
         }, 30 * 60 * 1000);
 
@@ -51,60 +54,67 @@ const Layout = () => {
     }, [navigate]);
 
 
-    const handlePageSelect = () => {
-        setShowPageSelection(true);
-    }
-
     return (
         <div className='Layout'>
             <nav>
                 <ul className='main-ul'>
+
                     <li className='imageLi'>
                         <Link to='/'>
                             <img src={mainLogo} alt="logo" className='mainLogo' />
                         </Link>
                     </li>
 
-                    {/* Login button (conditionally rendered) */}
-                    {!isLoggedIn && (
-                        <li className='loginLi'>
-                            <Login onLogin={handleLogin} isLoggedIn={isLoggedIn} />
+                    
+                    {!userRole && !loggedIn && (
+                        <li>
+                            <Link to='/Login'>
+                                <button
+                                className='navBtn'>
+                                    Login
+                                </button>
+                            </Link>
                         </li>
                     )}
-                    <li>
-                        {!isLoggedIn ? (
-                            <Link to='/Register'>
-                                <button>Register</button>
-                            </Link>
-                        ) : (null)}
-                    </li>
 
                     <li>
-                        {isLoggedIn ? (
-                            <Link to='/User'>
-                                <li>
-                                    <button>Profile</button>
-                                </li>
-                            </Link>
-                        ) : (null)}
-
-                        {isLoggedIn && (
-                            <li>
-                                <button className='logoutBtn' onClick={handleLogout}>Logout</button>
-                            </li>
-                        )}
-
-                        {!showPageSelection && isLoggedIn ? (
-                            <li>
-                                <button onClick={handlePageSelect}>Select Page</button>
-                            </li>
-                        ) : (null)}
-
+                        <Link to='/Register'>
+                            <button 
+                            className='navBtn'>
+                                Register
+                            </button>
+                        </Link>
                     </li>
+
+                    {loggedIn && (
+                        <li>
+                            <li>
+                                <Link to='/User'>
+                                    <button 
+                                    className='navBtn'>
+                                        Profile
+                                    </button>
+                                </Link>
+                            </li>
+
+                            <li>
+                                <button 
+                                    className='navBtn'
+                                    onClick={handleLogout}>
+                                        Logout
+                                </button>
+                            </li>
+                        </li>
+                    )}
                 </ul>
-                {showPageSelection && userRole && <PageSelection userRole={userRole} />}
+
+                    {userRole && loggedIn && 
+                        <PageSelection 
+                            userRole={userRole} 
+                        />
+                    }
             </nav>
-            <Outlet />
+                <Outlet />
         </div>
     );
 };

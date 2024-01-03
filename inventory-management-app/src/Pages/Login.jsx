@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css';
 import LoginForm from '../Components/Forms/LoginForm';
+import { useAuth } from '../Components/AuthContext';
 
-const Login = ({ onLogin, isLoggedIn }) => {
+const Login = () => {
     const initialFormData = {
-        "userName": '',
-        "password": ''
+        userName: '',
+        password: '',
     };
 
+    const { login } = useAuth();
+    const navigate = useNavigate();
     const [formdata, setFormData] = useState(initialFormData);
-    const [responseState, setResponseState] = useState('');
+    const [error, setError] = useState(null);
 
     const handleInputChange = (e) => {
         setFormData({ ...formdata, [e.target.name]: e.target.value });
@@ -18,7 +21,7 @@ const Login = ({ onLogin, isLoggedIn }) => {
 
     const loginUser = async (formData) => {
         try {
-            const response = await axios.post('/Authentication/Login', formData);
+            const response = await axios.post('api/Authentication/Login', formData);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error;
@@ -27,6 +30,7 @@ const Login = ({ onLogin, isLoggedIn }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const responseData = await loginUser(formdata);
 
@@ -34,44 +38,49 @@ const Login = ({ onLogin, isLoggedIn }) => {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${responseData.token}`;
                 localStorage.setItem('userName', responseData.userName);
                 localStorage.setItem('email', responseData.email);
-                setResponseState(responseData);
-                onLogin(); // Call the onLogin callback from the parent component
+                login();
+                navigate('/User');
             } else {
                 console.error('Invalid response:', responseData);
-                setResponseState(responseData);
+                setError(responseData);
             }
         } catch (error) {
             console.error('Login failed:', error);
-            setResponseState(error);
-            // Reset the form state to allow the user to try again
-            setFormData(initialFormData);
+            setError(error);
         }
     };
 
     return (
         <div className='login'>
-            {responseState === '' ? (
+            <h2>Login</h2>
+            {error ? (
                 <div>
-                    <LoginForm
-                        handleSubmit={handleSubmit}
-                        formdata={formdata}
-                        handleInputChange={handleInputChange}
-                    />
+                    {error.hasOwnProperty('Bad credentials') ? (
+                        <div>
+                            {error['Bad credentials'][0]}
+                            <LoginForm
+                                handleSubmit={handleSubmit}
+                                formdata={formdata}
+                                handleInputChange={handleInputChange}
+                            />
+                        </div>
+                    ) : (
+                        <div>
+                            An unexpected error occurred.
+                            <LoginForm
+                                handleSubmit={handleSubmit}
+                                formdata={formdata}
+                                handleInputChange={handleInputChange}
+                            />
+                        </div>
+                    )}
                 </div>
             ) : (
-                responseState.hasOwnProperty("Bad credentials") ? (
-                    <div>
-                        {responseState["Bad credentials"][0]}
-                        {/* Render the form again to allow the user to try again */}
-                        <LoginForm
-                            handleSubmit={handleSubmit}
-                            formdata={formdata}
-                            handleInputChange={handleInputChange}
-                        />
-                    </div>
-                ) : (
-                    <div>{responseState.userName} has been successfully logged in.</div>
-                )
+                <LoginForm
+                    handleSubmit={handleSubmit}
+                    formdata={formdata}
+                    handleInputChange={handleInputChange}
+                />
             )}
         </div>
     );

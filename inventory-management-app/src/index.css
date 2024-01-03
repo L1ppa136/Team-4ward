@@ -31,19 +31,30 @@ code {
 }
 
 .pageSelection {
-  list-style-type: none;
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 0.5rem;
-
   color: white;
   font-size: 1.5rem;
   font-weight: bold;
-
   background-color: #58595b;
   border: 1px solid white;
   border-radius: 5px;
+}
+
+.pageBtn{
+  background-color: transparent;
+  border:none;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.pageSelection button:hover{
+  margin:0%;
+  background-color: grey;
+  border: 2px solid #f6e939a1;
 }
 
 .pageSelection li {
@@ -52,6 +63,15 @@ code {
   text-align: center;
   justify-content: space-around;
 }
+
+.activeBtn {
+  background-color: transparent;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 10px;
+  border: 2px solid #f6e939a1;
+}
+
 
 .submitBtn {
   width: 10%;

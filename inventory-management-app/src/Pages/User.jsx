@@ -16,7 +16,7 @@ const User = () => {
                 setEmail(storedEmail);
 
                 try {
-                    const response = await axios.post('/Authentication/Roles', { userName: storedUserName });
+                    const response = await axios.post('api/Authentication/Roles', { userName: storedUserName });
 
                     if (response && response.data) {
                         setRole(response.data[0]);
@@ -39,9 +39,9 @@ const User = () => {
         <div className='userData'>
             {userName && role && (
                 <ul>
-                    <div className='name'>{userName}</div>
-                    <div>e-mail: {email}</div>
-                    <div>role: {role} </div>
+                    <li className='name'>{userName}</li>
+                    <li>e-mail: {email}</li>
+                    <li>role: {role} </li>
                 </ul>
             )}
         </div>

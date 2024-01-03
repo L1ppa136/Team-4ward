@@ -1,7 +1,14 @@
-import React from "react";
+import { React, useState} from "react";
 import { Link } from 'react-router-dom';
+import '../index.css';
 
 const PageSelection = ({ userRole }) => {
+    const [lastClickedButton, setLastClickedButton] = useState(null);
+
+    const handleClick = (label) => {
+        setLastClickedButton(label);
+    };
+
     const roleToLinksMap = {
         "Admin": [
             { link: '/Users', label: 'Users' },
@@ -34,14 +41,17 @@ const PageSelection = ({ userRole }) => {
         ],
     };
 
+    
     return (
         <ul className="pageSelection">
-            {userRole && roleToLinksMap[userRole] && roleToLinksMap[userRole].map(({ link, label }) => (
-                <li key={link}>
-                    <Link to={link}><button>{label}</button></Link>
-                </li>
-            ))}
-        </ul>
+        {userRole && roleToLinksMap[userRole] && roleToLinksMap[userRole].map(({ link, label }) => (
+            <li key={link}>
+                <Link to={link}>
+                    <button onClick={() => handleClick(label)} className={lastClickedButton === label ? 'activeBtn' : 'pageBtn'}>{label}</button>
+                </Link>
+            </li>
+        ))}
+    </ul>
     );
 }
 

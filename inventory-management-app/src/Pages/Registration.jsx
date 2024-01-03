@@ -5,7 +5,7 @@ import RegisterForm from '../Components/Forms/RegisterForm';
 const Registration = () => {
   const [formdata, setFormData] = useState({
     "email": '',
-    "userName": '',
+    "username": '',
     "password": ''
   });
 
@@ -21,7 +21,7 @@ const Registration = () => {
     console.log(formdata);
 
     try {
-      const response = await axios.post('/Authentication/Register', formdata);
+      const response = await axios.post('api/Authentication/Register', formdata);
 
       // Check if 'response' is defined and has a 'data' property
       if (response && response.data) {
