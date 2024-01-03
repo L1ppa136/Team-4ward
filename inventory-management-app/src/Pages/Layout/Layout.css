@@ -26,7 +26,7 @@
   padding: 10px;
   color: white;
   background: none;
-  border: none;
+  border: 1px solid transparent;
   text-transform: uppercase;
 }
 

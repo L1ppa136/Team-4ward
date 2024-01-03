@@ -1,7 +1,7 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import "./Layout.css";
 import axios from 'axios';
-import {useEffect} from 'react';
+import { useEffect, useState } from 'react';
 import mainLogo from '../pictures/Warehouse01.png';
 import PageSelection from '../../Components/PageSelection.jsx';
 import { useAuth } from '../../Components/AuthContext.jsx';
@@ -11,6 +11,7 @@ const Layout = () => {
     const { loggedIn, logout, login } = useAuth();;
     const navigate = useNavigate();
     const userRole = JSON.parse(localStorage.getItem('role'));
+    const [lastClickedButton, setLastClickedButton] = useState(null);
 
     axios.defaults.baseURL = 'http://localhost:5179';
 
@@ -61,60 +62,41 @@ const Layout = () => {
 
                     <li className='imageLi'>
                         <Link to='/'>
-                            <img src={mainLogo} alt="logo" className='mainLogo' />
+                            <img onClick={()=>setLastClickedButton(null)} src={mainLogo} alt="logo" className='mainLogo' />
                         </Link>
                     </li>
 
-                    
-                    {!userRole && !loggedIn && (
+                    <li>
                         <li>
-                            <Link to='/Login'>
-                                <button
-                                className='navBtn'>
-                                    Login
+                            <Link to={!loggedIn ?'/Login' : '/'}>
+                                    <button
+                                        onClick={loggedIn ? handleLogout : null}
+                                        className='navBtn'>
+                                        {!loggedIn ? 'Login' : 'Logout'}
+                                    </button>
+                                </Link>
+                        </li>
+
+                        <li>
+                            <Link to={!loggedIn ? '/Register' : '/User'}>
+                                <button className='navBtn'>
+                                    {!loggedIn ? 'Register' : 'Profile'}
                                 </button>
                             </Link>
                         </li>
-                    )}
 
-                    <li>
-                        <Link to='/Register'>
-                            <button 
-                            className='navBtn'>
-                                Register
-                            </button>
-                        </Link>
                     </li>
-
-                    {loggedIn && (
-                        <li>
-                            <li>
-                                <Link to='/User'>
-                                    <button 
-                                    className='navBtn'>
-                                        Profile
-                                    </button>
-                                </Link>
-                            </li>
-
-                            <li>
-                                <button 
-                                    className='navBtn'
-                                    onClick={handleLogout}>
-                                        Logout
-                                </button>
-                            </li>
-                        </li>
-                    )}
                 </ul>
 
-                    {userRole && loggedIn && 
-                        <PageSelection 
-                            userRole={userRole} 
-                        />
-                    }
+                {userRole && loggedIn &&
+                    <PageSelection
+                        userRole={userRole}
+                        setLastClickedButton={setLastClickedButton}
+                        lastClickedButton={lastClickedButton}
+                    />
+                }
             </nav>
-                <Outlet />
+            <Outlet />
         </div>
     );
 };
