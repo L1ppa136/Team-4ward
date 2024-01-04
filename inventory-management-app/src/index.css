@@ -101,6 +101,27 @@ code {
   box-sizing: border-box;
 }
 
+.setUserRole{
+  display: block;
+  margin-left:auto;
+  margin-right: auto;
+
+  color:white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  background: linear-gradient(to bottom, #47d7f7, #094554);
+  border-radius: 8px;
+  padding: 10px;
+  width: 450px;
+}
+
+.setRoleForm input, select, button{
+  padding: 8px;
+  margin: 2px;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
 .login{
   display: block;
   margin-left:auto;

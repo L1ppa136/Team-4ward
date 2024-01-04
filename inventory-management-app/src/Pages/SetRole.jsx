@@ -53,12 +53,34 @@ const SetRole = () => {
                 </div>
             ) : (
                 responseState.message === 'Request failed with status code 405' ? (
-                    <div>
-                        You have no right to change roles.
+                    <div className='setRole'>
+                        <div className='error-text'>
+                            You have no right to change roles.
+                        </div>
+                        <SetRoleForm
+                            handleSubmit={handleSubmit}
+                            formdata={formdata}
+                            handleInputChange={handleInputChange}
+                        />
                     </div>
                 ) : responseState.hasOwnProperty("DuplicateEmail") ? (
-                    <div> {responseState.DuplicateEmail[0]} </div>
-                ) : <div> {formdata.userName} has a new role as {formdata.role}. </div>
+                    <div className='setRole'>
+                        <div className='error-text'> {responseState.DuplicateEmail[0]} </div>
+                        <SetRoleForm
+                            handleSubmit={handleSubmit}
+                            formdata={formdata}
+                            handleInputChange={handleInputChange}
+                        />
+                    </div>
+                ) :
+                    <div className='setRole'>
+                        <div className='success-text'> {formdata.userName} has a new role as {formdata.role}. </div>
+                        <SetRoleForm
+                            handleSubmit={handleSubmit}
+                            formdata={formdata}
+                            handleInputChange={handleInputChange}
+                        />
+                    </div>
             )}
         </div>
     );

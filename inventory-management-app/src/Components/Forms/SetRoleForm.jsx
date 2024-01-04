@@ -2,7 +2,7 @@ import React from 'react';
 
 const SetRoleForm = ({handleSubmit, formdata, handleInputChange}) => {
     return (
-        <form onSubmit={handleSubmit}>
+        <form className='setRoleForm' onSubmit={handleSubmit}>
                         <label>Username:</label>
                         <input type='text' name='userName' value={formdata.userName} onChange={handleInputChange} required />
                         <label>Role:</label>
