@@ -52,12 +52,12 @@ const Login = () => {
 
     return (
         <div className='login'>
-            <h2>Login</h2>
+            <div className='login-title'>Login</div>
             {error ? (
                 <div>
                     {error.hasOwnProperty('Bad credentials') ? (
                         <div>
-                            {error['Bad credentials'][0]}
+                            <div className='error-text'>{error['Bad credentials'][0]}</div>
                             <LoginForm
                                 handleSubmit={handleSubmit}
                                 formdata={formdata}

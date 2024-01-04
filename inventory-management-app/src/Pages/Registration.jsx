@@ -27,6 +27,12 @@ const Registration = () => {
       if (response && response.data) {
         console.log(response.data);
         setResponseState(response.data);
+        setFormData({
+          email: '',
+          username: '',
+          password: ''
+        });
+
       } else {
         console.error('Invalid response:', response);
         setResponseState(response.data);
@@ -47,8 +53,8 @@ const Registration = () => {
   return (
     <div>
       {responseState === '' ? (
-        <div>
-          <h2>Registration</h2>
+        <div className='register'>
+          <div className='login-title'>Register</div>
           <RegisterForm
             handleSubmit={handleSubmit}
             formdata={formdata}
@@ -57,14 +63,39 @@ const Registration = () => {
         </div>
       ) : (
         responseState.hasOwnProperty("PasswordTooShort") ? (
-          <div>
-            {responseState.PasswordTooShort[0]}
+          <div className='register'>
+            <div className='login-title'>Register</div>
+            <div className='error-text'>{responseState.PasswordTooShort[0]}</div>
+            <RegisterForm
+              handleSubmit={handleSubmit}
+              formdata={formdata}
+              handleInputChange={handleInputChange}
+            />
           </div>
         ) : responseState.hasOwnProperty("DuplicateEmail") ? (
-          <div> {responseState.DuplicateEmail[0]} </div>
-        ) : <div> {responseState.email} has been successfully registered. </div>
+          <div className='register'>
+            <div className='login-title'>Register</div>
+            <div className='error-text'>{responseState.DuplicateEmail[0]}</div>
+            <RegisterForm
+              handleSubmit={handleSubmit}
+              formdata={formdata}
+              handleInputChange={handleInputChange}
+            />
+          </div>
+        ) : (
+          <div className='register'>
+            <div className='login-title'>Register</div>
+            <div className='success-text'>{responseState.email} has been successfully registered.</div>
+            <RegisterForm
+              handleSubmit={handleSubmit}
+              formdata={formdata}
+              handleInputChange={handleInputChange}
+            />
+          </div>
+        )
       )}
     </div>
+
   );
 
 };
