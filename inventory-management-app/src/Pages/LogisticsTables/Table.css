@@ -28,6 +28,14 @@ body {
     border: 1px solid #000; /* Black border for cells */
     padding: 10px;
   }
+
+  th{
+    background: linear-gradient(to bottom, #47d7f7, #117E99);
+  }
+
+  td {
+    background-color: #e9d543;
+  }
   
   /* Style links inside the table */
   a {
@@ -40,6 +48,7 @@ body {
   }
   
   .Table {
+    margin-top: 2%;
     margin-left: 5%;
     margin-right: 5%;
     justify-content: center;
@@ -70,6 +79,7 @@ body {
     display:block;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 2%;
     padding-left: 5%;
     padding-right: 5%;
     border-radius: 5px;

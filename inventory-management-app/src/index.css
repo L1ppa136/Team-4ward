@@ -5,12 +5,15 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  background-color: lightgray;
+  /* background-image: url('./Pages/pictures/image01.jpg');
+  background-size: cover; */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+    
 }
 
 .userData {
@@ -20,10 +23,11 @@ code {
   margin: auto;
   margin-top: 0%;
   border: 5px solid #58595b;
-  border-radius: 5px;
+  border-radius: 8px;
   color: black;
   margin-top: 2%;
   padding: 2%;
+  background: linear-gradient(to bottom, white, rgb(169, 168, 168));
 }
 
 .profileBanner{
@@ -48,6 +52,7 @@ code {
 }
 
 .pageSelection {
+  margin-bottom:0%;
   height: 30px;
   display: flex;
   align-items: center;
@@ -99,13 +104,14 @@ code {
   border-radius: 8px;
   width: 100%;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .setUserRole{
   display: block;
   margin-left:auto;
   margin-right: auto;
-
+  margin-top:2%;
   color:white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
@@ -126,11 +132,12 @@ code {
   display: block;
   margin-left:auto;
   margin-right: auto;
+  margin-top: 5%;
 
   color:white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
-  background: linear-gradient(to bottom, #E3C95B, #857635);
+  background: linear-gradient(to bottom, #E3C95B, #71652e);
   border-radius: 8px;
   padding: 10px;
   width: 250px;
@@ -189,11 +196,11 @@ code {
   display: block;
   margin-left:auto;
   margin-right: auto;
-
+  margin-top: 5%;
   color:white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
-  background: linear-gradient(to bottom, #E3C95B, #857635);
+  background: linear-gradient(to bottom, #E3C95B, #71652e);
   border-radius: 8px;
   padding: 10px;
   width: 250px;

@@ -3,6 +3,8 @@
 }
 
 .main-ul {
+  margin-top:0%;
+  margin-bottom:0%;
   margin-right: 10%;
   margin-left: 10%;
   list-style-type: none;

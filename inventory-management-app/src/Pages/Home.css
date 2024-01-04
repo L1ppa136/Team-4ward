@@ -2,17 +2,43 @@ body{
     background-color:  lightgrey;
 }
 
+.home{
+    background-color:  rgba(255, 255, 255, 0.769);
+}
 .homeLogo{
     display: block;
     margin-left: auto;
     margin-right: 10%;
     
 }
-
+.homeText h3{
+    color:rgb(123, 94, 19);
+}
 .homeText{
+    display: flex;
+  align-items: center;
+
     border-top: 3px solid black;
     margin-left:10%;
     margin-right: 10%;
+    padding-bottom: 2%;
+}
+
+.text-section img{
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    padding-top: 5%;
+}
+
+.text-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 2%;
+    text-align: justify;
+    width: 50%;
+    height: 50%;
 }
 
 .userData{
